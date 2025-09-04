@@ -1,0 +1,658 @@
+<?php
+
+//////////////////////////////////////////////////////////////
+//===========================================================
+// create_template_theme.php
+//===========================================================
+// SOFTACULOUS 
+// Version : 1.1
+// Inspired by the DESIRE to be the BEST OF ALL
+// ----------------------------------------------------------
+// Started by: Alons
+// Date:       10th Jan 2009
+// Time:       21:00 hrs
+// Site:       http://www.softaculous.com/ (SOFTACULOUS)
+// ----------------------------------------------------------
+// Please Read the Terms of use at http://www.softaculous.com
+// ----------------------------------------------------------
+//===========================================================
+// (c)Softaculous Inc.
+//===========================================================
+//////////////////////////////////////////////////////////////
+
+if(!defined('SOFTACULOUS')){
+
+	die('Hacking Attempt');
+
+}
+
+
+function create_template_theme(){
+
+global $user, $globals, $l, $theme, $softpanel, $iscripts, $catwise, $error, $act;
+global $insid, $backing, $software, $soft, $completed, $remote_location, $template_count_per_script, $backing_up, $template_count_per_installation;
+
+if(optREQ('ajax_backup') == 1){
+	if(!empty($error)){
+		echo current($error);
+		return false;
+	}else{
+		echo 'success';
+		return true;
+	}
+}
+
+// Give the status
+if(optGET('ajaxstatus')){
+	
+	$_status = soft_progress(optGET('ajaxstatus'));
+	
+	$tmp_status = _unserialize($_status[1]);
+	$_status[1] = $tmp_status['current_status'];
+	if(!empty($_status) && !empty($tmp_status) && !array_key_exists('error', $tmp_status)){
+		echo implode('|', $_status);
+		return true;
+	}
+	
+	if(!empty($tmp_status) && array_key_exists('error', $tmp_status)){
+		$_status = array();
+		//r_print($tmp_status['error']);
+		$return = error_handle($tmp_status['error'], "100%", 0, 1);
+		echo 'error';
+		echo array2json($return);
+		//To prevent conflicting errors hence we deleting status file.
+		soft_progress(optGET('ajaxstatus'), NULL, NULL);
+		return false;
+	}
+	
+	// False call
+	echo 0;
+	return false;
+}
+
+softheader($l['<title>']);
+
+$return = '';
+$role = '';
+
+if(can_wordpress_manager($soft)){
+	$return .= '<a role="button" href="'.$globals['ind'].'act=wordpress&insid='.$insid.'"><span class="btn btn-outline-primary">'.$l['return_to_wpm'].'</span></a>&nbsp';
+	
+	$role = 'role="button"';
+}
+
+$return .= '<a '.$role.' href="'.script_link($soft).'&highlight='.$insid.'&postact=template"><span class="btn btn-outline-primary">'.$l['return'].'</span></a>';
+
+//Filter to customize the return to link
+$return = apply_filters('return_link', $return, $act);
+
+echo '<div id="install_win">
+		<div class="bg" id="completed" style="display:none;"><br />
+			<div class="alert alert-warning">
+				<center><img src="'.$theme['images'].'notice.gif" /> &nbsp; '.lang_vars($l['backedup'], array($user['ins'][$insid]['softurl'])).'
+				<center><b><a href="'.script_link($soft).'&highlight='.$insid.'&postact=template"></a></b></center></center>
+			</div>
+			<br />
+			<center>'.$return.'</center><br /><br />
+		</div>
+
+	<div id="fadeout_div">
+<form accept-charset="'.$globals['charset'].'" name="editsettings" method="post" action="" class="form-horizontal" onsubmit="return checkform();" id="editsettings">
+
+<script language="javascript" type="text/javascript"><!-- // --><![CDATA[
+	function checkform(dosubmit){
+		$_("softsubmitbut").disabled = true;
+		if(useprog){
+	
+			// Send a request to check the status
+			progressbar.start();
+			
+			// Return false so that the form is not submitted
+			return false;
+		
+			// This is OLD School !
+		}
+		return true;
+	}
+	
+var progressbar = {
+	timer: 0,
+	total_width: 0,	
+	status_key: "",
+	synctimer: 0,
+	fadeout_div: "#fadeout_div",
+	win_div: "#install_win",
+	progress_div: "#progress_bar",
+	formid: "#editsettings",
+	frequency: 4000,
+	got_resp: 0,
+	error: "",
+	
+	current: function(){
+		try{
+			var tmp_cur = Math.round(parseInt($_("progress_color").width)/parseInt($_("table_progress").width)*100);
+			if(tmp_cur > 100){
+				tmp_cur = 99;
+			}
+			return tmp_cur;
+		}catch(e){
+			return -1;	
+		}
+	},
+	
+	reset: function(){ try{
+		clearTimeout(this.timer);
+		$_("progress_color").width = 1;
+		progressbar.got_resp = 0;
+	}catch(e){ }},
+	
+	move: function(dest, speed, todo){ try{
+		var cur = this.current();
+		if(cur < 0){
+			clearTimeout(this.timer);
+			return false;
+		}
+		var cent = cur + 1;
+		var new_width = cent/100*this.total_width;
+		if(new_width < 1){
+			new_width = 1;
+		}
+		//alert(new_width+" "+dest+" "+cent);
+		
+		$_("progress_color").width = new_width;
+		$_("progress_percent").innerHTML = "("+cent+" %)";
+		
+		if(cent < dest){
+			this.timer = setTimeout("progressbar.move("+dest+", "+speed+", \""+todo+"\")", speed);
+		}else{
+			eval(todo);	
+		}
+	}catch(e){ }},
+	
+	text: function(txt){ try{
+		$_("progress_txt").innerHTML = txt;
+	}catch(e){ }},
+	
+	sync: function(){
+		if(progressbar.status_key.length < 2){
+			return false;
+		}
+		
+		$("#background_error").empty();
+		
+		$.ajax({
+			url: window.location+"&ajaxstatus="+progressbar.status_key+"&random="+Math.random(),
+			type: "GET",
+			success: function(data){
+				if(data == 0){
+					progressbar.synctimer = setTimeout("progressbar.sync()", progressbar.frequency);
+					return false;
+				}
+				
+				var err = "";
+				if(data.substring(0,5) == "error"){
+					var error = data.substr(5);
+					error = JSON.parse(error);
+					var err = $(error).filter(\'#error_handler\');
+				}
+				
+				var tmp = data.split("|");
+				
+				var cur = progressbar.current();
+				tmp[2] = (3000/(tmp[0]-cur));
+				//alert(tmp);
+				if(tmp[0] > cur){
+					if(parseInt(tmp[2]) == 0){
+						tmp[2] = 800;
+					}
+					progressbar.move(tmp[0], tmp[2]);
+				}
+				progressbar.text(tmp[1]);
+				
+				//Checking if any error in background process
+				if(err.length > 0){
+					//alert("error");
+					progressbar.error = 1;
+					
+					progressbar.reset();
+					
+					progressbar.sync_abort();	
+					
+					$(".sai_main_head").next("br").remove();
+					
+					linebreak = document.createElement("br");
+					var newdiv = document.createElement("div");
+					newdiv.id = "background_error";
+					
+					$(".sai_main_head").after(newdiv);
+					
+					$("#background_error").append(err);
+					$(".sai_main_head").after(linebreak);
+					
+					$("#softsubmitbut").removeAttr("disabled"); //Enabling submit button 			
+					$(progressbar.progress_div).fadeOut(1, 
+					function(){
+						$(progressbar.fadeout_div).fadeOut(1);
+						$(progressbar.fadeout_div).fadeIn(500);
+					});
+					
+					return false;	//Stop javascript execution
+				}
+				
+				//Checking if pogressbar is completed for backgrounding
+				if(tmp[0] == 100){
+					progressbar.sync_abort();	
+					progressbar.text("'.addslashes($l['finishing_process']).'");
+					progressbar.move(99, 10);
+					$(progressbar.progress_div).fadeOut(1200, function(){
+						$("#completed").fadeIn(1);
+					});
+					
+					return false; //Stop javascript execution
+					
+				}
+				progressbar.synctimer = setTimeout("progressbar.sync()", progressbar.frequency);
+			}
+		});
+	},
+	
+	sync_abort: function(){
+		clearTimeout(this.synctimer);
+	},
+	
+	start: function(){ try{
+		this.post();
+		this.reset();
+		this.total_width = parseInt($_("table_progress").width);
+		this.move(95, 800);
+		this.status_key = $("#soft_status_key").attr("value");
+		this.sync();
+	}catch(e){ }},
+	
+	post: function(){
+		
+		// Scroll to the Top and show the progress bar
+		goto_top();
+		$(progressbar.fadeout_div).fadeOut(500, 
+			function(){
+				$(progressbar.progress_div).fadeOut(1);
+				$(progressbar.progress_div).fadeIn(500);
+			}
+		);
+		
+		var progress_text = $("#progress_txt").text();
+		if(progress_text == "undefined" || progress_text == null){
+			$("#progress_txt").text("'.$l['checking_data'].'");	
+		}
+		
+		$.ajax({
+			url: window.location+"&jsnohf=1",
+			type: "POST",
+			data: $(progressbar.formid).serialize(),
+			complete: function( jqXHR, status, responseText ) {
+				
+				//Handling when resubmiting the form with error in background(progress div was also visible when resubmiting form with error).
+				if(progressbar.error == 1){
+					if ($(progressbar.fadeout_div).is(":visible")){
+						$(progressbar.progress_div).hide();
+					}
+				}
+				
+				// Store the response as specified by the jqXHR object
+				responseText = jqXHR.responseText;
+				
+				try{
+					//alert(responseText);
+					if(responseText.match(/\<\!\-\-PROC_DONE\-\-\>/gi)){
+						progressbar.text("'.addslashes($l['finishing_process']).'");
+						progressbar.move(99, 10, "$(progressbar.progress_div).fadeOut(1)");
+					}
+				}catch(e){ }
+				
+				var backgrounding = $(responseText).find("#backgrounding");
+									
+				//Check if the process is going into background
+				if(backgrounding.length > 0){
+					progressbar.backgrounding = 1;
+					if ( jqXHR.state() == "resolved" ) {
+					}else{
+						alert("Oops ... the connection was lost");
+					}
+				}else{
+					if ( jqXHR.state() == "resolved" ) {
+					
+						// #4825: Get the actual response in case
+						// a dataFilter is present in ajaxSettings
+						jqXHR.done(function( r ) {
+							responseText = r;
+						});
+						//alert(responseText);
+						// Create a dummy div to hold the results
+						// inject the contents of the document in, removing the scripts
+						// to avoid any "Permission Denied" errors in IE
+						var newhtml = jQuery("<div>").append(responseText).find(progressbar.win_div).html();
+						
+						$(progressbar.win_div).animate({opacity: 0}, 1000, "", function(){
+							$(progressbar.win_div).html(newhtml);
+							new_theme_funcs_init();
+						}).delay(50).animate({opacity: 1}, 500);
+						
+						//alert(newhtml);
+						
+					}else{
+						alert("Oops ... the connection was lost");
+					}
+				}
+			}
+		});
+	}
+};
+	
+// Use the Progress Bar ?
+var useprog = 1;
+try{
+	if(BrowserDetect.browser.toLowerCase() == "safari" && BrowserDetect.version.toString().substr(0, 1) == "3"){
+		useprog = 0;
+	}
+}catch(e){ }
+
+
+// ]]></script>';
+
+echo '<div class="bg template-form"><br />
+		<div class="row sai_main_head mt-8 mb-4">
+			<div class="col-12 text-center">
+				<i class="fas fa-box fa-2x mr-2" style="color:#00A0D2;"></i>
+				<span class="form-title">'.$l['create_template'].'</span>
+			</div>
+		</div>';
+		
+		//To detect in javascript if the process is in background
+		if(!empty($GLOBALS['backgrounding'])){
+			echo '<div id="backgrounding"></div>';
+		}
+		
+		if(!empty($globals['max_templates'])){
+			echo '<div class="row">
+			<div class="col-12 my-2 text-center">
+				<div class="alert alert-warning">
+					<a href="#close" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span>'.lang_vars($l['max_templates'], array($cur_templates, $globals['max_templates'])).'</span>
+				</div>
+			</div>
+		</div>';
+		}
+		
+		//Maximum Templates Limit per script
+		if(!empty($globals['max_templates_script']) && $template_count_per_script >= $globals['max_templates_script']){
+			echo '<div class="row">
+			<div class="col-12 my-2 text-center">
+				<div class="alert alert-warning">
+					<a href="#close" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span>'.lang_vars($l['error_max_backup_script'], array($globals['max_templates_script'])).'</span>
+				</div>
+			</div>
+		</div>';	
+		} 
+		
+		//Maximum Templates Limit per installation
+		if(!empty($globals['max_insid_templates']) && $template_count_per_installation >= $globals['max_insid_templates']){
+			echo '<div class="row">
+			<div class="col-12 my-2 text-center">
+				<div class="alert alert-warning">
+					<a href="#close" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span>'.lang_vars($l['error_max_backup_insid'], array($globals['max_insid_templates'])).'</span>
+				</div>
+			</div>
+		</div>';	
+		} 
+		
+		echo error_handle($error, "100%", 0, 1);
+
+		$return = '';
+		$role = '';
+
+		if(can_wordpress_manager($soft)){
+			$return .= '<a role="button" href="'.$globals['ind'].'act=wordpress&insid='.$insid.'"><span class="btn btn-outline-primary">'.$l['return_to_wpm'].'</span></a>&nbsp';
+			
+			$role = 'role="button"';
+		}
+
+		$return .= '<a '.$role.' href="'.script_link($soft).'"><span class="btn btn-outline-primary">'.$l['return'].'</span></a>';
+
+		//Filter to customize the return to link
+		$return = apply_filters('return_link', $return, $act);
+		
+		
+		echo '
+		<div class="mt-4">
+			<div class="m-3 card p-3">
+				<div class="sai_sub_head">'.$l['backup_operation'].'</div>
+				<hr class="sai_main_head_hr">
+					<div class="row mb-2">
+						<div class="col-sm-5">
+							<label for="template_name" class="sai_head mb-2">'.$l['template_name'].'</label><br />
+							<span class="sai_exp2">'.$l['template_name_exp'].'</span>
+						</div>
+						<div class="col-sm-7">
+							<input type="text" name="template_name" id="template_name" class="form-control" '.POSTval('template_name', '').' size="50" maxlength="255"/><br />
+						</div>
+					</div>
+					
+					<div class="row mb-2">
+						<div class="col-sm-5">
+							<label for="template_type" class="sai_head mb-2">'.$l['template_type'].'</label>
+							<span class="sai_exp">'.$l['exp_template_type'].'</span>
+						</div>
+						<div class="col-sm-7">
+							<select name="template_type" class="form-control" id="template_type">
+								<option value="1" '.POSTselect('template_type', 1, 1).'>'.$l['private'].'</option>
+								<option value="2" '.POSTselect('template_type', 2, 0).'>'.$l['shared'].'</option>
+							</select><br />
+						</div>
+					</div>';
+					
+					if(is_wordpress($soft)){
+						
+						echo '
+						<div class="row mb-2">
+							<div class="col-sm-5">
+								<label for="disallow_plugins" class="sai_head mb-2">'.$l['disallow_plugins'].'</label>
+								<span class="sai_exp">'.$l['exp_disallow_plugins'].'</span>
+							</div>
+							<div class="col-sm-7">
+								<input type="checkbox" name="disallow_plugins" class="form-control" id="disallow_plugins" '.POSTchecked('disallow_plugins').'><br />
+							</div>
+						</div>
+						
+						<!-- <div class="row mb-2">
+							<div class="col-sm-5">
+								<label for="upgrade" class="sai_head mb-2">'.$l['upgrade'].'</label>
+								<span class="sai_exp">'.$l['exp_upgrade'].'</span>
+							</div>
+							<div class="col-sm-7">
+								<input type="checkbox" name="upgrade" class="form-control" id="upgrade" '.POSTchecked('upgrade').'><br />
+							</div>
+						</div> -->';
+					}
+					
+			echo '
+			</div>
+		</div>
+		<div class="bg m-3 info_block">
+			<div class="sai_sub_head">'.$l['info'].'</div>
+			<hr class="sai_main_head_hr">
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_softname'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info">'.$software['name'].'</span>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_num'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info">'.$user['ins'][$insid]['insid'].'</span>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_ver'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info">'.$user['ins'][$insid]['ver'].'</span>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_time'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info">'.datify($user['ins'][$insid]['itime']).'</span>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_path'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info">'.$user['ins'][$insid]['softpath'].'</span>
+				</div>
+			</div>
+			
+			<div class="row mb-3">
+				<div class="col-sm-5 col-xs-12">
+					<span class="sai_head">'.$l['ins_url'].'</span>
+				</div>
+				<div class="col-sm-6 col-xs-12">
+					<span class="sai_info"><a href="'.$user['ins'][$insid]['softurl'].'" target="_blank">'.$user['ins'][$insid]['softurl'].'</a></span>
+				</div>
+			</div>
+			'.(empty($user['ins'][$insid]['wwwdir']) ? '' :'
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_wwwdir'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.$user['ins'][$insid]['wwwdir'].'</span>
+					</div>
+				</div>
+			').'
+			
+			'.(empty($user['ins'][$insid]['softdatadir']) ? '' : '
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_datadir'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.$user['ins'][$insid]['softdatadir'].'</span>
+					</div>
+				</div>
+			').'	
+			
+			'.(empty($user['ins'][$insid]['softdb']) ? '' : '
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_db'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.$user['ins'][$insid]['softdb'].'</span>
+					</div>
+				</div>
+			').'	
+			
+			'.(empty($user['ins'][$insid]['softdbuser']) ? '' : '
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_dbuser'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.$user['ins'][$insid]['softdbuser'].'</span>
+					</div>
+				</div>
+			').'	
+			
+			'.(empty($user['ins'][$insid]['softdbhost']) ? '' : '
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_dbhost'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.$user['ins'][$insid]['softdbhost'].'</span>
+					</div>
+				</div>
+			').'	
+			
+			'.(empty($user['ins'][$insid]['cron_command']) ? '' : '
+				<div class="row mb-3">
+					<div class="col-sm-5 col-xs-12">
+						<span class="sai_head">'.$l['ins_cron_command'].'</span>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<span class="sai_info">'.base64_decode($user['ins'][$insid]['cron_command']).'</span>
+					</div>
+				</div>			
+			');
+			
+		echo '</div><!--end of bg class-->
+		<br />
+		<div class="row" align="center">
+			<div class="col-12 text-center mt-4">
+				<input type="hidden" name="createtemplate" id="createtemplate" value="'.$l['create_template'].'" />
+				<input type="submit" name="softsubmitbut" class="btn sai-button" id="softsubmitbut" value="'.$l['create_template'].'"  />
+				<br /><br /><center><p class="m-3">'.$return.'</p></center>
+			</div>
+		</div>
+		<input type="hidden" name="soft_status_key" id="soft_status_key" value="'.POSTval('soft_status_key', generateRandStr(32)).'" />
+
+	</div><br /><!--end of bg class-->
+	'.csrf_display().'
+</form>
+</div>
+
+<div id="progress_bar" style="display: none; width: 100%;">
+	<br />
+	<div class="bg">
+	
+		<div class="row sai_main_head" style="width:100%;" align="center">
+			<div class="col-sm-5 col-xs-5" style="padding:0 10px 0 0; text-align:right;">
+				<i class="far fa-file-archive fa-2x" style="color:#00A0D2;"></i>
+			</div>
+			<div class="col-sm-7 col-xs-7" style="padding-top:10px; padding-left:0; text-align:left;">'.$l['prog_backingup'].$software['name'].'</div>
+		</div><hr /><br />
+		
+		<div class="alert alert-warning" id="stat_txt">
+			<center><img src="'.$theme['images'].'notice.gif" /> &nbsp; '.lang_vars($l['backingup'], array($user['ins'][$insid]['softurl'])).'</center>
+		</div>
+		
+		<br />
+		<center>
+		<font size="4" id="progress_txt" style="width: 100%;">'.$l['checking_data'].'</font>
+		<font style="font-size: 18px;font-weight: 400; width: 100%;" id="progress_percent">(0 %)</font><br /><br />
+		</center>
+		<table width="500" cellpadding="0" cellspacing="0" id="table_progress" border="0" align="center" height="28" style="border:1px solid #CCC; -moz-border-radius: 5px;
+		-webkit-border-radius: 5px; border-radius: 5px; width: 50%;">
+			<tr>
+				<td id="progress_color" width="1" style="background-image: url('.$theme['images'].'bar.gif); -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;"></td>
+				<td id="progress_nocolor">&nbsp;</td>
+			</tr>
+		</table>
+		<br /><center>'.$l['wait_note'].'</center><br /><br />
+	</div>
+</div><br /><br />';
+
+echo '</div>';
+
+softfooter();
+
+}
+
+?>

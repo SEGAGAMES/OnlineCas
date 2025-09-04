@@ -1,0 +1,5 @@
+[Thu Sep 04 09:53:58.343901 2025] [mpm_winnt:notice] [pid 1792:tid 472] AH00455: Apache/2.4.65 (Win64) OpenSSL/3.5.1 PHP/8.2.29 configured -- resuming normal operations
+[Thu Sep 04 09:53:58.343901 2025] [mpm_winnt:notice] [pid 1792:tid 472] AH00456: Apache Lounge VS17 Server built: Jul 24 2025 14:32:29
+[Thu Sep 04 09:53:58.343901 2025] [core:notice] [pid 1792:tid 472] AH00094: Command line: 'apache\\bin\\httpd.exe -d D:/repos/OnlineCas/Ampps/apache'
+[Thu Sep 04 09:53:58.358288 2025] [mpm_winnt:notice] [pid 1792:tid 472] AH00418: Parent: Created child process 13420
+[Thu Sep 04 09:53:59.434575 2025] [mpm_winnt:notice] [pid 13420:tid 500] AH00354: Child: Starting 64 worker threads.

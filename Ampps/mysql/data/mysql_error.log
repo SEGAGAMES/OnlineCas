@@ -1,0 +1,13 @@
+2025-09-03T23:53:59.031752Z 0 [Warning] [MY-011070] [Server] 'binlog_format' is deprecated and will be removed in a future release.
+2025-09-03T23:53:59.033321Z 0 [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
+2025-09-03T23:53:59.033367Z 0 [System] [MY-010116] [Server] D:\repos\OnlineCas\Ampps\mysql\bin\mysqld.exe (mysqld 8.0.43) starting as process 10300
+2025-09-03T23:53:59.086483Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2025-09-03T23:53:59.876067Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2025-09-03T23:54:00.589959Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2025-09-03T23:54:00.591722Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2025-09-03T23:54:00.720107Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060
+2025-09-03T23:54:00.720350Z 0 [System] [MY-010931] [Server] D:\repos\OnlineCas\Ampps\mysql\bin\mysqld.exe: ready for connections. Version: '8.0.43'  socket: ''  port: 3306  MySQL Community Server - GPL.
+2025-09-03T23:54:39.410740Z 8 [Warning] [MY-013360] [Server] Plugin mysql_native_password reported: ''mysql_native_password' is deprecated and will be removed in a future release. Please use caching_sha2_password instead'
+2025-09-04T00:11:05.801312Z 75 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.43).
+2025-09-04T00:11:05.802617Z 0 [System] [MY-013105] [Server] D:\repos\OnlineCas\Ampps\mysql\bin\mysqld.exe: Normal shutdown.
+2025-09-04T00:11:06.483151Z 0 [System] [MY-010910] [Server] D:\repos\OnlineCas\Ampps\mysql\bin\mysqld.exe: Shutdown complete (mysqld 8.0.43)  MySQL Community Server - GPL.

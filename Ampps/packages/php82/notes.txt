@@ -1,0 +1,13 @@
+1. Add ssh2 extension from (not available yet check again later) :
+https://pecl.php.net/package/ssh2
+
+Choose Windows DLL download option. 
+Currently we are offerring SSH v1.4.1
+
+2. check xdebug.dll in lib 
+
+3. copy opcache.dll from ext to lib 
+
+4. Add cacert.pem in extras/ssl/cacert.pem from old package
+
+5. Add ioncube loader extension in $path\php82\ from old package

@@ -1,0 +1,4 @@
+[Thu Sep 04 09:53:58.145045 2025] [ssl:warn] [pid 1792:tid 472] AH01906: localhost:443:0 server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Thu Sep 04 09:53:58.200970 2025] [ssl:warn] [pid 1792:tid 472] AH01906: localhost:443:0 server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Thu Sep 04 09:53:59.250296 2025] [ssl:warn] [pid 13420:tid 500] AH01906: localhost:443:0 server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)
+[Thu Sep 04 09:53:59.316567 2025] [ssl:warn] [pid 13420:tid 500] AH01906: localhost:443:0 server certificate is a CA certificate (BasicConstraints: CA == TRUE !?)

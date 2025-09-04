@@ -1,0 +1,42 @@
+{
+    "1": {
+        "aid": "1",
+        "default": "1",
+        "fullname": "Apache",
+        "group_type": "webserver",
+        "mod": "27",
+        "name": "apache",
+        "type": "service",
+        "version": "2.4.65"
+    },
+    "2": {
+        "aid": "2",
+        "default": "1",
+        "fullname": "MySQL",
+        "group_type": "mysql",
+        "mod": "35",
+        "name": "mysql",
+        "type": "service",
+        "version": "8.0.43"
+    },
+    "3": {
+        "aid": "3",
+        "default": "1",
+        "fullname": "phpMyAdmin",
+        "group_type": "utilities",
+        "mod": "13",
+        "name": "phpmyadmin",
+        "type": "utilities",
+        "version": "5.2.2"
+    },
+    "75": {
+        "aid": "75",
+        "default": "1",
+        "fullname": "PHP 8.2",
+        "group_type": "php",
+        "mod": "34",
+        "name": "php82",
+        "type": "app",
+        "version": "8.2.29"
+    }
+}

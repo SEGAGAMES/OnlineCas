@@ -1,0 +1,1104 @@
+
+/* The Dark Mode */
+
+body{
+background-color: #000000 /* #F3F4FA #e0e0e0*/ !Important;
+color: #e0e0e0;
+}
+
+h1, h2, h3, h4, h5, span, label, strong, td{
+color:#e0e0e0 !important;
+}
+
+.sai_toggle-pass{
+color:#e0e0e0 !important;
+}
+
+a:link,
+a:visited,
+a:active{
+color: #e0e0e0;
+}
+
+a:hover{
+color: #0099e6;
+}
+
+.alert.alert-warning,
+.alert.alert-warning a{
+color: #A56404;
+}
+
+.alert-danger a{
+color:#721c24;
+}
+
+/* hf_theme.php the top row*/
+.sai_softac_header{
+box-shadow:none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+.sai_search{
+/*background: #e0e0e0 url(../default/images/search_bar.gif) no-repeat right;*/
+}
+
+.sai_softsearch:hover .sai_softinput_search{
+background-color:#e0e0e0;
+}
+.sai_softinput_search:focus{
+background-color:#e0e0e0;
+}
+
+.soft_nav {
+color: #e0e0e0;
+background-color: #1a1a1a;
+box-shadow:none;
+}
+
+.soft_nav a{
+color: #e0e0e0;
+}
+
+.soft_nav_selected{
+border-bottom:2px solid #e0e0e0;
+}
+
+.soft_nav_mob{
+background:#1a1a1a;
+}
+
+.soft_nav .nav-icons{
+color:#262626;
+}
+
+.left_panel{
+background-color: #1a1a1a !important;
+}
+
+.left-panel-links .list-menu{
+color:#e0e0e0;
+}
+
+.submenu{
+background-color: #262626;
+}
+
+.search_suggestion{
+background-color:#e0e0e0;
+}
+
+/* Softwares Slide Menu */
+
+.softlinks a:link,
+.softlinks a:visited,
+.softlinks a:active{
+color:#e0e0e0;
+}
+
+.softlib a:link, .softlib a:visited, .softlib a:active{
+background: #e0e0e0 url(../default/images/softarrow.gif) no-repeat right;
+}
+
+/* Ending - Softwares Slide Menu */
+
+.welcome{
+color:#e0e0e0;
+}
+
+.input-group-text{
+color: #000000 !important;
+}
+
+.sai_tab:hover{
+background: #404040;	
+}
+
+.sai_single-tab a{
+color:#e0e0e0;
+}
+
+.tab:hover{
+background: #404040;	
+}
+
+.sai_new_insbut a{
+color:#e0e0e0;
+}
+
+.sai_process_heading{
+color:#262626;
+}
+
+.sai_heading_full{
+color:#262626;
+}
+
+.sai_head2{
+border:1px solid #e0e0e0;
+}
+
+.sai_main_head{
+color: #e0e0e0 !important;
+}
+
+.sai_exp{
+color: #e0e0e0;
+}
+
+.sai_qt{
+color:#262626;
+}
+
+/* Calibri Head */
+.sai_newhead{
+color: #262626;
+}
+
+.sai_feature_exp{
+color: #e0e0e0;
+}
+
+.sai_feature_exp b{
+color: #e0e0e0;
+line-height:150%;
+}
+
+/* Suggest */
+.suggestbox{
+color: #999999;
+}
+
+a.suga:link, a.suga:visited, a.suga:active, a.suga:hover{
+color: #999999;
+}
+ 
+a.sugaon:link, a.sugaon:visited, a.sugaon:active, a.sugaon:hover{
+color: #999999;
+}
+
+.softnewshead{
+background-color: #333333;
+}
+
+.news_content_header{
+background: #262626; 
+color:#e0e0e0;
+}
+
+.news_content{
+color:#e0e0e0;
+background:#1a1a1a;
+}
+
+.revtable{
+border:4px solid #999999;
+}
+
+/********************************************************************
+WE HAVE USED "!important" BECAUSE IT WAS CONFLICTED WITH THE INPUT CLASS 
+WHICH WE HAVE WRIITEN FOR THE TEXTBOXES AND ALL BELOW
+*********************************************************************/
+.sai_login_input {
+color:#999999 !important;
+}
+
+.webuzo_icons a:link, .webuzo_icons a:visited, .webuzo_icons a:active {
+color: #262626;
+}
+
+.ampps_icons a:link, .ampps_icons a:visited, .ampps_icons a:active{
+color: #262626;
+}
+
+/************************************/
+/*CODE FOR DISPLAYING ALTERNATE ROWS*/
+/************************************/
+.sai_altrowstable, .sai_divroundshad {
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}
+
+.sai_divroundshad{
+background:#e0e0e0;
+}
+
+.sai_oddrowcolor{
+border-top: 1px solid #e0e0e0;
+}
+
+.sai_message_box {
+background: #e0e0e0;
+}
+
+.sai_boxgrid2{
+box-shadow: none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+.sai_classes_boxgrid h2{
+box-shadow: none;
+}
+			
+.sai_classes_boxgrid2{
+box-shadow: none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+/* Button Css for Install & Show files buttons and for pagination links  */
+a.sai_cbutton {
+color: #e0e0e0;
+}
+
+a.sai_cbutton:hover {
+color: #e0e0e0;
+box-shadow: none;
+}
+
+a.selected_page {
+box-shadow: none;	
+}
+
+.sai_iframe_class{ 
+box-shadow: none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+/*Search box for classes*/
+.sai_inputs input{
+box-shadow: none;
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+}
+
+.sai_inputs input:focus{
+background-color: #e0e0e0;
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}
+
+.divshadow{
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+box-shadow: none;
+}
+
+/*FORM STYLING AND GLOW EFFECT*/
+.sai_reviewform{
+background: #e0e0e0;
+/* -- CSS3 - add a drop shadow -- */
+-webkit-box-shadow:none;
+-moz-box-shadow:none;
+box-shadow:none;		 		
+}
+
+input[type=text], textarea,
+select, 
+input[type=password], 
+option{
+background-color: #262626 ;
+background:#262626 !important;
+border: 1px solid #999999 !important;
+color: #b3b3b3 !important;
+}
+
+input[type=text]:hover, textarea:hover, select:hover, input[type=password]:hover{ 
+background-color: #262626;
+background: #262626 !important;
+border-color: #3498db !important;
+}
+
+input[type=text]:focus, textarea:focus, select:focus, input[type=password]:focus{
+background-color: black;
+border-color: #3498db !important;
+}
+
+.small{
+color:#e0e0e0;
+}
+
+.small:hover{
+color:#e0e0e0;
+box-shadow:none;
+}
+
+/*input[type=submit]
+.sai_graybluebut,*/
+.sai_checkbut{
+box-shadow:none;
+}
+
+/*input[type=submit]
+.sai_graybluebut:active{
+	
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}*/
+
+/* Component containers
+----------------------------------*/
+.ui-widget-content {
+background: #e0e0e0/*{bgColorContent}*/ repeat-x/*{bgContentRepeat}*/; 
+}
+
+/*********************************/
+/****** PASSWORD STRENGTH METER***/
+/*********************************/
+/*
+#pass-strength-result {
+
+border-width: none;
+border: 1px solid #999
+
+}
+
+*/
+
+.sai_clogbutton{
+box-shadow: none;
+color:#e0e0e0;
+}
+
+.sai_popup{
+background-color:#e0e0e0;
+box-shadow:none;
+}
+
+.new_tab .nav #install{
+color: #e0e0e0 !important;
+}
+
+.sai_changelogbut{
+color: #e0e0e0 !important;
+}
+
+.sai_changelogbut:hover{
+box-shadow: none;
+}
+
+.sai_highlight{
+box-shadow:none;
+}
+
+#features_win ul li a{
+color:#1ab2ff;
+}
+
+
+
+.top i{
+color: #e0e0e0;
+}
+
+.top i:hover{
+box-shadow: none;
+}
+
+
+#tiptip_content {
+color: #e0e0e0;
+box-shadow: none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+
+#tiptip_holder.tip_top #tiptip_arrow {
+border-top-color: #e0e0e0;
+}
+
+#tiptip_holder.tip_bottom #tiptip_arrow {
+border-bottom-color: #e0e0e0;
+}
+
+#tiptip_holder.tip_right #tiptip_arrow {
+border-right-color: #e0e0e0;
+}
+
+#tiptip_holder.tip_left #tiptip_arrow {
+border-left-color: #e0e0e0;
+}
+
+.sai_blog_script{
+background-color:#1a1a1a;
+border: 1px solid #999;
+box-shadow:none;
+}
+
+.sai_script_name{
+color:#e0e0e0 !important;
+}
+
+.blog_table_border{
+background-color:#e0e0e0;
+box-shadow:none;
+}
+
+.blog_table_border:hover{
+background-color:#e0e0e0;
+}
+
+/* List software stops here*/
+
+/*NOTE BOX EFFECT*/
+.sai_notebox{
+text-shadow: 0 1px 0 #e0e0e0;
+}
+
+.sai_notebox:before, .sai_notebox:after{
+-webkit-box-shadow: none;  
+-moz-box-shadow: none;
+box-shadow: none;
+}
+
+input.sai_twitter-btn:hover{
+box-shadow:none;
+}
+
+.sai_image_container:hover{
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}
+
+.sai_theme_selected:hover{
+-moz-box-shadow: none;
+-webkit-box-shadow: none;
+box-shadow: none;
+}
+
+.sai_searchbox_button{
+color: #262626;
+color:#e0e0e0;
+}
+
+.sai_searchbox_button a{
+color:#e0e0e0;
+}
+
+/* Popup */
+.sai_popupc{
+background:e0e0e0;
+box-shadow: none;
+}
+
+.sai_popuphead{
+color: #e0e0e0;
+}
+
+.sai_popupclose, a.sai_popupclose{
+color: #e0e0e0;
+}
+
+/* End Popup */
+
+.price{
+color:#e0e0e0;
+}
+
+.sai_noti_bubble {
+color:#e0e0e0;
+}
+
+.sai_purchased.blue {
+color: #e0e0e0;
+}
+
+.sai_purchased {
+color: #262626;
+}
+
+.sai_purchased a{
+color:#e0e0e0;
+}
+
+#overview_img img{
+border:1px solid #999999;
+}
+
+.bg{
+background-color: #1a1a1a;
+border-width: none;
+border: 1px solid #999;
+box-shadow: none;
+}
+
+.bg2{
+background-color: #1a1a1a;
+color: #e0e0e0 !important;
+}
+
+/* #Flat Button
+==================================================*/
+
+.left_toggle_btn{
+background-color: #1a1a1a;
+}
+
+.info_block{
+box-shadow: none;
+-webkit-box-shadow: none;
+-moz-box-shadow: none;
+}
+
+.statistic_grp .title {
+color:#262626;
+}
+
+.badge {
+color: #e0e0e0;
+}
+
+
+.quick_install_dropdown_btn:hover {
+background: #e0e0e0;
+}
+
+.quick_form_toggle_btn{
+color:#e0e0e0;
+}
+
+.quick_form_toggle_btn:hover{
+color:#e0e0e0;
+}
+
+.quick_install_dropdown_btn a{	
+color:#000000 !important;
+}
+
+.selectnext_element{
+color:#262626 !important;
+background-color:#e0e0e0 !important;
+
+}
+
+/*dashboard index page*/
+
+.resource_gr{
+background-color : #e0e0e0;
+box-shadow:none;
+}
+
+.resource_header{
+color:#e0e0e0;
+}
+
+.resource_header .badge{
+box-shadow: none;
+}
+
+.installation-block{
+color: #e0e0e0;
+}
+
+.installation-block .badge{
+background-color: #e0e0e0;
+color:#4a47a3 !important;
+box-shadow: none;
+}
+
+.outdated-block .badge{
+background-color:#e0e0e0;
+color:#00917c !important;
+box-shadow: none;
+}
+
+.backup-block{ 
+background-color:#28527a !important;
+}
+
+.backup-block .badge{
+background-color:#e0e0e0;
+color: #28527a !important;
+box-shadow: none;
+}
+
+.foot{
+font-size: 14px;
+padding: 15px 0px;
+text-align: left;
+color: #212121 !important;
+}
+
+.foot a{
+color:#3f51b5 !important;
+text-decoration: none;
+}
+
+.foot a:hover{
+text-decoration:none;
+color:#222 !important;
+}
+
+.sai_boxgrid2_ts{
+background-color: #1a1a1a;
+box-shadow: none;
+}
+
+.sai_boxgrid2_ts:hover{
+background-color: #262626;
+transition: 0.3s;
+}
+
+.soft-news{
+background-color:#e0e0e0;
+}
+
+.soft-news .news-header{
+ box-shadow: none;
+}
+
+.soft-news .news_content_header{
+background-color:#1a1a1a;
+color:#e0e0e0;
+}
+
+.news_content::-webkit-scrollbar-track,
+#changelog_div .modal-body::-webkit-scrollbar-track{
+box-shadow: none;
+}
+
+.saihover-details a.sai_btns:hover{
+color:#e0e0e0;
+}
+
+.saihover-details a.sai_btns_invert{
+color:#e0e0e0;
+}
+
+.saihover-details a.sai_btns_invert:hover{
+background-color: #004466;
+}
+
+.sai_hover a.sai_insbut{
+color: #e0e0e0;
+}
+
+/*Softaculous News front page css*/
+
+.soft-news{
+background-color:#e0e0e0;
+box-shadow: none;
+}
+
+.soft-news .news-header{
+box-shadow: none;
+}
+
+.news_content::-webkit-scrollbar-track{
+box-shadow: none;
+}
+
+/*Left panel menu css start*/
+.leftpanel-options{
+color: #e0e0e0;
+}
+
+.leftpanel-options .left-option-link a{
+color: #e0e0e0 !important;
+}
+.soft-suboptions{
+background-color: #262626;
+}
+/*Left panel menu css end*/
+
+
+.sai_blog_script{
+box-shadow: none;
+}
+.sai_loginhead .flat-butt a{
+color: #e0e0e0;
+}
+
+.details-label,
+.bg .details .details-label{
+color: #262626;
+}
+
+.demo-btn,
+.support-btn,
+.download-btn{
+color: #e0e0e0 !important;
+}
+
+.installations-table,
+.backup-table{
+border: 1px solid white;
+box-shadow: none;
+}
+
+.section .radio-label{
+color: #262626;
+}
+
+.installations-table .sai_head2,
+.backup-table .sai_head2{
+color:#e0e0e0;
+background-color: #1a1a1a;
+}
+
+
+.installations-table .script-title{
+color:#262626;
+}
+
+.backup-table td{
+color:#e0e0e0;
+}
+
+.card{
+background-color:#1a1a1a;border-color:#999999;font-size: 14px;
+font-weight:400;
+margin:10px 0px 0px 0px;
+}
+
+div #carousel-container{
+background-color:#1a1a1a;
+}
+.overview-img{
+box-shadow: none;
+}
+
+
+
+.softphrase-overview a{
+color:#1ab2ff;
+}
+
+.softphrase-overview a:hover{
+color:#0099e6;
+}
+
+.softphrase-overview font{
+
+color:#0066cc;
+}
+
+.softphrase-overview{
+
+color: #e0e0e0;
+
+}
+
+.page-sub-text{
+color: #e0e0e0;
+}
+
+#ratings_win .flat-butt,
+.sai-button,
+a.sai-button{
+
+color: #e0e0e0;
+
+}
+
+a.sai-button:hover,
+.sai-button:hover{
+
+color:#e0e0e0 !Important;
+}
+
+.sai-button a{
+color: #e0e0e0;
+
+}
+
+.sai-icon-style{
+
+color: #e0e0e0;
+
+
+}
+
+
+
+.sai_head{
+
+color:#e0e0e0;
+
+}
+
+.sai_table_head{
+background-color:black !important;
+}
+
+
+.sai_newhead{
+
+color:#e0e0e0;
+}
+
+.sai_head2{
+
+background-color: #1a1a1a;
+}
+
+.sai_head2 th{
+color:#e0e0e0;
+
+}
+
+.installation-list-table,
+.ratings-table{
+box-shadow: none;
+
+}
+
+
+.related-scripts{
+text-decoration: none !important;
+box-shadow: none;
+transition: 0.6s;
+}
+
+.related-scripts:hover{
+box-shadow: none;
+}
+
+
+#features_win strong{
+color: #262626;
+
+}
+
+
+#reviews_win .revtable{
+border: 1px solid #999999;
+/*box-shadow: 0 10px 20px 0 #e0e0e0;*/
+}
+
+
+
+#reviews_win .revby{
+background-color: #000000;
+
+}
+
+
+
+
+.import-soft .old_tab{
+color:#262626;
+}
+
+
+.page-title{
+color:#262626;
+
+}
+
+
+
+.iconbg{
+
+box-shadow: none;
+
+color: #e0e0e0;
+}
+
+
+.sai_sub_head{
+color: #e0e0e0;
+
+}
+
+.sai-info-link{
+
+color: #e0e0e0 !important;
+
+}
+
+.sai-btn-link{
+
+color: #e0e0e0 !important;
+
+}
+
+.sai-btn-link:hover{
+color: #e0e0e0 !important;
+
+}
+
+
+
+.form-label,
+.script_fields .form-label{
+color: #262626;
+
+}
+
+
+/* Softaculous Modal */
+.modal-header{
+
+color: #e0e0e0;
+}
+
+
+
+.soft-modal .modal-body h4{
+color: #262626;
+
+}
+
+
+#changelog_div .modal-header{
+background-color: #1a1a1a;
+}
+
+.modal-header .close,
+#changelog_div .modal-header .close{
+color: #e0e0e0;
+
+}
+
+
+.sai_graybluebut{
+
+color: #e0e0e0;
+
+}
+
+.sai_exp{
+
+box-shadow: none;
+
+}
+
+
+
+/*Pricing Plans*/
+.plan{
+box-shadow: none;
+
+}
+
+
+.head_span{
+color:#e0e0e0;
+
+}
+
+.plan-price{
+
+color: #e0e0e0;
+}
+
+
+
+.btn.sai-plan-btn{
+
+color:#e0e0e0;
+
+}
+
+
+.review-block{
+box-shadow: none;
+
+}
+
+
+.sai_single-tab .btn a{
+color:#e0e0e0;
+}
+
+
+
+.sai_single-tab .dropdown-toggle::after{
+
+border-top: 0.3em solid #e0e0e0;
+}
+
+
+
+.pfx-theme-slide .popularfx-theme-details{
+box-shadow: none;
+border: none;
+}
+
+
+
+.pfx-theme-slide .popularfx-theme-details:hover{
+-webkit-transform: scale(1.05, 1.05);
+transform: scale(1.05, 1.05);
+box-shadow: none;
+}
+
+.prevBtn a,
+.nextBtn a{
+
+color: #e0e0e0;
+
+}
+
+
+#popularfx-next-prev .popularfx-demo-btn{
+
+color: #e0e0e0 !important;
+
+}
+
+
+
+/* Track */
+body::-webkit-scrollbar-track{
+background-color: #1a1a1a;
+}
+
+
+/*Javascript*/
+
+.sai_boxgrid_js{
+
+background-color: #e0e0e0;
+
+box-shadow: none;
+
+}
+
+
+
+
+.new_tab .nav #install{
+
+color: #262626;
+}
+
+
+.new_tab .navbar-toggle{
+background-color: #e0e0e0;
+
+}
+
+.sai_info{	
+color:#e0e0e0;
+
+}
+.sai_info,
+.sai_info a{
+
+color: #e0e0e0 !important;
+}
+
+#progress_bar font #progress_txt, #progress_percent{
+color: #e0e0e0;
+}
+
+.wp-info .title{
+color:#e0e0e0;
+font-size: 14px;
+font-weight:400;
+margin:10px 0px 0px 0px;
+}
+
+.wp-info-section{
+border: 1px solid #999;
+}	

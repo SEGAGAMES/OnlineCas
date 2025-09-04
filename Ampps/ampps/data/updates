@@ -1,0 +1,200 @@
+{
+    "1": {
+        "aid": "1",
+        "fullname": "Apache",
+        "group_type": "webserver",
+        "installed": "0",
+        "mod": "27",
+        "name": "apache",
+        "notified": "0",
+        "notified_version": "2.4.65",
+        "version": "2.4.65"
+    },
+    "10": {
+        "aid": "10",
+        "fullname": "PHP 8.0",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "31",
+        "name": "php80",
+        "notified": "0",
+        "notified_version": "8.0.30",
+        "version": "8.0.30"
+    },
+    "11": {
+        "aid": "11",
+        "fullname": "PHP 8.1",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "44",
+        "name": "php81",
+        "notified": "0",
+        "notified_version": "8.1.33",
+        "version": "8.1.33"
+    },
+    "2": {
+        "aid": "2",
+        "fullname": "MySQL",
+        "group_type": "mysql",
+        "installed": "0",
+        "mod": "35",
+        "name": "mysql",
+        "notified": "0",
+        "notified_version": "8.0.43",
+        "version": "8.0.43"
+    },
+    "3": {
+        "aid": "3",
+        "fullname": "phpMyAdmin",
+        "group_type": "utilities",
+        "installed": "0",
+        "mod": "13",
+        "name": "phpmyadmin",
+        "notified": "0",
+        "notified_version": "5.2.2",
+        "version": "5.2.2"
+    },
+    "4": {
+        "aid": "4",
+        "fullname": "PHP 5.6",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "19",
+        "name": "php56",
+        "notified": "0",
+        "notified_version": "5.6.40",
+        "version": "5.6.40"
+    },
+    "5": {
+        "aid": "5",
+        "fullname": "PHP 7.0",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "18",
+        "name": "php70",
+        "notified": "0",
+        "notified_version": "7.0.33",
+        "version": "7.0.33"
+    },
+    "6": {
+        "aid": "6",
+        "fullname": "PHP 7.1",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "19",
+        "name": "php71",
+        "notified": "0",
+        "notified_version": "7.1.33",
+        "version": "7.1.33"
+    },
+    "7": {
+        "aid": "7",
+        "fullname": "PHP 7.2",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "19",
+        "name": "php72",
+        "notified": "0",
+        "notified_version": "7.2.34",
+        "version": "7.2.34"
+    },
+    "73": {
+        "aid": "73",
+        "fullname": "Sendmail",
+        "group_type": "utilities",
+        "installed": "0",
+        "mod": "2",
+        "name": "sendmail",
+        "notified": "0",
+        "notified_version": "33",
+        "version": "33"
+    },
+    "74": {
+        "aid": "74",
+        "fullname": "MongoDB",
+        "group_type": "mongodb",
+        "installed": "0",
+        "mod": "12",
+        "name": "mongodb",
+        "notified": "0",
+        "notified_version": "7.0.21",
+        "version": "7.0.21"
+    },
+    "75": {
+        "aid": "75",
+        "fullname": "PHP 8.2",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "34",
+        "name": "php82",
+        "notified": "0",
+        "notified_version": "8.2.29",
+        "version": "8.2.29"
+    },
+    "77": {
+        "aid": "77",
+        "fullname": "PHP 5.3",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "2",
+        "name": "php53",
+        "notified": "0",
+        "notified_version": "5.3.29",
+        "version": "5.3.29"
+    },
+    "78": {
+        "aid": "78",
+        "fullname": "PHP 8.3",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "25",
+        "name": "php83",
+        "notified": "0",
+        "notified_version": "8.3.25",
+        "version": "8.3.25"
+    },
+    "8": {
+        "aid": "8",
+        "fullname": "PHP 7.3",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "22",
+        "name": "php73",
+        "notified": "0",
+        "notified_version": "7.3.33",
+        "version": "7.3.33"
+    },
+    "80": {
+        "aid": "80",
+        "fullname": "FileZilla",
+        "group_type": "FTP",
+        "installed": "0",
+        "mod": "5",
+        "name": "filezilla",
+        "notified": "0",
+        "notified_version": "1.10.3",
+        "version": "1.10.3"
+    },
+    "82": {
+        "aid": "82",
+        "fullname": "PHP 8.4",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "12",
+        "name": "php84",
+        "notified": "0",
+        "notified_version": "8.4.12",
+        "version": "8.4.12"
+    },
+    "9": {
+        "aid": "9",
+        "fullname": "PHP 7.4",
+        "group_type": "php",
+        "installed": "0",
+        "mod": "31",
+        "name": "php74",
+        "notified": "0",
+        "notified_version": "7.4.33",
+        "version": "7.4.33"
+    }
+}

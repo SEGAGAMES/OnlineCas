@@ -1,0 +1,1 @@
+- Copy the latest config.sample.inc.php from phpmyadmin package to this folder and rename it to config.inc.php and change the value of $cfg['blowfish_secret'] to [[secret]]

@@ -1,0 +1,15 @@
+- Do not forget to add the following files from old package if not available in the latest package :
+	bin/libsqlite3.dll
+	bin/libsqlite3.pdb
+	bin/libssh2.dll
+	bin/libssh2.pdb
+
+- Make sure you have enabled the following modules in httpd.conf and original-httpd.conf
+	mod_headers
+	mod_rewrite
+	mod_socache_shmcb
+	mod_ssl
+	
+- Make sure to add alisa.conf file in conf/extra/alias.conf 
+
+- Make sure to replace {SRVROOT} with {$PATH} in all the files in conf/extra 

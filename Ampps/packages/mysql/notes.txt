@@ -1,0 +1,7 @@
+After compilation path - C:\Program Files\MySQL\MySQL Server 8.0
+Data folder path - C:\ProgramData\MySQL\MySQL Server 8.0\Data
+
+Authentication method 
+default_authentication_plugin = mysql_native_password
+Note -data folder should always be lowercase.
+
