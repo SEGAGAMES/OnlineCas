@@ -418,19 +418,19 @@ main h3 {
 .roulette {
     background: 
         linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMxZTNhNWYiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIxNTAiIHI9IjEwMCIgZmlsbD0iI2M4OWIzYyIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiLz48Y2lyY2xlIGN4PSIyMDAiIGN5PSIxNTAiIHI9IjUiIGZpbGw9IiNmZmYiLz48L3N2Zz4=');
+        url('imgs/рулетка.jpg');
 }
 
 .slots {
     background: 
         linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAi IGZpbGw9IiMxZTNhNWYiLz48cmVjdCB4PSIxMDAiIHk9Ijc1IiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgcng9IjEwIiByeT0iMTAiIGZpbGw9IiNjODliM2MiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTIwIiByPSIxNSIgZmlsbD0iI2U3NGMzYyIvPjxjaXJjbGUgY3g9IjIwMCIgY3k9IjEyMCIgcj0iMTUiIGZpbGw9IiMzNDk4ZGIiLz48Y2lyY2xlIGN4PSIyNTAiIGN5PSIxMjAiIHI9IjE1IiBmaWxsPSIjMmVjYzcxIi8+PC9zdmc+');
+        url('imgs/слоты.jpg');
 }
 
 .poker {
     background: 
         linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMxZTNhNWYiLz48cmVjdCB4PSIxMDAiIHk9IjUwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcng9IjEwIiByeT0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2M4OWIzYyIgc3Ryb2tlLXdpZHRoPSIzIi8+PHJlY3QgeD0iMTIwIiB5PSI3MCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxNjAiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzJjM2U1MCIvPjwvc3ZnPg==');
+        url('imgs/покер.jpg');
 }
 
 .blackjack {

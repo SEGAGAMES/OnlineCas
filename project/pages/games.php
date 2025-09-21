@@ -5,12 +5,7 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
     exit;
 }
 ?>
-<h1>Игровые автоматы</h1>
-<div class="warning-banner">
-    Учебный проект. Все игровые элементы являются демонстрационными.
-</div>
-
-<p>Выберите игру из нашей коллекции и погрузитесь в мир азарта и развлечений!</p>
+<h1>Играй и выигрывай</h1>
 
 <div class="games-grid">
     <div class="game-card roulette">
@@ -36,16 +31,4 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
             <button class="play-btn">Играть</button>
         </div>
     </div>
-    
-    <div class="game-card blackjack">
-        <div class="game-content">
-            <h3>Blackjack</h3>
-            <p>Классическая игра 21 очко против дилера</p>
-            <button class="play-btn">Играть</button>
-        </div>
-    </div>
-</div>
-
-<div class="educational-note">
-    Это учебный проект, поэтому игры не являются реальными и не принимают настоящие ставки.
 </div>
