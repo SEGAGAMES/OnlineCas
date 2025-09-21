@@ -137,5 +137,66 @@
         });
     });
 </script>
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Вход в систему</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <?php if (isset($_SESSION['login_error'])): ?>
+                    <div class="error-message"><?php echo $_SESSION['login_error']; unset($_SESSION['login_error']); ?></div>
+                <?php endif; ?>
+                
+                <form method="POST" action="">
+                    <input type="hidden" name="login" value="1">
+                    <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Войти</button>
+                </form>
+                
+                <div class="modal-footer">
+                    <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Управление модальным окном входа
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeModal = document.querySelector('.close-modal');
+
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'block';
+            });
+        }
+
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('click', function(event) {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html> 	

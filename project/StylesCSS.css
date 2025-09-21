@@ -1269,3 +1269,196 @@ nav ul li a, .header-right a, .footer-section a {
         font-size: 14px;
     }
 }
+/* Стили для авторизации */
+.user-welcome {
+    color: #c89b3c;
+    padding: 8px 16px;
+}
+
+/* Модальное окно входа */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: 10% auto;
+    padding: 0;
+    border: 1px solid #333;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #0a0e12 0%, #05080c 100%);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #c89b3c;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.error-message {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #c89b3c;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #c89b3c;
+}
+
+.modal-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #bdc3c7;
+}
+
+.modal-footer a {
+    color: #c89b3c;
+    text-decoration: none;
+}
+
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Стили для страницы регистрации */
+.register-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.register-form {
+    background: #1e1e1e;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.register-info {
+    background: #1e1e1e;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.register-info h3 {
+    color: #c89b3c;
+    margin-bottom: 15px;
+}
+
+.register-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.register-info li {
+    padding: 8px 0;
+    color: #e0e0e0;
+    position: relative;
+    padding-left: 25px;
+}
+
+.register-info li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #c89b3c;
+    font-weight: bold;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.login-link {
+    margin-top: 20px;
+    text-align: center;
+    color: #bdc3c7;
+}
+
+.login-link a {
+    color: #c89b3c;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивность для авторизации */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+    }
+    
+    .register-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}

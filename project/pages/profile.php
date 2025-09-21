@@ -1,3 +1,20 @@
+<?php
+// Для страниц, которые требуют авторизации
+if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
+    header('Location: index.php');
+    exit;
+}
+?>
+<?php
+// Если пользователь не авторизован, перенаправляем на главную
+if (!isLoggedIn()) {
+    header('Location: index.php');
+    exit;
+}
+
+$userData = getUserData();
+?>
+
 <h1>Личный кабинет</h1>
 <div class="warning-banner">
     Учебный проект. Все данные являются демонстрационными.

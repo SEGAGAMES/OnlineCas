@@ -1,4 +1,6 @@
 <?php
+include('auth.php');
+
 // Определяем текущее название страницы для title
 $pageTitles = [
     'home' => 'Главная',
@@ -6,6 +8,7 @@ $pageTitles = [
     'bonuses' => 'Бонусы',
     'shop' => 'Магазин',
     'profile' => 'Личный кабинет',
+    'register' => 'Регистрация',
     'about' => 'О проекте',
     'authors' => 'Об авторах',
     'partners' => 'Партнерам',
@@ -16,6 +19,9 @@ $pageTitles = [
 
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
 $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'Страница';
+
+// Получаем данные пользователя если авторизован
+$userData = getUserData();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -30,8 +36,14 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     <header>
         <div class="logo">Non-lossing Play</div>
         <div class="header-right">
-            <a href="index.php?page=profile">Личный кабинет</a>
+            <?php if (isLoggedIn() && $userData): ?>
+                <a href="index.php?page=profile">Личный кабинет</a>
+                <span class="user-welcome">Привет, <?php echo explode(' ', $userData['name'])[0]; ?></span>
+                <a href="?logout=true">Выйти</a>
+            <?php else: ?>
+                <a href="#" id="loginBtn">Войти</a>
+                <a href="index.php?page=register">Регистрация</a>
+            <?php endif; ?>
             <a href="#" id="supportBtn">Поддержка</a>
-            <a href="#">example@mail.com</a>
         </div>
     </header>
