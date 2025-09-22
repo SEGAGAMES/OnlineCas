@@ -31,4 +31,5 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
             <button class="play-btn">Играть</button>
         </div>
     </div>
+
 </div>

@@ -38,7 +38,7 @@ $userData = getUserData();
         <div class="header-right">
             <?php if (isLoggedIn() && $userData): ?>
                 <a href="index.php?page=profile">Личный кабинет</a>
-                <span class="user-welcome">Привет, <?php echo explode(' ', $userData['name'])[0]; ?></span>
+                <span class="user-welcome">ТУТ БУДЕТ БАЛАНС</span>
                 <a href="?logout=true">Выйти</a>
             <?php else: ?>
                 <a href="#" id="loginBtn">Войти</a>

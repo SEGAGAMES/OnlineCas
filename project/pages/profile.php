@@ -16,9 +16,6 @@ $userData = getUserData();
 ?>
 
 <h1>Личный кабинет</h1>
-<div class="warning-banner">
-    Учебный проект. Все данные являются демонстрационными.
-</div>
 
 <div class="profile-container">
     <!-- Блок с основной информацией -->
@@ -29,8 +26,8 @@ $userData = getUserData();
                 <button class="avatar-upload">Изменить</button>
             </div>
             <div class="user-name">
-                <h2>Иванов Иван Иванович</h2>
-                <p class="user-status">Gold статус</p>
+                <h2>Из базы данных фио</h2>
+                <p class="user-status">Из базы данных статус</p>
             </div>
         </div>
 
