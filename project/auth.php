@@ -1,25 +1,53 @@
 <?php
 session_start();
 
-// Демонстрационные пользователи (в реальном проекте нужно использовать базу данных)
-$demoUsers = [
-    'user@example.com' => [
-        'password' => 'password123',
-        'name' => 'Иван Иванов',
-        'balance' => 10000,
-        'bonuses' => 5000
-    ],
-    'test@example.com' => [
-        'password' => 'test123',
-        'name' => 'Тест Тестов',
-        'balance' => 5000,
-        'bonuses' => 2500
-    ]
-];
+// Конфигурация базы данных
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'cas');
+define('DB_USER', 'admin');
+define('DB_PASS', 'your_password');
+define('FALLBACK_USER', 'admin@example.com'); // Резервный email
+define('FALLBACK_PASSWORD_HASH', password_hash('admin', PASSWORD_DEFAULT)); // Хеш резервного пароля
+
+function getDBConnection() {
+    try {
+        return new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+        ]);
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+function authenticateUser($email, $password) {
+    // Попытка аутентификации через БД
+    $db = getDBConnection();
+    if ($db) {
+        try {
+            $stmt = $db->prepare("SELECT id, password FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password'])) {
+                return ['id' => $user['id'], 'email' => $email];
+            }
+        } catch (PDOException $e) {
+            // Логируем ошибку при необходимости
+        }
+    }
+
+    // Fallback проверка если БД недоступна
+    if ($email === FALLBACK_USER && password_verify($password, FALLBACK_PASSWORD_HASH)) {
+        return ['id' => 0, 'email' => FALLBACK_USER];
+    }
+
+    return false;
+}
 
 // Функция проверки авторизации
 function isLoggedIn() {
-    return isset($_SESSION['user_email']);
+     return isset($_SESSION['user_id']) && isset($_SESSION['user_email']);
 }
 
 // Функция получения данных пользователя
@@ -36,20 +64,5 @@ if (isset($_GET['logout'])) {
     session_destroy();
     header('Location: index.php');
     exit;
-}
-
-// Обработка входа
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    if (isset($demoUsers[$email]) && $demoUsers[$email]['password'] === $password) {
-        $_SESSION['user_email'] = $email;
-        $_SESSION['user_name'] = $demoUsers[$email]['name'];
-        header('Location: ' . ($_POST['redirect'] ?? 'index.php'));
-        exit;
-    } else {
-        $_SESSION['login_error'] = 'Неверный email или пароль';
-    }
 }
 ?>

@@ -138,65 +138,101 @@
     });
 </script>
     <!-- Модальное окно входа -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Вход в систему</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <?php if (isset($_SESSION['login_error'])): ?>
-                    <div class="error-message"><?php echo $_SESSION['login_error']; unset($_SESSION['login_error']); ?></div>
-                <?php endif; ?>
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Вход в систему</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <?php 
+            // Показываем ошибки авторизации из сессии
+            if (isset($_SESSION['login_error'])): ?>
+                <div class="error-message"><?php 
+                    echo $_SESSION['login_error']; 
+                    unset($_SESSION['login_error']);
+                ?></div>
+            <?php endif; ?>
+            
+            <form method="POST" action="">
+                <input type="hidden" name="auth_action" value="login">
+                <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
                 
-                <form method="POST" action="">
-                    <input type="hidden" name="login" value="1">
-                    <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                    
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Пароль:</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary">Войти</button>
-                </form>
-                
-                <div class="modal-footer">
-                    <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required 
+                           value="<?php echo isset($_SESSION['login_email']) ? $_SESSION['login_email'] : ''; ?>">
                 </div>
+                
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">Войти</button>
+            </form>
+            
+            <div class="modal-footer">
+                <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Управление модальным окном входа
-        const loginModal = document.getElementById('loginModal');
-        const loginBtn = document.getElementById('loginBtn');
-        const closeModal = document.querySelector('.close-modal');
+<script>
+// Управление модальным окном входа
+const loginModal = document.getElementById('loginModal');
+const loginBtn = document.getElementById('loginBtn');
+const closeModal = document.querySelector('.close-modal');
 
-        if (loginBtn) {
-            loginBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginModal.style.display = 'block';
-            });
-        }
+if (loginBtn) {
+    loginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        loginModal.style.display = 'block';
+    });
+}
 
-        if (closeModal) {
-            closeModal.addEventListener('click', function() {
-                loginModal.style.display = 'none';
-            });
-        }
+if (closeModal) {
+    closeModal.addEventListener('click', function() {
+        loginModal.style.display = 'none';
+        // Очищаем ошибки при закрытии
+        <?php unset($_SESSION['login_error']); ?>
+    });
+}
 
-        window.addEventListener('click', function(event) {
-            if (event.target === loginModal) {
-                loginModal.style.display = 'none';
-            }
-        });
-    </script>
+window.addEventListener('click', function(event) {
+    if (event.target === loginModal) {
+        loginModal.style.display = 'none';
+        // Очищаем ошибки при закрытии
+        <?php unset($_SESSION['login_error']); ?>
+    }
+});
+</script>
+
+<?php
+// Обработка авторизации
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_POST['auth_action'] === 'login') {
+    require_once 'auth.php'; // Подключаем механизм аутентификации
+    
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'] ?? '';
+    
+    // Сохраняем email для повторного показа
+    $_SESSION['login_email'] = $email;
+    
+    if ($user = authenticateUser($email, $password)) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        
+        // Перенаправляем на указанную страницу
+        $redirect = $_POST['redirect'] ?? 'index.php';
+        header('Location: ' . $redirect);
+        exit;
+    } else {
+        $_SESSION['login_error'] = "Неверные учетные данные или система недоступна";
+        // Не перенаправляем, остаемся на той же странице с открытым модальным окном
+    }
+}
+?>
 </body>
 </html> 	

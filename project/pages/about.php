@@ -1,4 +1,3 @@
-
 <?php
 // Для страниц, которые требуют авторизации
 if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
