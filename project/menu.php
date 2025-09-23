@@ -3,8 +3,8 @@
     <ul>
         <li><a href="index.php?page=home" class="<?php echo ($currentPage == 'home') ? 'active' : ''; ?>">Главная</a></li>
         <li><a href="index.php?page=games" class="<?php echo ($currentPage == 'games') ? 'active' : ''; ?>">Игры</a></li>
-        <li><a href="index.php?page=bonuses" class="<?php echo ($currentPage == 'bonuses') ? 'active' : ''; ?>">Бонусы</a></li>
         <li><a href="index.php?page=shop" class="<?php echo ($currentPage == 'shop') ? 'active' : ''; ?>">Магазин</a></li>
+        <li><a href="index.php?page=bonuses" class="<?php echo ($currentPage == 'bonuses') ? 'active' : ''; ?>">Поддержка проекта</a></li>
     </ul>
 </nav>
 
@@ -21,4 +21,5 @@
         include('pages/home.php');
     }
     ?>
+
 </main>
