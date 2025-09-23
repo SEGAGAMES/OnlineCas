@@ -108,6 +108,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             <?php if (isLoggedIn()): ?>
                 <a href="index.php?page=profile">Личный кабинет</a>
                 <span class="user-welcome">ТУТ БУДЕТ БАЛАНС</span>
+              <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
                 <a href="?logout=true">Выйти</a>
             <?php else: ?>
                 <a href="#" id="loginBtn">Войти</a>
@@ -115,6 +116,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             <?php endif; ?>
             <a href="#" id="supportBtn">Поддержка</a>
         </div>
+
     </header>
 
     <!-- Модальное окно входа -->
