@@ -7,44 +7,44 @@
 <div class="shop-grid">
     <div class="product-card">
         <div class="product-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5MCIgZmlsbD0iI2M4OWIzYyIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjM1ZW0iPiQxMDAwPC90ZXh0Pjwvc3ZnPg==" alt="1000 виртуальных монет">
+            <img src="imgs/Аватарка2.jpg" alt="Аватарка" class="circle-image">
         </div>
         <div class="product-content">
-            <h3>1000 монет</h3>
-            <p class="product-price">100 ₽</p>
+            <h3>Аватарка "Новичок"</h3>
+            <p class="product-price">100 CEV</p>
             <button class="buy-btn">Купить</button>
         </div>
     </div>
 
     <div class="product-card">
         <div class="product-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5MCIgZmlsbD0iI2M4OWIzYyIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjM1ZW0iPiQ1MDAwPC90ZXh0Pjwvc3ZnPg==" alt="5000 виртуальных монет">
+            <img src="imgs/Аватарка 3.png" alt="imgs/Аватарка2.jpg" class="circle-image">
         </div>
         <div class="product-content">
-            <h3>5000 монет</h3>
-            <p class="product-price">450 ₽</p>
+            <h3>Аватарка "Мафиози"</h3>
+            <p class="product-price">500 CEV</p>
             <button class="buy-btn">Купить</button>
         </div>
     </div>
 
     <div class="product-card">
         <div class="product-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5MCIgZmlsbD0iI2M4OWIzYyIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjUiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjM1ZW0iPiQxMDAwMDwvdGV4dD48L3N2Zz4=" alt="10000 виртуальных монет">
+            <img src="imgs/Аватарка4.jpg" alt="imgs/Аватарка2.jpg" class="circle-image">
         </div>
         <div class="product-content">
-            <h3>10000 монет</h3>
-            <p class="product-price">800 ₽</p>
+            <h3>Аватарка "Весельчак"</h3>
+            <p class="product-price">1000 CEV</p>
             <button class="buy-btn">Купить</button>
         </div>
     </div>
 
     <div class="product-card">
         <div class="product-image">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3QgeD0iNTAiIHk9IjUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjEwIiByeT0iMTAiIGZpbGw9IiNjODliM2MiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+PHBhdGggZD0iTTcwIDcwIEwxMzAgNzAgTDEzMCAxMzAgTDcwIDEzMCBaIiBmaWxsPSIjZmZmIi8+PC9zdmc+" alt="Эксклюзивная аватарка">
+            <img src="imgs/Premium.png" alt="Эксклюзивная аватарка" class="circle-image">
         </div>
         <div class="product-content">
             <h3>Эксклюзивная аватарка</h3>
-            <p class="product-price">300 ₽</p>
+            <p class="product-price">10 000 CEV</p>
             <button class="buy-btn">Купить</button>
         </div>
     </div>
@@ -61,6 +61,11 @@
         gap: 25px;
         margin: 30px 0;
     }
+    .circle-image {
+    	width: 200px; 
+    	height: 200px;
+    	border-radius: 50%; 
+    	object-fit: cover; }
 
     .product-card {
         background: #1e1e1e;
