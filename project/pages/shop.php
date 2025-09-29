@@ -1,10 +1,3 @@
-<?php
-// Для страниц, которые требуют авторизации
-if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
-    header('Location: index.php');
-    exit;
-}
-?>
 <h1>Магазин</h1>
 <p>В нашем магазине вы найдете эксклюзивные предметы и уникальные предложения.</p>
 <div class="warning-banner">

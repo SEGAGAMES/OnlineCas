@@ -20,7 +20,8 @@ function getDBConnection() {
     }
 }
 
-function authenticateUser($email, $password) {
+function authenticateUser($email, $password) 
+{
     // Попытка аутентификации через БД
     $db = getDBConnection();
     if ($db) {
@@ -46,21 +47,14 @@ function authenticateUser($email, $password) {
 }
 
 // Функция проверки авторизации
-function isLoggedIn() {
+function isLoggedIn()
+{
      return isset($_SESSION['user_id']) && isset($_SESSION['user_email']);
 }
 
-// Функция получения данных пользователя
-function getUserData() {
-    global $demoUsers;
-    if (isLoggedIn() && isset($demoUsers[$_SESSION['user_email']])) {
-        return $demoUsers[$_SESSION['user_email']];
-    }
-    return null;
-}
-
 // Выход из системы
-if (isset($_GET['logout'])) {
+if (isset($_GET['logout'])) 
+{
     session_destroy();
     header('Location: index.php');
     exit;

@@ -1,11 +1,4 @@
-
-<?php
-// Для страниц, которые требуют авторизации
-if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
-    header('Location: index.php');
-    exit;
-}
-?><h1>Поддержка проекта</h1>
+<h1>Поддержка проекта</h1>
 <div class="warning-banner">
     Учебный проект. Все материалы представлены исключительно в ознакомительных целях.
 </div>
