@@ -1,7 +1,4 @@
 <h1>Добро пожаловать в Non-lossing Play!</h1>
-<div class="warning-banner">
-    Учебный проект. Все материалы представлены исключительно в ознакомительных целях.
-</div>
 
 <!-- Герой-секция -->
 <div class="hero-section">
@@ -92,8 +89,4 @@
         <a href="index.php?page=games" class="cta-button">Играть сейчас</a>
         <a href="index.php?page=about" class="cta-button secondary">Узнать больше</a>
     </div>
-</div>
-
-<div class="educational-note">
-    Это учебный проект, созданный для демонстрации возможностей веб-разработки. Все игровые элементы являются демонстрационными и не предполагают использование реальных денег.
 </div>

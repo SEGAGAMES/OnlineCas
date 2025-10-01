@@ -6,10 +6,6 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
 }
 ?>
 <h1>Поддержка проекта</h1>
-<div class="warning-banner">
-    Валюта CEV явлется виртуальной и не имеет реальной денежной стоимости.
-</div>
-
 <div class="support-section">
     <h2>Поддержать проект</h2>
     <p>Ваша поддержка помогает нам развивать учебный проект и создавать новые материалы!</p>
@@ -41,18 +37,14 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
     </div>
 </div>
 
-<div class="educational-note">
-    Это учебный проект, созданный для демонстрации возможностей веб-разработки.
-</div>
-
 <!-- Модальное окно для поддержки проекта -->
-<div id="donateModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
+<div id="donateModal" class="modal-bonuses">
+    <div class="modal-bonuses-content">
+        <div class="modal-bonuses-header">
             <h3>Поддержка проекта</h3>
-            <span class="close-modal">&times;</span>
+            <span class="close-modal-bonuses">&times;</span>
         </div>
-        <div class="modal-body">
+        <div class="modal-bonuses-body">
             <div class="form-summary">
                 <p>Сумма: <span id="selected-amount">0</span> ₽</p>
                 <p>Вы получите: <span id="selected-coins">0</span> CEV-коинов</p>
@@ -145,7 +137,7 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
     }
     
     /* Стили модального окна */
-    .modal {
+    .modal-bonuses {
         display: none;
         position: fixed;
         z-index: 1001;
@@ -158,11 +150,11 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
         transition: opacity 0.3s ease;
     }
     
-    .modal.active {
+    .modal-bonuses.active {
         opacity: 1;
     }
     
-    .modal-content {
+    .modal-bonuses-content {
         background-color: #1e1e1e;
         margin: 5% auto;
         padding: 0;
@@ -174,11 +166,11 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
         transition: transform 0.3s ease;
     }
     
-    .modal.active .modal-content {
+    .modal-bonuses.active .modal-bonuses-content {
         transform: translateY(0);
     }
     
-    .modal-header {
+    .modal-bonuses-header {
         background: linear-gradient(135deg, #0a0e12 0%, #05080c 100%);
         color: #e0e0e0;
         padding: 15px 20px;
@@ -188,23 +180,23 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
         border-radius: 15px 15px 0 0;
     }
     
-    .modal-header h3 {
+    .modal-bonuses-header h3 {
         margin: 0;
         color: #c89b3c;
     }
     
-    .close-modal {
+    .close-modal-bonuses {
         color: #aaa;
         font-size: 28px;
         font-weight: bold;
         cursor: pointer;
     }
     
-    .close-modal:hover {
+    .close-modal-bonuses:hover {
         color: #fff;
     }
     
-    .modal-body {
+    .modal-bonuses-body {
         padding: 20px;
     }
     
@@ -297,7 +289,7 @@ if (!isLoggedIn() && in_array(basename(__FILE__), ['profile.php'])) {
     document.addEventListener('DOMContentLoaded', function() {
         const donationCards = document.querySelectorAll('.donation-card');
         const donateModal = document.getElementById('donateModal');
-        const closeModal = document.querySelector('.close-modal');
+        const closeModal = document.querySelector('.close-modal-bonuses');
         const selectedAmount = document.getElementById('selected-amount');
         const selectedCoins = document.getElementById('selected-coins');
         const confirmButton = document.getElementById('confirm-donation');
