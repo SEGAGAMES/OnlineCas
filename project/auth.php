@@ -1,38 +1,22 @@
 <?php
-session_start();
+require_once ("database-api/db-connection");
+// Резервный email.
+define('FALLBACK_USER', 'admin@example.com');
+// Хеш резервного пароля.
+define('FALLBACK_PASSWORD_HASH', password_hash('admin', PASSWORD_DEFAULT)); 
 
-// Конфигурация базы данных
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'cas');
-define('DB_USER', 'admin');
-define('DB_PASS', 'your_password');
-define('FALLBACK_USER', 'admin@example.com'); // Резервный email
-define('FALLBACK_PASSWORD_HASH', password_hash('admin', PASSWORD_DEFAULT)); // Хеш резервного пароля
-
-function getDBConnection() {
-    try {
-        return new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]);
-    } catch (PDOException $e) {
-        return null;
-    }
-}
 
 function authenticateUser($email, $password) 
 {
     // Попытка аутентификации через БД
-    $db = getDBConnection();
+    $db = new Database;
     if ($db) {
         try {
-            $stmt = $db->prepare("SELECT id, password FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
-
-            if ($user && password_verify($password, $user['password'])) {
-                return ['id' => $user['id'], 'email' => $email];
-            }
+            $query = "SELECT password, surname, name, lastname, balance FROM users WHERE email = ?";
+            $result = $db->SendQuery($query, [$email]);
+            $user = $result->fetch();
+            if ($user && password_verify($password, $user['password']))
+                return ['email' => $email, 'surname' => $user['surname'], 'name' => $user['name'], 'lastname'=> $user['lastname'], 'balance' => $user['balance'], 'status' => $user['status']];
         } catch (PDOException $e) {
             // Логируем ошибку при необходимости
         }
@@ -40,7 +24,7 @@ function authenticateUser($email, $password)
 
     // Fallback проверка если БД недоступна
     if ($email === FALLBACK_USER && password_verify($password, FALLBACK_PASSWORD_HASH)) {
-        return ['id' => 0, 'email' => FALLBACK_USER];
+        return ['email' => FALLBACK_USER, 'surname' => 'admin', 'name' => 'admin', 'lastname'=> 'admin', 'balance' => 999, 'status' => 'admin'];
     }
 
     return false;
@@ -49,7 +33,7 @@ function authenticateUser($email, $password)
 // Функция проверки авторизации
 function isLoggedIn()
 {
-     return isset($_SESSION['user_id']) && isset($_SESSION['user_email']);
+     return isset($_SESSION['user_email']);
 }
 
 // Выход из системы

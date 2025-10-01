@@ -1,0 +1,27 @@
+<?php
+require_once('db-connection');
+function register_user($email, $surname, $name, $password, $lastname = "")
+{
+    $db = new Database;
+    if ($db) {
+        try {
+            $query = "INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`) VALUES (?, ?, ?, ?, ?, '1000', 'common')";
+            $result = $db->SendQuery($query, [$email,password_hash($password, PASSWORD_DEFAULT), $surname, $name, $lastname]);
+            
+            if (!$result) {
+                http_response_code(503);
+                return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];
+            }
+            
+            http_response_code(201);
+            return ['success' => true, 'code' => 201, 'message' => 'User created successfully'];
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return ['success' => false, 'code' => 500, 'message' => 'Database error: ' . $e->getMessage()];
+        }
+    } else {
+        http_response_code(503);
+        return ['success' => false, 'code' => 503, 'message' => 'Database connection failed'];
+    }
+}?>

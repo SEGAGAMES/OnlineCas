@@ -1,22 +1,24 @@
 <?php
-include('auth.php');
+session_start();
+require_once('auth.php');
 
-// Обработка авторизации ПЕРЕНЕСЕНА ИЗ FOOTER
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_POST['auth_action'] === 'login') {
-    require_once 'auth.php'; // Подключаем механизм аутентификации
+// Обработка авторизации
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_POST['auth_action'] === 'login')
+{
     $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'] ?? '';
-    
-    // Сохраняем email для повторного показа
-    $_SESSION['login_email'] = $email;
-    if ($user = authenticateUser($email, $password)) {
-        $_SESSION['user_id'] = $user['id'];
+
+    if ($user = authenticateUser($email, $password))
+    {
         $_SESSION['user_email'] = $user['email'];
+        $_SESSION['surname'] = $user['surname'];
+        $_SESSION['name'] = $user['name'];
+        $_SESSION['lastname'] = $user['lastname'];
+        $_SESSION['balance'] = $user['balance'];
+        $_SESSION['status'] = $user['status'];
         // Перенаправляем на ту же страницу после успешного входа
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;
-    } else {
-        $_SESSION['login_error'] = "Неверные учетные данные или система недоступна";
     }
 }
 
@@ -107,13 +109,13 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
         <div class="header-right">
             <?php if (isLoggedIn()): ?>
                 <a href="index.php?page=profile">Личный кабинет</a>
-                <span class="user-welcome">ТУТ БУДЕТ БАЛАНС</span>
-              <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
+                <span class="user-welcome"><?php echo $_SESSION['balance']?> CEV</span>
               <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
                 <a href="?logout=true">Выйти</a>
             <?php else: ?>
                 <a href="#" id="loginBtn">Войти</a>
                 <a href="index.php?page=register">Регистрация</a>
+                <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
             <?php endif; ?>
             <a href="#" id="supportBtn">Поддержка</a>
         </div>
@@ -144,13 +146,6 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
                         <input type="password" id="password" name="password" required>
                     </div>
                     
-                    <?php if (isset($_SESSION['login_error'])): ?>
-                        <div class="error-message">
-                            <?php echo $_SESSION['login_error']; ?>
-                            <?php unset($_SESSION['login_error']); ?>
-                        </div>
-                    <?php endif; ?>
-                    
                     <button type="submit" class="btn-primary">Войти</button>
                 </form>
                 
@@ -167,26 +162,26 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     const loginBtn = document.getElementById('loginBtn');
     const closeModal = document.querySelector('.close-modal');
 
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function(e) {
+    if (loginBtn) 
+    {
+        loginBtn.addEventListener('click', function(e)
+        {
             e.preventDefault();
             loginModal.style.display = 'block';
         });
     }
 
-    if (closeModal) {
-        closeModal.addEventListener('click', function() {
+    if (closeModal)
+    {
+        closeModal.addEventListener('click', function()
+        {
             loginModal.style.display = 'none';
-            // Очищаем ошибки при закрытии
-            <?php unset($_SESSION['login_error']); ?>
         });
     }
 
-    window.addEventListener('click', function(event) {
-        if (event.target === loginModal) {
+    window.addEventListener('click', function(event)
+    {
+        if (event.target === loginModal)
             loginModal.style.display = 'none';
-            // Очищаем ошибки при закрытии
-            <?php unset($_SESSION['login_error']); ?>
-        }
     });
     </script>

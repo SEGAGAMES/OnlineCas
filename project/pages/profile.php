@@ -17,15 +17,15 @@ if (!isLoggedIn()) {
                 <button class="avatar-upload">Изменить</button>
             </div>
             <div class="user-name">
-                <h2>Из базы данных фио</h2>
-                <p class="user-status">Из базы данных статус</p>
+                <h2><?php echo $_SESSION['surname'], " ", $_SESSION['surname'], " ", $_SESSION['surname']?></h2>
+                <p class="user-status"><?php echo $_SESSION['status']?></p>
             </div>
         </div>
 
         <div class="profile-details">
             <div class="detail-item">
                 <label>Email:</label>
-                <span>ivanov@example.com</span>
+                <span><?php echo $_SESSION['user_email']?></span>
             </div>
             <div class="detail-item">
                 <label>Телефон:</label>
@@ -42,7 +42,7 @@ if (!isLoggedIn()) {
     <div class="financial-info">
         <div class="balance-card">
             <h3>Баланс</h3>
-            <div class="balance-amount">10 000 ₽</div>
+            <div class="balance-amount"><?php echo $_SESSION['balance']?> CEV</div>
             <div class="balance-actions">
                 <button class="btn-primary">Пополнить</button>
                 <button class="btn-secondary">Вывести</button>
@@ -120,8 +120,4 @@ if (!isLoggedIn()) {
             </table>
         </div>
     </div>
-</div>
-
-<div class="educational-note">
-    Это учебный проект. Все финансовые операции являются демонстрационными и не используют реальные деньги.
 </div>
