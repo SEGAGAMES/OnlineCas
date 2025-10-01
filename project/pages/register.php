@@ -1,5 +1,4 @@
 <?php
-
 // Если пользователь уже авторизован, перенаправляем в профиль
 if (isLoggedIn()) {
     header('Location: index.php?page=profile');
