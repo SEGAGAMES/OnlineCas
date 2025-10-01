@@ -122,19 +122,5 @@
             chatMinimized.click();
         });
     </script>
-<script>
-    // Обработка кликов по кнопкам "Играть"
-    document.querySelectorAll('.play-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Получаем название игры из карточки
-            const gameName = this.closest('.game-card').querySelector('h3').textContent;
-            
-            // Показываем сообщение о том, что это учебный проект
-            alert(`Это учебный проект. Игра "${gameName}" находится в разработке.`);
-        });
-    });
-</script>
 </body>
 </html> 	

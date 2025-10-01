@@ -35,7 +35,10 @@ $pageTitles = [
     'partners' => 'Партнерам',
     'terms' => 'Правила и условия',
     'support' => 'Поддержка проекта',
-    'faq' => 'FAQ'
+    'faq' => 'FAQ',
+    'roulette' => 'Рулетка',
+    'poker' => 'Техасский холдем',
+    'slots' => 'Слоты',
 ];
 
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
