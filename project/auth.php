@@ -12,11 +12,11 @@ function authenticateUser($email, $password)
     $db = new Database;
     if ($db) {
         try {
-            $query = "SELECT password, surname, name, lastname, balance FROM users WHERE email = ?";
+            $query = "SELECT password, surname, name, lastname, balance, ava FROM users WHERE email = ?";
             $result = $db->SendQuery($query, [$email]);
             $user = $result->fetch();
             if ($user && password_verify($password, $user['password']))
-                return ['email' => $email, 'surname' => $user['surname'], 'name' => $user['name'], 'lastname'=> $user['lastname'], 'balance' => $user['balance'], 'status' => $user['status']];
+                return ['email' => $email, 'surname' => $user['surname'], 'name' => $user['name'], 'lastname'=> $user['lastname'], 'balance' => $user['balance'], 'status' => $user['status'], 'ava' =>$user['ava']];
         } catch (PDOException $e) {
             // Логируем ошибку при необходимости
         }
@@ -24,7 +24,7 @@ function authenticateUser($email, $password)
 
     // Fallback проверка если БД недоступна
     if ($email === FALLBACK_USER && password_verify($password, FALLBACK_PASSWORD_HASH)) {
-        return ['email' => FALLBACK_USER, 'surname' => 'admin', 'name' => 'admin', 'lastname'=> 'admin', 'balance' => 999, 'status' => 'admin'];
+        return ['email' => FALLBACK_USER, 'surname' => 'admin', 'name' => 'admin', 'lastname'=> 'admin', 'balance' => 999, 'status' => 'admin', 'ava' => '2'];
     }
 
     return false;

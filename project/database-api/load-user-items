@@ -1,0 +1,42 @@
+<?php
+require_once('db-connection');
+function load_inv()
+{
+    $db = new Database;
+    if ($db) {
+        try {
+            $query = "SELECT i.path, i.item_id, i.description, i.item_type
+            FROM inventory inv
+            INNER JOIN items i on inv.item_id = i.item_id
+            WHERE inv.email = ?";
+            $result = $db->SendQuery($query, [$_SESSION['user_email']]);    
+            $result = $result->fetchall();
+            if (!$result) {
+                http_response_code(503);
+                return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];
+            }
+            
+            http_response_code(200);
+            $path = [];
+            $id =[];
+            $desc = [];
+            $type =[];
+            foreach ($result as $res)
+            {
+                $path[] = $res['path'];
+                $id[] =$res['item_id'];
+                $desc[] = $res['description'];
+                $type[] = $res['item_type'];
+            }
+            return ['success' => true, 'code' => 200, 'message' => 'User created successfully', 'path' => $path, 'id' => $id, 'desc' => $desc, 'type'=>$type];
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return ['success' => false, 'code' => 500, 'message' => 'Database error: ' . $e->getMessage()];
+        }
+    } else {
+        http_response_code(503);
+        return ['success' => false, 'code' => 503, 'message' => 'Database connection failed'];
+    }
+}
+?>

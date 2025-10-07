@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_P
         $_SESSION['lastname'] = $user['lastname'];
         $_SESSION['balance'] = $user['balance'];
         $_SESSION['status'] = $user['status'];
+        $_SESSION['ava'] = $user['ava'];
         // Перенаправляем на ту же страницу после успешного входа
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;
