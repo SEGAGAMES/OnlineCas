@@ -4,18 +4,18 @@
 
 <h2>Наша команда</h2>
 <div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0;">
-    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-        <h3>Алексей Петров</h3>
+    <div style="flex: 1; min-width: 200px; padding: 15px; background: #545148; border-radius: 8px;">
+        <h3>Сергей Шиляев</h3>
         <p>Frontend-разработчик</p>
         <p>Ответственный за дизайн и верстку</p>
     </div>
-    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-        <h3>Мария Сидорова</h3>
+    <div style="flex: 1; min-width: 200px; padding: 15px; background: #545148; border-radius: 8px;">
+        <h3>Владимир Карпеза</h3>
         <p>Backend-разработчик</p>
-        <p>Ответственная за PHP и логику сайта</p>
+        <p>Ответственный за PHP и логику сайта</p>
     </div>
-    <div style="flex: 1; min-width: 200px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
-        <h3>Иван Иванов</h3>
+    <div style="flex: 1; min-width: 200px; padding: 15px; background: #545148; border-radius: 8px;">
+        <h3>Никита Кондратов</h3>
         <p>Дизайнер</p>
         <p>Ответственный за UX/UI дизайн</p>
     </div>
