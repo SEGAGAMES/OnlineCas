@@ -2,87 +2,56 @@
 <p class="shop-subtitle">Коллекция эксклюзивных аватарок для вашего уникального стиля!</p>
 
 <div class="shop-grid">
-    <div class="product-card">
-        <div class="product-badge popular">Популярная</div>
-        <div class="product-image">
-            <img src="imgs/Аватарка2.jpg" alt="Аватарка" class="circle-image">
-        </div>
-        <div class="product-content">
-            <h3>🎯 Аватарка "Новичок"</h3>
-            <p class="product-description">Идеальный старт для новых игроков</p>
-            <div class="product-price">
-                <span class="price-amount">100 CEV</span>
-                <span class="price-bonus">+10 бонусов</span>
-            </div>
-            <button class="buy-btn">
-                <span class="btn-text">Купить сейчас</span>
-                <span class="btn-sparkle">✨</span>
-            </button>
-        </div>
-        <div class="product-glow"></div>
-    </div>
-
-    <div class="product-card">
-        <div class="product-badge exclusive">Эксклюзив</div>
-        <div class="product-image">
-            <img src="imgs/Аватарка 3.png" alt="Аватарка Мафиози" class="circle-image">
-        </div>
-        <div class="product-content">
-            <h3>🕶️ Аватарка "Мафиози"</h3>
-            <p class="product-description">Стиль и элегантность настоящего босса</p>
-            <div class="product-price">
-                <span class="price-amount">500 CEV</span>
-                <span class="price-bonus">+50 бонусов</span>
-            </div>
-            <button class="buy-btn">
-                <span class="btn-text">Купить сейчас</span>
-                <span class="btn-sparkle">✨</span>
-            </button>
-        </div>
-        <div class="product-glow"></div>
-    </div>
-
-    <div class="product-card">
-        <div class="product-badge new">Новая</div>
-        <div class="product-image">
-            <img src="imgs/Аватарка4.jpg" alt="Аватарка Весельчак" class="circle-image">
-        </div>
-        <div class="product-content">
-            <h3>😄 Аватарка "Весельчак"</h3>
-            <p class="product-description">Поднимает настроение всей команде</p>
-            <div class="product-price">
-                <span class="price-amount">1000 CEV</span>
-                <span class="price-bonus">+100 бонусов</span>
-            </div>
-            <button class="buy-btn">
-                <span class="btn-text">Купить сейчас</span>
-                <span class="btn-sparkle">✨</span>
-            </button>
-        </div>
-        <div class="product-glow"></div>
-    </div>
-
-    <div class="product-card">
-        <div class="product-badge premium">PREMIUM</div>
-        <div class="product-image">
-            <img src="imgs/Premium.png" alt="Эксклюзивная аватарка" class="circle-image">
-        </div>
-        <div class="product-content">
-            <h3>👑 Эксклюзивная аватарка</h3>
-            <p class="product-description">Для настоящих ценителей роскоши</p>
-            <div class="product-price">
-                <span class="price-amount">10 000 CEV</span>
-                <span class="price-bonus">+1000 бонусов</span>
-            </div>
-            <button class="buy-btn premium-btn">
-                <span class="btn-text">Купить сейчас</span>
-                <span class="btn-sparkle">✨</span>
-            </button>
-        </div>
-        <div class="product-glow"></div>
-    </div>
+    <?php
+            require_once ('database-api/load-items');
+            $cards = loadAllItems();
+            $pathes = $cards['path'];
+            $ids = $cards['item_id'];
+            $descs = $cards['desc'];
+            $types = $cards['item_type'];
+            $name = $cards['name'];
+            $cost = $cards['cost'];
+            // Пример данных предметов (замените на реальные данные из БД)
+            for ($i = 0; $i < count($pathes); $i++)
+            {
+                echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i]);
+            }
+            function renderItemCard($path, $id, $desc, $type, $name, $cost)
+            {
+                return "
+                <div class='product-card'>
+                    <!--<div class='product-badge popular'>Популярная</div>-->
+                    <div class='product-image'>
+                        <img src='{$path}' alt='{$name}' class='circle-image'>
+                    </div>
+                    <div class='product-content'>
+                        <h3>{$name}</h3>
+                        <p class='product-description'>{$desc}</p>
+                        <div class='product-price'>
+                            <span class='price-amount'>{$cost} CEV</span>
+                            <span class='price-bonus'>{$cost} бонусов</span>
+                        </div>
+                        <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
+                            <span class='btn-text'>Купить сейчас</span>
+                            <span class='btn-sparkle'>✨</span>
+                        </button>
+                    </div>
+                    <div class='product-glow'></div>
+                </div>";
+            }
+            ?>
 </div>
+<script>
+    function buyConfirm(name, cost, itemid)
+    {
+        if (confirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?" ))
+        {
+            fetch("database-api/buyitem.php?id="+itemid+"&cost="+cost)
+        }
+    }
+</script>
 
+<?php if (!isLoggedIn()): ?>
 <div class="shop-promo">
     <div class="promo-content">
         <h3>🎁 Получи бонус за регистрацию!</h3>
@@ -93,7 +62,7 @@
         <div class="floating-star">⭐</div>
     </div>
 </div>
-
+<?php endif ?>
 <style>
     .shop-subtitle {
         text-align: center;
@@ -366,21 +335,3 @@
         }
     }
 </style>
-
-<script>
-    // Обработка копирования промокода
-    document.querySelector('.promo-copy-btn').addEventListener('click', function() {
-        window.location.href = 'index.php?page=register';
-    });
-
-    // Анимация при наведении на изображения
-    document.querySelectorAll('.product-image').forEach(image => {
-        image.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)';
-        });
-        
-        image.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)';
-        });
-    });
-</script>
