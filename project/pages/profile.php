@@ -14,7 +14,7 @@ require_once('database-api/load-items');
     <div class="profile-info">
         <div class="profile-header">
             <div class="avatar-container">
-                <img src="<?php echo load_items($_SESSION['ava'])['path']?>" alt="Аватар" class="avatar">
+                <img src="<?php echo loadItem($_SESSION['ava'])['path']?>" alt="Аватар" class="avatar">
                 <button class="avatar-upload" onclick="openShop()">Изменить</button>
                 <script>
                     function openShop() {window.location.href = "index.php?page=shop";}
@@ -79,12 +79,13 @@ require_once('database-api/load-items');
             $ids = $cards['id'];
             $descs = $cards['desc'];
             $types = $cards['type'];
+            $name = $cards['name'];
             // Пример данных предметов (замените на реальные данные из БД)
             for ($i = 0; $i < count($pathes); $i++)
             {
-                echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i]);
+                echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i]);
             }
-            function renderItemCard($path, $id, $desc, $type)
+            function renderItemCard($path, $id, $desc, $type, $name)
             {
                 return "
                 <div class='item-card' data-type=''>
@@ -92,7 +93,7 @@ require_once('database-api/load-items');
                         <img src='{$path}' alt='' onerror=\"this.src='images/items/default.png'\">
                     </div>
                     <div class='item-info'>
-                        <h4 class='item-name'>{$type}</h4>
+                        <h4 class='item-name'>{$name}</h4>
                         <p class='item-description'>{$desc}</p>
                     </div>
                     <div class='item-actions'>

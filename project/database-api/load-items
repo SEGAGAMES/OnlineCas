@@ -1,6 +1,6 @@
 <?php
 require_once('db-connection');
-function load_items($item_id)
+function loadItem($item_id)
 {
     $db = new Database;
     if ($db) {
@@ -24,4 +24,45 @@ function load_items($item_id)
         http_response_code(503);
         return ['success' => false, 'code' => 503, 'message' => 'Database connection failed'];
     }
-}?>
+}
+function loadAllItems()
+{
+    $db = new Database;
+    if ($db) {
+        try {
+            $query = "SELECT `item_id`, `item_type`, `path`, `description`, `name`, `cost` FROM `items` WHERE 1";
+            $result = $db->SendQuery($query, []);
+            $result = $result->fetchall();
+            if (!$result) {
+                http_response_code(503);
+                return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];
+            }
+            $path = [];
+            $id =[];
+            $desc = [];
+            $type =[];
+            $name =[];
+            $cost =[];
+            foreach ($result as $res)
+            {
+                $path[] = $res['path'];
+                $id[] =$res['item_id'];
+                $desc[] = $res['description'];
+                $type[] = $res['item_type'];
+                $name[] = $res['name'];
+                $cost[] = $res['cost'];
+            }
+            http_response_code(200);
+            return ['success' => true, 'code' => 200, 'message' => 'User created successfully', 'item_id' => $id, 'item_type' => $type, 'path' => $path, 'desc' => $desc, 'name' =>$name, 'cost'=>$cost];
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return ['success' => false, 'code' => 500, 'message' => 'Database error: ' . $e->getMessage()];
+        }
+    } else {
+        http_response_code(503);
+        return ['success' => false, 'code' => 503, 'message' => 'Database connection failed'];
+    }
+}
+
+?>

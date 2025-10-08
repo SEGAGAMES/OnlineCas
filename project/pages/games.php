@@ -76,6 +76,7 @@
         </div>
     </a>
 </div>
+<?php if (!isLoggedIn()): ?>
 
 <div class="games-promo-banner">
     <div class="promo-content">
@@ -84,6 +85,7 @@
         <p>Начни играть прямо сейчас с бонусным капиталом</p>
         <button class="promo-btn" onclick="goToPage()">Забрать бонус 🎯</button>
     </div>
+
     <script>
     function goToPage() {
         window.location.href = "index.php?page=register";
@@ -94,7 +96,7 @@
         <div class="jumping-diamond">💎</div>
     </div>
 </div>
-
+    <?php endif ?>
 <style>
 /* Стили для страницы игр */
 .games-header-stats {
