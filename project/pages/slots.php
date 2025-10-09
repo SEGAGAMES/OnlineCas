@@ -11,6 +11,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
 
         <div class="slot-machine">
             <div class="reels-container">
+                <div class="left-arrow">➡</div>
                 <div class="reel" id="reel1">
                     <div class="win-frame" id="winFrame1"></div>
                     <div class="reel-inner" id="reelInner1">
@@ -35,6 +36,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                         <?php endfor; ?>
                     </div>
                 </div>
+                  <div class="right-arrow">⬅</div>
             </div>
 
             <div class="controls">
@@ -43,9 +45,12 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                 </button>
                 
                 <div class="bet-controls">
+                    <button class="bet-btn" onclick="changeBet(-10)">-10</button>
                     <button class="bet-btn" onclick="changeBet(-1)">-</button>
-                    <div class="bet-display" id="betDisplay">10</div>
+                    <input type="number" class="bet-input" id="betInput" value="10" min="10" max="1000" onchange="setCustomBet()">
                     <button class="bet-btn" onclick="changeBet(1)">+</button>
+                    <button class="bet-btn" onclick="changeBet(10)">+10</button>
+                    <button class="bet-btn max-bet" onclick="setMaxBet()">MAX</button>
                 </div>
             </div>
 
@@ -68,8 +73,92 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                 </div>
             </div>
 
+            <!-- Добавляем таблицу коэффициентов -->
+            <div class="paytable">
+                <h3>🎯 Таблица выплат</h3>
+                <div class="paytable-content">
+                    <div class="paytable-section">
+                        <h4>3 одинаковых символа</h4>
+                        <div class="paytable-items">
+                            <div class="paytable-item">
+                                <span class="symbol">7️⃣ 7️⃣ 7️⃣</span>
+                                <span class="multiplier">×10</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">💎 💎 💎</span>
+                                <span class="multiplier">×8</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🔔 🔔 🔔</span>
+                                <span class="multiplier">×5</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">⭐ ⭐ ⭐</span>
+                                <span class="multiplier">×4</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍇 🍇 🍇</span>
+                                <span class="multiplier">×3</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍊 🍊 🍊</span>
+                                <span class="multiplier">×2</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍋 🍋 🍋</span>
+                                <span class="multiplier">×2</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍒 🍒 🍒</span>
+                                <span class="multiplier">×2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="paytable-section">
+                        <h4>2 одинаковых символа</h4>
+                        <div class="paytable-items">
+                            <div class="paytable-item">
+                                <span class="symbol">7️⃣ 7️⃣</span>
+                                <span class="multiplier">×5</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">💎 💎</span>
+                                <span class="multiplier">×4</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🔔 🔔</span>
+                                <span class="multiplier">×2.5</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">⭐ ⭐</span>
+                                <span class="multiplier">×2</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍇 🍇</span>
+                                <span class="multiplier">×1.5</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍊 🍊</span>
+                                <span class="multiplier">×1</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍋 🍋</span>
+                                <span class="multiplier">×1</span>
+                            </div>
+                            <div class="paytable-item">
+                                <span class="symbol">🍒 🍒</span>
+                                <span class="multiplier">×1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="paytable-note">
+                    <p>💡 Выигрыш = Ставка × Множитель</p>
+                </div>
+            </div>
+
             <div class="history">
-                <h3>Последние игры</h3>
+                <h3>📊 Последние игры</h3>
                 <div class="history-items" id="history"></div>
             </div>
         </div>
@@ -128,6 +217,17 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             
             // Генерируем результаты
             const results = [];
+            
+            // Сначала сбрасываем transform без анимации
+            reels.forEach(reel => {
+                reel.style.transition = 'none';
+                reel.style.transform = 'translateY(0)';
+            });
+            
+            // Принудительно переflow, чтобы применить сброс transform
+            void reels[0].offsetWidth;
+            
+            // Теперь устанавливаем анимацию и запускаем
             reels.forEach((reel, index) => {
                 const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
                 results.push(randomSymbol);
@@ -142,10 +242,13 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                 
                 // Анимация вращения
                 const spinDuration = 2000 + index * 500; // Разное время остановки
-                const targetPosition = -4 * 100; // 4-я позиция (центр)
+                const targetPosition = -3 * 100; // 3-я позиция (центр)
                 
-                reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
-                reel.style.transform = `translateY(${targetPosition}px)`;
+                // Включаем transition и запускаем анимацию
+                setTimeout(() => {
+                    reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
+                    reel.style.transform = `translateY(${targetPosition}px)`;
+                }, 10);
             });
             
             // Проверяем результат после остановки всех барабанов
@@ -181,9 +284,15 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                 // Подсвечиваем все три барабана
                 winFrames.forEach(frame => frame.classList.add('active'));
             } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
-                // Два одинаковых символа
-                winAmount = Math.floor(currentBet * 1.5);
-                winMessage = `👍 Два одинаковых! Выигрыш: ${winAmount}`;
+                // Два одинаковых символа - находим какой именно символ повторяется
+                let matchingSymbol;
+                if (results[0] === results[1]) matchingSymbol = results[0];
+                else if (results[1] === results[2]) matchingSymbol = results[1];
+                else matchingSymbol = results[0]; // results[0] === results[2]
+                
+                // Используем множитель для парного символа, но меньше чем для трёх
+                winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
+                winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;
                 
                 // Подсвечиваем соответствующие барабаны
                 if (results[0] === results[1]) {
@@ -217,22 +326,56 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
         }
 
         function changeBet(amount) {
-            const newBet = currentBet + amount * 10;
-            if (newBet >= 10 && newBet <= 100) {
+            const newBet = currentBet + amount;
+            if (newBet >= 10 && newBet <= 1000 && newBet <= balance) {
                 currentBet = newBet;
                 updateDisplay();
             }
         }
 
+        function setCustomBet() {
+            const betInput = document.getElementById('betInput');
+            let newBet = parseInt(betInput.value);
+            
+            // Валидация введенного значения
+            if (isNaN(newBet) || newBet < 10) {
+                newBet = 10;
+            } else if (newBet > 1000) {
+                newBet = 1000;
+            } else if (newBet > balance) {
+                newBet = balance;
+            }
+            
+            currentBet = newBet;
+            updateDisplay();
+        }
+
+        function setMaxBet() {
+            // Ставим максимально возможную ставку (но не более 1000)
+            currentBet = Math.min(balance, 1000);
+            updateDisplay();
+        }
+
         function updateDisplay() {
             document.getElementById('balance').textContent = balance;
             document.getElementById('currentBet').textContent = currentBet;
-            document.getElementById('betDisplay').textContent = currentBet;
+            document.getElementById('betInput').value = currentBet;
+            
+            // Обновляем кнопки ставок
+            const betButtons = document.querySelectorAll('.bet-btn');
+            betButtons.forEach(btn => {
+                if (balance < currentBet || balance < 10) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            });
+            
             document.getElementById('wins').textContent = wins;
             
             // Блокируем кнопку если недостаточно средств
             const spinBtn = document.getElementById('spinBtn');
-            if (balance < currentBet) {
+            if (balance < currentBet || balance < 10) {
                 spinBtn.disabled = true;
                 spinBtn.style.background = '#666';
             } else {
@@ -253,18 +396,10 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             ).join('');
         }
 
-        // Автоматический демо-спин при загрузке
-        window.onload = function() {
-            setTimeout(() => {
-                if (!isSpinning) {
-                    spinSlots();
-                }
-            }, 1000);
-        };
     </script>
     <style>
         .slots-container {
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -318,6 +453,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             gap: 15px;
             margin-bottom: 30px;
             perspective: 1000px;
+            position: relative;
         }
 
         .reel {
@@ -452,22 +588,24 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
         .bet-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             background: rgba(255,255,255,0.1);
-            padding: 15px 25px;
+            padding: 15px 20px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .bet-btn {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             border: 2px solid rgba(255,255,255,0.3);
             background: rgba(255,255,255,0.1);
             color: white;
-            font-size: 1.2em;
+            font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -475,17 +613,40 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             justify-content: center;
         }
 
-        .bet-btn:hover {
+        .bet-btn:hover:not(:disabled) {
             background: rgba(255,255,255,0.2);
             border-color: rgba(255,255,255,0.5);
         }
 
-        .bet-display {
-            font-size: 1.3em;
+        .bet-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .max-bet {
+            width: auto;
+            padding: 0 15px;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             font-weight: bold;
+        }
+
+        .bet-input {
+            width: 80px;
+            height: 45px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
             color: #f8e71c;
-            min-width: 60px;
+            font-size: 1.2em;
+            font-weight: bold;
             text-align: center;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .bet-input:focus {
+            border-color: #f8e71c;
+            box-shadow: 0 0 10px rgba(248, 231, 28, 0.5);
         }
 
         .info-panel {
@@ -524,9 +685,6 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
         .win-message {
             font-size: 1.5em;
             font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #f8e71c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
             animation: bounce 0.5s ease-in-out;
         }
@@ -558,6 +716,87 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                     inset 0 0 30px rgba(255,215,0,0.3),
                     0 5px 20px rgba(255,215,0,0.2);
             }
+        }
+
+        /* Стили для таблицы выплат */
+        .paytable {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .paytable h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f8e71c;
+            font-size: 1.4em;
+        }
+
+        .paytable-content {
+            display: flex;
+            gap: 30px;
+            justify-content: space-between;
+        }
+
+        .paytable-section {
+            flex: 1;
+        }
+
+        .paytable-section h4 {
+            color: #b8b8b8;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1em;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+        }
+
+        .paytable-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .paytable-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .paytable-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .paytable-item .symbol {
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: auto;
+        }
+
+        .paytable-item .multiplier {
+            color: #f8e71c;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .paytable-note {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: #b8b8b8;
+            font-style: italic;
         }
 
         .history {
@@ -597,6 +836,11 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
         }
 
         @media (max-width: 768px) {
+            .slots-container {
+                max-width: 100%;
+                padding: 10px;
+            }
+
             .reel {
                 width: 100px;
                 height: 250px;
@@ -610,6 +854,67 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             .spin-btn {
                 padding: 15px 30px;
                 font-size: 1.2em;
+            }
+            
+            .bet-controls {
+                gap: 8px;
+                padding: 12px 15px;
+            }
+            
+            .bet-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9em;
+            }
+            
+            .bet-input {
+                width: 70px;
+                height: 40px;
+                font-size: 1.1em;
+            }
+
+            .paytable-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .paytable-item .symbol {
+                font-size: 1.2em;
+            }
+        }
+        
+        .left-arrow {
+            position: absolute;
+            left: -20px;
+            font-size: 3em;
+            color: gold;
+            text-shadow: 0 0 10px rgba(255,215,0,0.7);
+            z-index: 10;
+            animation: arrowPulse 2s infinite;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .right-arrow {
+            position: absolute;
+            right: -20px;
+            font-size: 3em;
+            color: gold;
+            text-shadow: 0 0 10px rgba(255,215,0,0.7);
+            z-index: 10;
+            animation: arrowPulse 2s infinite;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @keyframes arrowPulse {
+            0%, 100% {
+                opacity: 0.7;
+                transform: translateY(-50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.1);
             }
         }
     </style>
