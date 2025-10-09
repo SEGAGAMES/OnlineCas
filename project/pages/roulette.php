@@ -1,12 +1,12 @@
 <?php
 // Генерация чисел рулетки
 $rouletteNumbers = [];
-for ($i = 0; $i < 37; $i++) {
+for ($i = 0; $i < 37; $i++)
     $rouletteNumbers[] = $i;
-}
 
 // Цвета для чисел согласно правилам европейской рулетки
-function getNumberColor($number) {
+function getNumberColor($number)
+{
     if ($number == 0) return 'green';
     
     if (($number >= 1 && $number <= 10) || ($number >= 19 && $number <= 28)) {
@@ -16,7 +16,8 @@ function getNumberColor($number) {
     }
 }
 
-function getNumberClass($number) {
+function getNumberClass($number)
+{
     return 'number-' . getNumberColor($number);
 }
 ?>
