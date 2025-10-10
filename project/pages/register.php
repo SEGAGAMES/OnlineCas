@@ -1,22 +1,92 @@
 <?php
 // Если пользователь уже авторизован, перенаправляем в профиль
-if (isLoggedIn()) {
-    header('Location: index.php?page=profile');
+if (isLoggedIn())
+{
+    echo "<script>window.location.href = 'index.php?page=profile';</script>";
     exit;
+}
+require_once('database-api/registration');
+// Обработка формы регистрации
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
+{
+    // Получаем данные из формы
+    $surname = trim($_POST['surname'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $lastname = trim($_POST['lastname'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    
+    // Базовая валидация
+    $errors = [];
+
+    if (empty($email)) {
+        $errors[] = "Email обязателен для заполнения";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Некорректный формат email";
+    }
+    
+    if (empty($password)) {
+        $errors[] = "Пароль обязателен для заполнения";
+    } elseif (strlen($password) < 6) {
+        $errors[] = "Пароль должен содержать минимум 6 символов";
+    }
+    
+    // Если ошибок нет, пытаемся зарегистрировать пользователя
+    if (empty($errors)) {
+        try {
+            $result = register_user($email, $surname, $name, $password, $lastname);
+            
+            if ($result['success']) {
+                // Регистрация успешна
+                $_SESSION['surname'] = $surname;
+                $_SESSION['name'] = $name;
+                $_SESSION['lastname'] = $lastname;
+                $_SESSION['balance'] = 1000;
+                $_SESSION['user_email'] = $email;
+                $_SESSION['ava'] = "3";
+                $_SESSION['status'] = 'common';
+                
+                // Перенаправляем в профиль
+                echo "<script>window.location.href = 'index.php?page=home';</script>";
+                exit;
+            } else {
+                $errors[] = $result['message'] ?? "Ошибка регистрации";
+            }
+            
+        } catch (Exception $e) {
+            $errors[] = "Произошла ошибка при регистрации: " . $e->getMessage();
+        }
+    }
+    
+    // Если есть ошибки, показываем их
+    if (!empty($errors)) {
+        echo '<div class="error-message">';
+        foreach ($errors as $error) {
+            echo '<p>' . htmlspecialchars($error) . '</p>';
+        }
+        echo '</div>';
+    }
 }
 ?>
 
 <h1>Регистрация</h1>
-<div class="warning-banner">
-    Учебный проект. Регистрация является демонстрационной.
-</div>
 
 <div class="register-container">
     <div class="register-form">
         <form method="POST" action="">
             <div class="form-group">
-                <label for="reg-name">ФИО:</label>
-                <input type="text" id="reg-name" name="name" required>
+                <label for="surname">Фамилия:</label>
+                <input type="text" id="surname" name="surname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Имя:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lastname">Отчество (если есть):</label>
+                <input type="text" id="lastname" name="lastname">
             </div>
             
             <div class="form-group">
@@ -28,12 +98,6 @@ if (isLoggedIn()) {
                 <label for="reg-password">Пароль:</label>
                 <input type="password" id="reg-password" name="password" required>
             </div>
-            
-            <div class="form-group">
-                <label for="reg-phone">Телефон:</label>
-                <input type="tel" id="reg-phone" name="phone">
-            </div>
-            
             <div class="form-actions">
                 <button type="submit" class="btn-primary">Зарегистрироваться</button>
                 <a href="index.php" class="btn-secondary">На главную</a>
@@ -53,10 +117,6 @@ if (isLoggedIn()) {
             <li>История ваших игр</li>
             <li>Специальные предложения</li>
         </ul>
-        
-        <div class="educational-note">
-            Это учебный проект. Все данные сохраняются только на время сессии.
-        </div>
     </div>
 </div>
 

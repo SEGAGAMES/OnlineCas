@@ -44,10 +44,18 @@
 <script>
     function buyConfirm(name, cost, itemid)
     {
+        <?php if(isLoggedIn()): ?>
         if (confirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?" ))
         {
-            fetch("database-api/buyitem.php?id="+itemid+"&cost="+cost)
+            fetch("database-api/buyitem.php?id="+itemid+"&cost="+cost);
+            setTimeout(() => {location.reload();}, 300);
         }
+        <?php else: ?>
+        if (confirm("Для покупки необходимо войти или зарегистрироваться, продолжить?" ))
+        {
+            loginModal.style.display = 'block';
+        }
+        <?php endif ?>
     }
 </script>
 
