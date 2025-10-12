@@ -1,0 +1,27 @@
+<?php
+require_once('db-connection');
+function send_photo($type, $path, $desc, $name, $cost)
+{
+    $db = new Database;
+    if ($db) {
+        try {
+            $query = "INSERT INTO `items`(`item_type`, `path`, `description`, `name`, `cost`) VALUES (?,?,?,?,?)";
+            $result = $db->SendQuery($query, [$type, $path, $desc, $name, $cost]);    
+            $result = $result->fetchall();
+            if (!$result) {
+                http_response_code(503);
+                return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];
+            }
+            http_response_code(200);
+            return ['success' => true, 'code' => 201, 'message' => 'Photo upload successfully'];
+
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return ['success' => false, 'code' => 500, 'message' => 'Database error: ' . $e->getMessage()];
+        }
+    } else {
+        http_response_code(503);
+        return ['success' => false, 'code' => 503, 'message' => 'Database connection failed'];
+    }
+}
+?>

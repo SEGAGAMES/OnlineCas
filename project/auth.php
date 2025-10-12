@@ -12,7 +12,7 @@ function authenticateUser($email, $password)
     $db = new Database;
     if ($db) {
         try {
-            $query = "SELECT password, surname, name, lastname, balance, ava FROM users WHERE email = ?";
+            $query = "SELECT password, surname, name, lastname, balance, status, ava FROM users WHERE email = ?";
             $result = $db->SendQuery($query, [$email]);
             $user = $result->fetch();
             if ($user && password_verify($password, $user['password']))
