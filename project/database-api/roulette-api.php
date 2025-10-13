@@ -8,7 +8,8 @@ if (isset($_GET['bet']))
     if (isset($_GET['number'])) 
         $number = $_GET['number'];
     $randomNumber = mt_rand(0, 36);
-    switch($bettype){
+    switch($bettype)
+    {
         case 'number':
             if($number==$randomNumber): 
                 changebalance($bet*36);
