@@ -54,6 +54,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Non-lossing Play - <?php echo $pageTitle; ?></title>
     <link rel="stylesheet" href="StylesCSS.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <style>
         .logo {
             padding: 10px 15px;
@@ -61,7 +62,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
+
         .logo-link {
             display: block;
             text-decoration: none;
@@ -75,12 +76,12 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             position: relative;
             z-index: 1;
         }
-        
+
         .logo-link:hover {
             animation: textGlow 1.5s ease-in-out infinite;
             background-color: transparent;
         }
-        
+
         @keyframes textGlow {
             0%, 60% {
                 text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
@@ -94,7 +95,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
                            0 0 60px rgba(255, 140, 0, 0.4);
             }
         }
-        
+
         /* Убираем любые box-shadow для рамки */
         .logo-link,
         .logo-link:hover {
@@ -112,7 +113,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
         </div>
         <div class="header-right">
             <?php if (isLoggedIn()): ?>
-                <a href="index.php?page=profile">Личный кабинет</a>
+                <img onclick="window.location.href='index.php?page=profile'" src="<?php  require_once("database-api/load-items"); echo loadItem($_SESSION['ava'])['path']?>" alt="Аватар" width="75" height="75" style="border-radius: 50%; cursor: pointer" >
                 <span class="user-welcome"><?php echo $_SESSION['balance']?> CEV</span>
               <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
                 <a href="?logout=true">Выйти</a>
@@ -134,25 +135,25 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
                 <h3>Вход в систему</h3>
                 <span class="close-modal">&times;</span>
             </div>
-            <div class="modal-body">            
+            <div class="modal-body">
                 <form method="POST" action="">
                     <input type="hidden" name="auth_action" value="login">
                     <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
-                    
+
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required 
+                        <input type="email" id="email" name="email" required
                                value="<?php echo isset($_SESSION['login_email']) ? $_SESSION['login_email'] : ''; ?>">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="password">Пароль:</label>
                         <input type="password" id="password" name="password" required>
                     </div>
-                    
+
                     <button type="submit" class="btn-primary">Войти</button>
                 </form>
-                
+
                 <div class="modal-footer">
                     <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
                 </div>
@@ -166,7 +167,7 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     const loginBtn = document.getElementById('loginBtn');
     const closeModal = document.querySelector('.close-modal');
 
-    if (loginBtn) 
+    if (loginBtn)
     {
         loginBtn.addEventListener('click', function(e)
         {

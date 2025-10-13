@@ -1,5 +1,5 @@
 <h1>Добро пожаловать в Non-lossing Play!</h1>
-
+<?php if (!isLoggedIn()): ?>
 <!-- Промо-предложение с бонусом -->
 <div class="promo-banner">
     <div class="promo-content">
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-
+<?php endif?>
 <div class="games-section">
     <div class="section-header">
         <h2>🎮 Игровая коллекция</h2>
@@ -112,6 +112,7 @@
             <div class="card-glow"></div>
         </div>
     </div>
+    <?php if (!isLoggedIn()): ?>
     <div class="games-cta">
         <div class="cta-content">
             <h3>🎁 Получите бонус для старта!</h3>
@@ -122,6 +123,7 @@
             </a>
         </div>
     </div>
+    <?php endif ?>
 </div>
 
 
@@ -131,7 +133,6 @@
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     position: relative;
     overflow: hidden;
-    min-height: 100vh;
 }
 
 .games-section::before {

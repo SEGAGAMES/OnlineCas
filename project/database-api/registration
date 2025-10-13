@@ -5,9 +5,12 @@ function register_user($email, $surname, $name, $password, $lastname = "")
     $db = new Database;
     if ($db) {
         try {
-            $query = "INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`) VALUES (?, ?, ?, ?, ?, '1000', 'common')";
+            $query = "INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`, `ava`) VALUES (?, ?, ?, ?, ?, '1000', 'common',3)";
             $result = $db->SendQuery($query, [$email,password_hash($password, PASSWORD_DEFAULT), $surname, $name, $lastname]);
-            
+            $query2 = "INSERT INTO `inventory`(`item_id`, `email`) VALUES ('3',?)";
+            $result2 = $db->SendQuery($query2, [$email]);
+            $query2 = "INSERT INTO `inventory`(`item_id`, `email`) VALUES ('4',?)";
+            $result2 = $db->SendQuery($query2, [$email]);
             if (!$result) {
                 http_response_code(503);
                 return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];
