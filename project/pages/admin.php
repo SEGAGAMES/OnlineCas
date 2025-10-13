@@ -1,4 +1,6 @@
-<?php if ($_SESSION['status'] == 'admin'):
+<?php 
+    if (isset($_SESSION['status'])):
+        if ($_SESSION['status'] == 'admin'):
 // Обработка загрузки фото
 require_once ('database-api/load-photo');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
@@ -444,4 +446,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {
     </script>
 </body>
 </html>
-<? endif?>
+<? endif; else: echo "<script> window.location.href='index.php?pages=home.php' </script>" ; endif?>

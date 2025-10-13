@@ -1,4 +1,8 @@
 <?php
+if (!isLoggedIn()):
+    ?>
+    <script>alert("Для начала игры необходимо войти или зарегистрироваться!"); window.location.href='index.php?page=register' </script>
+<?php else:
 // Символы для слотов
 $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
 ?>
@@ -918,3 +922,4 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             }
         }
     </style>
+    <? endif?>
