@@ -162,16 +162,16 @@ $betTypes = [
 
         // Коэффициенты выплат для разных типов ставок
         const payouts = {
-            'number': 35,
-            'red': 1,
-            'black': 1,
-            'even': 1,
-            'odd': 1,
-            'low': 1,
-            'high': 1,
-            'dozen1': 2,
-            'dozen2': 2,
-            'dozen3': 2
+            'number': 36,
+            'red': 2,
+            'black': 2,
+            'even': 2,
+            'odd': 2,
+            'low': 2,
+            'high': 2,
+            'dozen1': 3,
+            'dozen2': 3,
+            'dozen3': 3
         };
 
         function updateBetOptions() {
@@ -270,13 +270,12 @@ $betTypes = [
             const winLoseMessage = document.getElementById('winLoseMessage');
             
             // Случайное число от 0 до 36
-            const winningNumber = Math.floor(Math.random() * 37);
+            if (betType === 'number' && selectedNumber !== null)
+                const winningNumber = fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType+'number'+selectNumber);
+            else
+                const winningNumber = fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType);
             const color = getNumberColor(winningNumber);
-            
-            // Снимаем деньги со счета
-            balance -= betAmount;
-            updateBalance();
-            
+
             // Добавляем анимацию вращения
             wheel.classList.add('spinning');
             spinBtn.disabled = true;
@@ -301,15 +300,6 @@ $betTypes = [
                 
                 resultText.innerHTML = `Выпало: <strong>${winningNumber}</strong> | Цвет: <strong style="color: ${color}">${color === 'green' ? 'Зеленый' : color === 'red' ? 'Красный' : 'Черный'}</strong>`;
                 
-                // Проверяем выигрыш
-                const winAmount = checkWin(currentBet, winningNumber, color);
-                if (winAmount > 0) {
-                    balance += winAmount;
-                    winLoseMessage.innerHTML = `<span class="win">🎉 Вы выиграли $${winAmount}!</span>`;
-                } else {
-                    winLoseMessage.innerHTML = `<span class="lose">💸 Вы проиграли $${betAmount}</span>`;
-                }
-                updateBalance();
                 
                 // Добавляем в историю и обновляем статистику
                 addToHistory(winningNumber, color);
@@ -331,49 +321,6 @@ $betTypes = [
             }, 4000);
         }
 
-        function checkWin(bet, winningNumber, winningColor) {
-            const betAmount = bet.amount;
-            let won = false;
-
-            switch(bet.type) {
-                case 'number':
-                    won = (bet.value === winningNumber);
-                    break;
-                case 'red':
-                    won = (winningColor === 'red');
-                    break;
-                case 'black':
-                    won = (winningColor === 'black');
-                    break;
-                case 'even':
-                    won = (winningNumber !== 0 && winningNumber % 2 === 0);
-                    break;
-                case 'odd':
-                    won = (winningNumber !== 0 && winningNumber % 2 === 1);
-                    break;
-                case 'low':
-                    won = (winningNumber >= 1 && winningNumber <= 18);
-                    break;
-                case 'high':
-                    won = (winningNumber >= 19 && winningNumber <= 36);
-                    break;
-                case 'dozen1':
-                    won = (winningNumber >= 1 && winningNumber <= 12);
-                    break;
-                case 'dozen2':
-                    won = (winningNumber >= 13 && winningNumber <= 24);
-                    break;
-                case 'dozen3':
-                    won = (winningNumber >= 25 && winningNumber <= 36);
-                    break;
-            }
-
-            return won ? betAmount * (payouts[bet.type] + 1) : 0;
-        }
-
-        function updateBalance() {
-            document.getElementById('balance').textContent = balance;
-        }
 
         function resetGame() {
             const wheel = document.getElementById('rouletteWheel');
