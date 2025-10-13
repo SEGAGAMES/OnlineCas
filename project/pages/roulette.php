@@ -20,10 +20,25 @@ function getNumberClass($number)
 {
     return 'number-' . getNumberColor($number);
 }
+
+// Типы ставок
+$betTypes = [
+    'number' => 'Конкретное число',
+    'red' => 'Красное',
+    'black' => 'Черное',
+    'even' => 'Четное',
+    'odd' => 'Нечетное',
+    'low' => 'Малые (1-18)',
+    'high' => 'Большие (19-36)',
+    'dozen1' => 'Первая дюжина (1-12)',
+    'dozen2' => 'Вторая дюжина (13-24)',
+    'dozen3' => 'Третья дюжина (25-36)'
+];
 ?>
     <div class="roulette-container">
         <div class="header">
             <h1>Европейская Рулетка</h1>
+            <p>Сделайте ставку и испытайте удачу!</p>
         </div>
 
         <div class="game-area">
@@ -50,19 +65,69 @@ function getNumberClass($number)
             </div>
 
             <div class="controls-section">
+                <!-- Система ставок -->
+                <div class="betting-system">
+                    <div class="balance-section">
+                        <div class="balance-display">
+                            <span>Баланс: $</span>
+                            <span id="balance">1000</span>
+                        </div>
+                        <div class="bet-amount">
+                            <label>Сумма ставки:</label>
+                            <div class="amount-controls">
+                                <button class="amount-btn" onclick="changeBetAmount(-10)">-10</button>
+                                <input type="number" id="betAmount" value="10" min="1" max="1000">
+                                <button class="amount-btn" onclick="changeBetAmount(10)">+10</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bet-type-selector">
+                        <label>Тип ставки:</label>
+                        <select id="betType" onchange="updateBetOptions()">
+                            <?php foreach ($betTypes as $key => $value): ?>
+                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="number-selector" id="numberSelector">
+                        <label>Выберите число:</label>
+                        <div class="number-grid">
+                            <?php for ($i = 0; $i <= 36; $i++): ?>
+                                <div class="bet-number <?php echo getNumberClass($i); ?>" 
+                                     data-number="<?php echo $i; ?>"
+                                     onclick="selectNumber(<?php echo $i; ?>)">
+                                    <?php echo $i; ?>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+
+                    <div class="current-bet">
+                        <h4>Текущая ставка</h4>
+                        <div id="currentBetInfo">Не выбрана</div>
+                        <div id="currentBetAmount">$0</div>
+                    </div>
+                </div>
+
                 <div class="controls">
                     <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
                         🎯 Крутить Рулетку
                     </button>
-                    <button class="reset-btn" onclick="resetRoulette()">
-                        🔄 Сброс Игры
+                    <button class="reset-btn" onclick="resetGame()">
+                        🔄 Новая Игра
+                    </button>
+                    <button class="clear-bet-btn" onclick="clearBet()">
+                        ❌ Очистить Ставку
                     </button>
                 </div>
 
                 <div class="result" id="result">
                     <h3>Последний Результат</h3>
                     <div id="winningNumber" class="winning-number">-</div>
-                    <div id="resultText">Нажмите "Крутить Рулетку"</div>
+                    <div id="resultText">Сделайте ставку и крутите рулетку</div>
+                    <div id="winLoseMessage" class="win-lose-message"></div>
                 </div>
 
                 <div class="history">
@@ -91,20 +156,126 @@ function getNumberClass($number)
         let spinHistory = [];
         let isSpinning = false;
         let stats = { red: 0, black: 0, green: 0 };
+        let balance = 1000;
+        let currentBet = null;
+        let selectedNumber = null;
+
+        // Коэффициенты выплат для разных типов ставок
+        const payouts = {
+            'number': 35,
+            'red': 1,
+            'black': 1,
+            'even': 1,
+            'odd': 1,
+            'low': 1,
+            'high': 1,
+            'dozen1': 2,
+            'dozen2': 2,
+            'dozen3': 2
+        };
+
+        function updateBetOptions() {
+            const betType = document.getElementById('betType').value;
+            const numberSelector = document.getElementById('numberSelector');
+            
+            if (betType === 'number') {
+                numberSelector.style.display = 'block';
+            } else {
+                numberSelector.style.display = 'none';
+                selectedNumber = null;
+                updateCurrentBet();
+            }
+        }
+
+        function selectNumber(number) {
+            const betType = document.getElementById('betType').value;
+            if (betType !== 'number') return;
+            
+            selectedNumber = number;
+            
+            // Убираем выделение у всех чисел
+            document.querySelectorAll('.bet-number').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Выделяем выбранное число
+            document.querySelector(`.bet-number[data-number="${number}"]`).classList.add('selected');
+            
+            updateCurrentBet();
+        }
+
+        function updateCurrentBet() {
+            const betType = document.getElementById('betType').value;
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            const betTypeNames = <?php echo json_encode($betTypes); ?>;
+            
+            let betInfo = '';
+            
+            if (betType === 'number' && selectedNumber !== null) {
+                betInfo = `Число ${selectedNumber}`;
+                currentBet = { type: betType, value: selectedNumber, amount: betAmount };
+            } else if (betType !== 'number') {
+                betInfo = betTypeNames[betType];
+                currentBet = { type: betType, value: null, amount: betAmount };
+            } else {
+                betInfo = 'Не выбрана';
+                currentBet = null;
+            }
+            
+            document.getElementById('currentBetInfo').textContent = betInfo;
+            document.getElementById('currentBetAmount').textContent = currentBet ? `$${betAmount}` : '$0';
+        }
+
+        function changeBetAmount(change) {
+            const betAmountInput = document.getElementById('betAmount');
+            let currentAmount = parseInt(betAmountInput.value);
+            let newAmount = currentAmount + change;
+            
+            if (newAmount < 1) newAmount = 1;
+            if (newAmount > balance) newAmount = balance;
+            
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
+
+        function clearBet() {
+            currentBet = null;
+            selectedNumber = null;
+            document.getElementById('betAmount').value = 10;
+            document.querySelectorAll('.bet-number').forEach(el => {
+                el.classList.remove('selected');
+            });
+            updateCurrentBet();
+        }
 
         function spinRoulette() {
             if (isSpinning) return;
+            if (!currentBet) {
+                alert('Сделайте ставку перед вращением!');
+                return;
+            }
             
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            if (betAmount > balance) {
+                alert('Недостаточно средств на балансе!');
+                return;
+            }
+
             isSpinning = true;
             const spinBtn = document.getElementById('spinBtn');
             const wheel = document.getElementById('rouletteWheel');
             const resultDiv = document.getElementById('result');
             const winningNumberDiv = document.getElementById('winningNumber');
             const resultText = document.getElementById('resultText');
+            const winLoseMessage = document.getElementById('winLoseMessage');
             
             // Случайное число от 0 до 36
             const winningNumber = Math.floor(Math.random() * 37);
             const color = getNumberColor(winningNumber);
+            
+            // Снимаем деньги со счета
+            balance -= betAmount;
+            updateBalance();
             
             // Добавляем анимацию вращения
             wheel.classList.add('spinning');
@@ -130,6 +301,16 @@ function getNumberClass($number)
                 
                 resultText.innerHTML = `Выпало: <strong>${winningNumber}</strong> | Цвет: <strong style="color: ${color}">${color === 'green' ? 'Зеленый' : color === 'red' ? 'Красный' : 'Черный'}</strong>`;
                 
+                // Проверяем выигрыш
+                const winAmount = checkWin(currentBet, winningNumber, color);
+                if (winAmount > 0) {
+                    balance += winAmount;
+                    winLoseMessage.innerHTML = `<span class="win">🎉 Вы выиграли $${winAmount}!</span>`;
+                } else {
+                    winLoseMessage.innerHTML = `<span class="lose">💸 Вы проиграли $${betAmount}</span>`;
+                }
+                updateBalance();
+                
                 // Добавляем в историю и обновляем статистику
                 addToHistory(winningNumber, color);
                 updateStats(color);
@@ -144,28 +325,78 @@ function getNumberClass($number)
                     winningNumberDiv.style.transform = 'scale(1)';
                 }, 300);
                 
+                // Очищаем ставку после вращения
+                clearBet();
+                
             }, 4000);
         }
 
-        function resetRoulette() 
-        {
+        function checkWin(bet, winningNumber, winningColor) {
+            const betAmount = bet.amount;
+            let won = false;
+
+            switch(bet.type) {
+                case 'number':
+                    won = (bet.value === winningNumber);
+                    break;
+                case 'red':
+                    won = (winningColor === 'red');
+                    break;
+                case 'black':
+                    won = (winningColor === 'black');
+                    break;
+                case 'even':
+                    won = (winningNumber !== 0 && winningNumber % 2 === 0);
+                    break;
+                case 'odd':
+                    won = (winningNumber !== 0 && winningNumber % 2 === 1);
+                    break;
+                case 'low':
+                    won = (winningNumber >= 1 && winningNumber <= 18);
+                    break;
+                case 'high':
+                    won = (winningNumber >= 19 && winningNumber <= 36);
+                    break;
+                case 'dozen1':
+                    won = (winningNumber >= 1 && winningNumber <= 12);
+                    break;
+                case 'dozen2':
+                    won = (winningNumber >= 13 && winningNumber <= 24);
+                    break;
+                case 'dozen3':
+                    won = (winningNumber >= 25 && winningNumber <= 36);
+                    break;
+            }
+
+            return won ? betAmount * (payouts[bet.type] + 1) : 0;
+        }
+
+        function updateBalance() {
+            document.getElementById('balance').textContent = balance;
+        }
+
+        function resetGame() {
             const wheel = document.getElementById('rouletteWheel');
             const winningNumberDiv = document.getElementById('winningNumber');
             const resultText = document.getElementById('resultText');
+            const winLoseMessage = document.getElementById('winLoseMessage');
             
             wheel.style.transform = 'rotate(0deg)';
             winningNumberDiv.textContent = '-';
             winningNumberDiv.style.background = 'transparent';
-            resultText.textContent = 'Нажмите "Крутить Рулетку"';
+            resultText.textContent = 'Сделайте ставку и крутите рулетку';
+            winLoseMessage.innerHTML = '';
             
             spinHistory = [];
             stats = { red: 0, black: 0, green: 0 };
+            balance = 1000;
+            updateBalance();
+            clearBet();
             document.getElementById('history').innerHTML = '';
             updateStatsDisplay();
         }
 
-        function addToHistory(number, color)
-        {
+        function addToHistory(number, color) {
             spinHistory.unshift({number, color});
             if (spinHistory.length > 12) {
                 spinHistory.pop();
@@ -190,8 +421,7 @@ function getNumberClass($number)
             document.getElementById('greenCount').textContent = stats.green;
         }
 
-        function getNumberColor(number)
-        {
+        function getNumberColor(number) {
             if (number == 0) return 'green';
             
             if ((number >= 1 && number <= 10) || (number >= 19 && number <= 28)) {
@@ -200,11 +430,17 @@ function getNumberClass($number)
                 return number % 2 == 0 ? 'red' : 'black';
             }
         }
+
+        // Инициализация
+        document.getElementById('betAmount').addEventListener('input', updateCurrentBet);
+        document.getElementById('betType').addEventListener('change', updateCurrentBet);
+        updateBetOptions();
+        updateCurrentBet();
     </script>
 
     <style>
         .roulette-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -279,7 +515,7 @@ function getNumberClass($number)
             position: absolute;
             width: 40px;
             height: 80px;
-            transform-origin: center 225px; /* Центр вращения смещен к центру колеса */
+            transform-origin: center 225px;
             top: 0;
             left: calc(50% - 20px);
             display: flex;
@@ -330,33 +566,182 @@ function getNumberClass($number)
 
         .controls-section {
             flex: 1;
-            min-width: 300px;
+            min-width: 400px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .controls {
+        .betting-system {
             background: rgba(255,255,255,0.1);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             width: 100%;
-            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .balance-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #f8e71c;
+        }
+
+        .bet-amount label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b8b8b8;
+        }
+
+        .amount-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .amount-btn {
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .amount-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        #betAmount {
+            width: 80px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+
+        .bet-type-selector {
+            margin-bottom: 20px;
+        }
+
+        .bet-type-selector label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b8b8b8ff;
+        }
+
+        #betType {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            color: black;
+        }
+
+        .number-selector {
+            margin-bottom: 20px;
+        }
+
+        .number-selector label {
+            display: block;
+            margin-bottom: 10px;
+            color: #b8b8b8;
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        .bet-number {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bet-number:hover {
+            transform: scale(1.1);
+        }
+
+        .bet-number.selected {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px gold;
+            border: 2px solid gold;
+        }
+
+        .current-bet {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .current-bet h4 {
+            margin-bottom: 10px;
+            color: #f8e71c;
+        }
+
+        #currentBetInfo {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        #currentBetAmount {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #f8e71c;
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .spin-btn {
             width: 100%;
-            padding: 20px;
-            font-size: 1.2em;
+            padding: 15px;
+            font-size: 1.1em;
             font-weight: bold;
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            margin-bottom: 15px;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
@@ -373,10 +758,10 @@ function getNumberClass($number)
             box-shadow: none;
         }
 
-        .reset-btn {
+        .reset-btn, .clear-bet-btn {
             width: 100%;
-            padding: 15px;
-            font-size: 1em;
+            padding: 12px;
+            font-size: 0.9em;
             background: rgba(255,255,255,0.2);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
@@ -385,18 +770,17 @@ function getNumberClass($number)
             transition: all 0.3s ease;
         }
 
-        .reset-btn:hover {
+        .reset-btn:hover, .clear-bet-btn:hover {
             background: rgba(255,255,255,0.3);
         }
 
         .result {
             background: rgba(255,255,255,0.1);
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
             margin-top: 20px;
             text-align: center;
             width: 100%;
-            max-width: 400px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -407,23 +791,36 @@ function getNumberClass($number)
         }
 
         .winning-number {
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: bold;
             margin: 10px 0;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             display: inline-block;
-            min-width: 100px;
+            min-width: 80px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .win-lose-message {
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .win {
+            color: #00ff00;
+        }
+
+        .lose {
+            color: #ff4444;
         }
 
         .history {
             background: rgba(255,255,255,0.1);
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
             margin-top: 20px;
             width: 100%;
-            max-width: 400px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -507,6 +904,15 @@ function getNumberClass($number)
             
             .number-slot {
                 transform-origin: center 175px;
+            }
+            
+            .balance-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(6, 1fr);
             }
         }
     </style>
