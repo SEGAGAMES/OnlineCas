@@ -1,4 +1,8 @@
 <?php
+if (!isLoggedIn()):
+    ?>
+    <script>alert("Для начала игры необходимо войти или зарегистрироваться!"); window.location.href='index.php?page=register' </script>
+<?php else:
 // Генерация чисел рулетки
 $rouletteNumbers = [];
 for ($i = 0; $i < 37; $i++)
@@ -70,7 +74,7 @@ $betTypes = [
                     <div class="balance-section">
                         <div class="balance-display">
                             <span>Баланс: $</span>
-                            <span id="balance">1000</span>
+                            <span id="balance"><?php echo $_SESSION['balance']?> CEV</span>
                         </div>
                         <div class="bet-amount">
                             <label>Сумма ставки:</label>
@@ -115,21 +119,7 @@ $betTypes = [
                     <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
                         🎯 Крутить Рулетку
                     </button>
-                    <button class="reset-btn" onclick="resetGame()">
-                        🔄 Новая Игра
-                    </button>
-                    <button class="clear-bet-btn" onclick="clearBet()">
-                        ❌ Очистить Ставку
-                    </button>
                 </div>
-
-                <div class="result" id="result">
-                    <h3>Последний Результат</h3>
-                    <div id="winningNumber" class="winning-number">-</div>
-                    <div id="resultText">Сделайте ставку и крутите рулетку</div>
-                    <div id="winLoseMessage" class="win-lose-message"></div>
-                </div>
-
                 <div class="history">
                     <h3>История Бросков</h3>
                     <div class="history-items" id="history"></div>
@@ -156,62 +146,45 @@ $betTypes = [
         let spinHistory = [];
         let isSpinning = false;
         let stats = { red: 0, black: 0, green: 0 };
-        let balance = 1000;
+        let balance = <?php echo $_SESSION['balance']?>;
         let currentBet = null;
         let selectedNumber = null;
-
-        // Коэффициенты выплат для разных типов ставок
-        const payouts = {
-            'number': 36,
-            'red': 2,
-            'black': 2,
-            'even': 2,
-            'odd': 2,
-            'low': 2,
-            'high': 2,
-            'dozen1': 3,
-            'dozen2': 3,
-            'dozen3': 3
-        };
-
-        function updateBetOptions() {
+        function updateBetOptions()
+        {
             const betType = document.getElementById('betType').value;
             const numberSelector = document.getElementById('numberSelector');
-            
-            if (betType === 'number') {
+            if (betType === 'number')
                 numberSelector.style.display = 'block';
-            } else {
+            else
+            {
                 numberSelector.style.display = 'none';
                 selectedNumber = null;
                 updateCurrentBet();
             }
         }
 
-        function selectNumber(number) {
+        function selectNumber(number)
+        {
             const betType = document.getElementById('betType').value;
             if (betType !== 'number') return;
-            
             selectedNumber = number;
-            
-            // Убираем выделение у всех чисел
             document.querySelectorAll('.bet-number').forEach(el => {
                 el.classList.remove('selected');
             });
-            
-            // Выделяем выбранное число
             document.querySelector(`.bet-number[data-number="${number}"]`).classList.add('selected');
-            
             updateCurrentBet();
         }
 
-        function updateCurrentBet() {
+        function updateCurrentBet() 
+        {
             const betType = document.getElementById('betType').value;
             const betAmount = parseInt(document.getElementById('betAmount').value);
             const betTypeNames = <?php echo json_encode($betTypes); ?>;
             
             let betInfo = '';
             
-            if (betType === 'number' && selectedNumber !== null) {
+            if (betType === 'number' && selectedNumber !== null)
+            {
                 betInfo = `Число ${selectedNumber}`;
                 currentBet = { type: betType, value: selectedNumber, amount: betAmount };
             } else if (betType !== 'number') {
@@ -226,7 +199,8 @@ $betTypes = [
             document.getElementById('currentBetAmount').textContent = currentBet ? `$${betAmount}` : '$0';
         }
 
-        function changeBetAmount(change) {
+        function changeBetAmount(change)
+        {
             const betAmountInput = document.getElementById('betAmount');
             let currentAmount = parseInt(betAmountInput.value);
             let newAmount = currentAmount + change;
@@ -238,17 +212,9 @@ $betTypes = [
             updateCurrentBet();
         }
 
-        function clearBet() {
-            currentBet = null;
-            selectedNumber = null;
-            document.getElementById('betAmount').value = 10;
-            document.querySelectorAll('.bet-number').forEach(el => {
-                el.classList.remove('selected');
-            });
-            updateCurrentBet();
-        }
-
-        function spinRoulette() {
+        async function spinRoulette()
+        {
+            const betType = document.getElementById('betType').value;
             if (isSpinning) return;
             if (!currentBet) {
                 alert('Сделайте ставку перед вращением!');
@@ -264,83 +230,65 @@ $betTypes = [
             isSpinning = true;
             const spinBtn = document.getElementById('spinBtn');
             const wheel = document.getElementById('rouletteWheel');
-            const resultDiv = document.getElementById('result');
-            const winningNumberDiv = document.getElementById('winningNumber');
-            const resultText = document.getElementById('resultText');
             const winLoseMessage = document.getElementById('winLoseMessage');
+            let winningNumber=0;
             
             // Случайное число от 0 до 36
             if (betType === 'number' && selectedNumber !== null)
-                const winningNumber = fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType+'number'+selectNumber);
+                await fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType+'&number='+selectedNumber)
+                .then(response => response.text())
+                .then(data => {
+                    winningNumber = data.split('|')[0];
+                    balance = data.split('|')[1];
+                })
             else
-                const winningNumber = fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType);
+                await fetch('database-api/roulette-api.php?bet='+betAmount+'&bettype='+betType)
+                .then(response => response.text())
+                .then(data => {
+                    winningNumber = data.split('|')[0];
+                    balance = data.split('|')[1];
+                })
+            
             const color = getNumberColor(winningNumber);
-
-            // Добавляем анимацию вращения
-            wheel.classList.add('spinning');
-            spinBtn.disabled = true;
-            spinBtn.textContent = '🌀 Вращается...';
             
-            // Вычисляем угол для выигрышного числа (добавляем несколько полных оборотов)
-            const fullRotations = 5 + Math.floor(Math.random() * 3); // 5-7 полных оборотов
-            const targetAngle = fullRotations * 360 + (winningNumber / 37) * 360;
-            
-            // Запускаем вращение
-            wheel.style.transform = `rotate(-${targetAngle}deg)`;
-            
-            // Показываем результат после завершения анимации
-            setTimeout(() => {
-                wheel.classList.remove('spinning');
-                
-                // Отображаем результат
-                winningNumberDiv.textContent = winningNumber;
-                winningNumberDiv.style.background = color === 'red' ? '#d40000' : 
-                                                   color === 'black' ? '#000000' : '#008000';
-                winningNumberDiv.style.color = 'white';
-                
-                resultText.innerHTML = `Выпало: <strong>${winningNumber}</strong> | Цвет: <strong style="color: ${color}">${color === 'green' ? 'Зеленый' : color === 'red' ? 'Красный' : 'Черный'}</strong>`;
-                
-                
-                // Добавляем в историю и обновляем статистику
-                addToHistory(winningNumber, color);
-                updateStats(color);
-                
-                isSpinning = false;
-                spinBtn.disabled = false;
-                spinBtn.textContent = '🎯 Крутить Рулетку';
-                
-                // Анимация результата
-                winningNumberDiv.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    winningNumberDiv.style.transform = 'scale(1)';
-                }, 300);
-                
-                // Очищаем ставку после вращения
-                clearBet();
-                
-            }, 4000);
-        }
-
-
-        function resetGame() {
-            const wheel = document.getElementById('rouletteWheel');
-            const winningNumberDiv = document.getElementById('winningNumber');
-            const resultText = document.getElementById('resultText');
-            const winLoseMessage = document.getElementById('winLoseMessage');
-            
+            // Сбрасываем трансформацию перед началом вращения
+            wheel.style.transition = 'none';
             wheel.style.transform = 'rotate(0deg)';
-            winningNumberDiv.textContent = '-';
-            winningNumberDiv.style.background = 'transparent';
-            resultText.textContent = 'Сделайте ставку и крутите рулетку';
-            winLoseMessage.innerHTML = '';
             
-            spinHistory = [];
-            stats = { red: 0, black: 0, green: 0 };
-            balance = 1000;
-            updateBalance();
-            clearBet();
-            document.getElementById('history').innerHTML = '';
-            updateStatsDisplay();
+            // Даем браузеру время применить сброс
+            setTimeout(() => {
+                // Включаем плавную анимацию
+                wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
+                
+                // Добавляем анимацию вращения
+                wheel.classList.add('spinning');
+                spinBtn.disabled = true;
+                spinBtn.textContent = '🌀 Вращается...';
+                
+                const fullRotations = 5; // Фиксированное количество полных оборотов
+                const numberAngle = (winningNumber / 37) * 360; // Угол конкретного числа (0-360)
+                const targetAngle = fullRotations * 360 + (360 - numberAngle); // Всегда в одну сторону
+                
+                // Запускаем вращение
+                wheel.style.transform = `rotate(${targetAngle}deg)`;
+                
+                // Показываем результат после завершения анимации
+                setTimeout(() => 
+                {
+                    wheel.classList.remove('spinning');
+                    
+                    // Добавляем в историю и обновляем статистику
+                    addToHistory(winningNumber, color);
+                    updateStats(color);
+                    
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = '🎯 Крутить Рулетку';
+
+                    document.getElementById('balance').innerText = balance +" CEV";
+
+                }, 4000);
+            }, 50); // Небольшая задержка для применения сброса
         }
 
         function addToHistory(number, color) {
@@ -721,22 +669,6 @@ $betTypes = [
             background: rgba(255,255,255,0.3);
         }
 
-        .result {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            text-align: center;
-            width: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .result h3 {
-            margin-bottom: 15px;
-            color: #f8e71c;
-        }
-
         .winning-number {
             font-size: 2.5em;
             font-weight: bold;
@@ -863,3 +795,4 @@ $betTypes = [
             }
         }
     </style>
+    <? endif ?>
