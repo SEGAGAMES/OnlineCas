@@ -1,4 +1,5 @@
 <?php
+
 // Проверяем инициализацию игры
 if (!isset($_SESSION['memory_game']) || isset($_POST['restart'])) {
     initializeMemoryGame();
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['card_index'])) {
 
 function initializeMemoryGame() {
     // Папка с картинками карт
-    $imagesFolder = 'imgs/cards/'; // Укажите путь к вашей папке с картинками
+    $imagesFolder = 'imgs/cards/';
     
     // Список картинок для карт (18 пар)
     $cardImages = [
@@ -155,7 +156,7 @@ function isCardMatched($index) {
 
 function getCardImage($index) {
     if (!isset($_SESSION['memory_cards'][$index]) || !isset($_SESSION['memory_images_folder'])) {
-        return 'images/cards/card_back.png'; // Запасная картинка
+        return 'imgs/cards/card_back.png';
     }
     
     $imagePath = $_SESSION['memory_images_folder'] . $_SESSION['memory_cards'][$index];
@@ -165,27 +166,12 @@ function getCardImage($index) {
         return $imagePath;
     } else {
         // Если файл не найден, возвращаем запасной вариант
-        return 'images/cards/card_back.png';
+        return 'imgs/cards/card_back.png';
     }
 }
 
 function isWaitingForReset() {
     return isset($_SESSION['memory_waiting_for_reset']) && $_SESSION['memory_waiting_for_reset'];
-}
-
-// Функция для получения списка доступных картинок в папке
-function getAvailableCardImages($folder) {
-    $images = [];
-    if (is_dir($folder)) {
-        $files = scandir($folder);
-        foreach ($files as $file) {
-            if ($file !== '.' && $file !== '..' && 
-                in_array(pathinfo($file, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg', 'gif', 'webp'])) {
-                $images[] = $file;
-            }
-        }
-    }
-    return $images;
 }
 ?>
 
@@ -327,8 +313,11 @@ function getAvailableCardImages($folder) {
         }
 
         .card-back {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, #8B0000, #B22222, #DC143C);
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.3),
+                0 4px 8px rgba(0,0,0,0.2);
         }
 
         .card-image {
@@ -339,10 +328,10 @@ function getAvailableCardImages($folder) {
         }
 
         .back-image {
-            width: 70%;
-            height: 70%;
-            object-fit: contain;
-            opacity: 0.8;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
         }
 
         .memory-card:hover:not(.flipped):not(.matched):not(.disabled) {
@@ -390,16 +379,6 @@ function getAvailableCardImages($folder) {
             0%, 20%, 60%, 100% { transform: translateY(0); }
             40% { transform: translateY(-8px); }
             80% { transform: translateY(-4px); }
-        }
-
-        .card-back-pattern {
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255,255,255,0.1),
-                rgba(255,255,255,0.1) 8px,
-                rgba(255,255,255,0.05) 8px,
-                rgba(255,255,255,0.05) 16px
-            );
         }
 
         /* Анимация для совпавших карт */
@@ -504,10 +483,10 @@ function getAvailableCardImages($folder) {
                 ?>" onclick="selectMemoryCard(<?php echo $i; ?>)">
                     <div class="memory-card-inner">
                         <div class="card-front">
-                            <img src="<?php echo getCardImage($i); ?>" alt="Card" class="card-image" onerror="this.src='images/cards/card_back.png'">
+                            <img src="<?php echo getCardImage($i); ?>" alt="Card" class="card-image" onerror="this.src='imgs/cards/card_back.png'">
                         </div>
-                        <div class="card-back card-back-pattern">
-                            <img src="images/cards/card_back.png" alt="Card Back" class="back-image" onerror="this.style.display='none'">
+                        <div class="card-back">
+                            <img src="imgs/cards/card_back.png" alt="Card Back" class="back-image">
                         </div>
                     </div>
                 </div>
