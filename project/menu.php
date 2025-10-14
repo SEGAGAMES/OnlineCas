@@ -6,7 +6,7 @@
         <li><a href="index.php?page=shop" class="<?php echo ($currentPage == 'shop') ? 'active' : ''; ?>">Магазин</a></li>
         <li><a href="index.php?page=bonuses" class="<?php echo ($currentPage == 'bonuses') ? 'active' : ''; ?>">Поддержка проекта</a></li>
         <?php if (isset($_SESSION['status'])):
-                if ($_SESSION['status'] == 'admin'): ?>
+                if ($_SESSION['status'] == 'Админ'): ?>
         <li><a href="index.php?page=admin" class="<?php echo ($currentPage == 'admin') ? 'active' : ''; ?>">Админ-панель</a></li>
         <?php endif; endif ?>
     </ul>

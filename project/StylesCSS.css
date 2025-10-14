@@ -1051,14 +1051,14 @@ nav ul li a, .header-right a, .footer-section a {
     margin-bottom: 25px;
 }
 
-.balance-card, .bonus-card {
+.balance-card {
     background: #1e1e1e;
     border-radius: 15px;
     padding: 25px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.balance-card h3, .bonus-card h3 {
+.balance-card h3 {
     color: #c89b3c;
     margin-bottom: 15px;
 }
@@ -1070,16 +1070,6 @@ nav ul li a, .header-right a, .footer-section a {
     margin-bottom: 20px;
 }
 
-.bonus-amount {
-    font-size: 28px;
-    font-weight: bold;
-    color: #c89b3c;
-    margin-bottom: 10px;
-}
-
-.bonus-icon {
-    font-size: 24px;
-}
 
 .balance-actions {
     display: flex;

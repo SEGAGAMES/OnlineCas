@@ -29,7 +29,6 @@
                         <p class='product-description'>{$desc}</p>
                         <div class='product-price'>
                             <span class='price-amount'>{$cost} CEV</span>
-                            <span class='price-bonus'>{$cost} бонусов</span>
                         </div>
                         <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
                             <span class='btn-text'>Купить сейчас</span>
@@ -178,13 +177,7 @@
         background-clip: text;
         margin-bottom: 5px;
     }
-
-    .price-bonus {
-        font-size: 0.9rem;
-        color: #6bcf7f;
-        font-weight: bold;
-    }
-
+    
     .buy-btn {
         background: linear-gradient(45deg, #4d96ff, #6bcf7f);
         color: white;

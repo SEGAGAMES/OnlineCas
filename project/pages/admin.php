@@ -1,6 +1,6 @@
 <?php 
     if (isset($_SESSION['status'])):
-        if ($_SESSION['status'] == 'admin'):
+        if ($_SESSION['status'] == 'Админ'):
 // Обработка загрузки фото
 require_once ('database-api/load-photo');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['upload_photo'])) {

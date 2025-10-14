@@ -31,23 +31,15 @@ require_once('database-api/load-items');
                 <label>Email:</label>
                 <span><?php echo $_SESSION['user_email']?></span>
             </div>
-            <div class="detail-item">
-                <label>Телефон:</label>
-                <span>+7 (123) 456-78-90</span>
-            </div>
+
             <div class="detail-item">
                 <label>Дата регистрации:</label>
-                <span>15.01.2024</span>
+                <span><?php echo $_SESSION['regdate']?></span>
             </div>
-        </div>
-    </div>
-
-    <!-- Блок с балансом и статистикой -->
-    <div class="financial-info">
-        <div class="balance-card">
-            <h3>Баланс</h3>
-            <div class="balance-amount"><?php echo $_SESSION['balance']?> CEV</div>
-            <div class="balance-actions">
+            <div class="detail-item">
+                <label>Баланс:</label>
+                <span class="balance-amount"><?php echo $_SESSION['balance']?> CEV</span>
+                <div class="balance-actions">
                 <button class="btn-primary" onclick="openBonuses()">Пополнить</button>
                 <script>
                     function openBonuses() {window.location.href = "index.php?page=bonuses";}
@@ -57,15 +49,9 @@ require_once('database-api/load-items');
                     function canNot() {alert("Вы не моежете вывести отсюда деньги)")}
                 </script>
             </div>
-        </div>
-
-        <div class="bonus-card">
-            <h3>Бонусы</h3>
-            <div class="bonus-amount">5 000 <span class="bonus-icon">🎁</span></div>
-            <p>Доступно для использования в играх</p>
+            </div>
         </div>
     </div>
-
     <!-- Инвентарь -->
     <div class="inventory-section">
         <h3>Мой инвентарь</h3>

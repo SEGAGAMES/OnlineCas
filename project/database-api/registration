@@ -5,8 +5,10 @@ function register_user($email, $surname, $name, $password, $lastname = "")
     $db = new Database;
     if ($db) {
         try {
-            $query = "INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`, `ava`) VALUES (?, ?, ?, ?, ?, '1000', 'common',3)";
-            $result = $db->SendQuery($query, [$email,password_hash($password, PASSWORD_DEFAULT), $surname, $name, $lastname]);
+            date_default_timezone_set('Europe/Moscow');
+
+            $query = "INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`,`regdate`, `balance`, `status`, `ava`) VALUES (?, ?, ?, ?, ?, ?, '1000', 'Обычный',3)";
+            $result = $db->SendQuery($query, [$email,password_hash($password, PASSWORD_DEFAULT), $surname, $name, $lastname, date('y.m.d')]);
             $query2 = "INSERT INTO `inventory`(`item_id`, `email`) VALUES ('3',?)";
             $result2 = $db->SendQuery($query2, [$email]);
             $query2 = "INSERT INTO `inventory`(`item_id`, `email`) VALUES ('4',?)";

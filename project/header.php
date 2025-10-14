@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_P
         $_SESSION['balance'] = $user['balance'];
         $_SESSION['status'] = $user['status'];
         $_SESSION['ava'] = $user['ava'];
+        $_SESSION['regdate']=$user['regdate'];
         // Перенаправляем на ту же страницу после успешного входа
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;
@@ -114,7 +115,6 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
         <div class="header-right">
             <?php if (isLoggedIn()): ?>
                 <img onclick="window.location.href='index.php?page=profile'" src="<?php  require_once("database-api/load-items"); echo loadItem($_SESSION['ava'])['path']?>" alt="Аватар" width="75" height="75" style="border-radius: 50%; cursor: pointer" >
-                <span class="user-welcome"><?php echo $_SESSION['balance']?> CEV</span>
               <a href="index.php?page=bonuses#donate-form">Поддержать проект</a>
                 <a href="?logout=true">Выйти</a>
             <?php else: ?>

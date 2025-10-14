@@ -79,9 +79,11 @@ $betTypes = [
                         <div class="bet-amount">
                             <label>Сумма ставки:</label>
                             <div class="amount-controls">
+                                <button class="amount-btn" onclick="defaultBet()">10</button>
                                 <button class="amount-btn" onclick="changeBetAmount(-10)">-10</button>
-                                <input type="number" id="betAmount" value="10" min="1" max="1000">
+                                <input type="number" id="betAmount" value="10" min="10" max="100000">
                                 <button class="amount-btn" onclick="changeBetAmount(10)">+10</button>
+                                <button class="amount-btn" onclick="X2Bet(-10)">X2</button>
                             </div>
                         </div>
                     </div>
@@ -198,7 +200,27 @@ $betTypes = [
             document.getElementById('currentBetInfo').textContent = betInfo;
             document.getElementById('currentBetAmount').textContent = currentBet ? `$${betAmount}` : '$0';
         }
-
+        function defaultBet()
+        {
+            const betAmountInput = document.getElementById('betAmount');
+            let newAmount = 10;
+            
+            if (newAmount > balance) newAmount = balance;
+            
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
+        function X2Bet()
+        {
+            const betAmountInput = document.getElementById('betAmount');
+            let currentAmount = parseInt(betAmountInput.value);
+            let newAmount = currentAmount * 2;
+            
+            if (newAmount > balance) newAmount = balance;
+            
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
         function changeBetAmount(change)
         {
             const betAmountInput = document.getElementById('betAmount');

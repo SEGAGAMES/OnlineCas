@@ -44,8 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 $_SESSION['balance'] = 1000;
                 $_SESSION['user_email'] = $email;
                 $_SESSION['ava'] = "3";
-                $_SESSION['status'] = 'common';
-                require_once('databesa-api/addHistory.php');
+                $_SESSION['status'] = 'Обычный';
+                $_SESSION['regdate'] = date('y.m.d.');
+                require_once('database-api/addHistory.php');
                 addToHistory('Регистрация', 1000);
                 // Перенаправляем в профиль
                 echo "<script>window.location.href = 'index.php?page=home';</script>";
