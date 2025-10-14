@@ -1,29 +1,41 @@
 <?php
 
 // Проверяем инициализацию игры
-if (!isset($_SESSION['memory_game'])) {
+if (!isset($_SESSION['memory_game']) || isset($_POST['restart'])) {
     initializeMemoryGame();
+}
+
+// Обработка ходов
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['card_index'])) {
+    handleCardClick($_POST['card_index']);
 }
 
 function initializeMemoryGame() {
     // Папка с картинками карт
     $imagesFolder = 'imgs/cards/';
     
-    // Список картинок для карт (9 пар)
+    // Список картинок для карт (18 пар)
     $cardImages = [
-        'ace_of_spades.png', 'king_of_spades.png', 'queen_of_spades.png',
-        'ace_of_hearts.png', 'king_of_hearts.png', 'queen_of_hearts.png',
-        'ace_of_diamonds.png', 'king_of_diamonds.png', 'queen_of_diamonds.png'
+        'ace_of_spades.png', 'king_of_spades.png', 'queen_of_spades.png', 'jack_of_spades.png',
+        '10_of_spades.png', '9_of_spades.png', '8_of_spades.png', '7_of_spades.png', '6_of_spades.png',
+        'ace_of_hearts.png', 'king_of_hearts.png', 'queen_of_hearts.png', 'jack_of_hearts.png',
+        '10_of_hearts.png', '9_of_hearts.png', '8_of_hearts.png', '7_of_hearts.png', '6_of_hearts.png',
+        'ace_of_diamonds.png', 'king_of_diamonds.png', 'queen_of_diamonds.png', 'jack_of_diamonds.png',
+        '10_of_diamonds.png', '9_of_diamonds.png', '8_of_diamonds.png', '7_of_diamonds.png', '6_of_diamonds.png',
+        'ace_of_clubs.png', 'king_of_clubs.png', 'queen_of_clubs.png', 'jack_of_clubs.png',
+        '10_of_clubs.png', '9_of_clubs.png', '8_of_clubs.png', '7_of_clubs.png', '6_of_clubs.png'
     ];
     
-    // Создаем пары (9 пар = 18 карт)
-    $cards = array_merge($cardImages, $cardImages);
+    // Выбираем случайные 18 картинок для создания 18 пар
+    shuffle($cardImages);
+    $selectedCards = array_slice($cardImages, 0, 18);
+    $cards = array_merge($selectedCards, $selectedCards);
     shuffle($cards);
     
     $_SESSION['memory_cards'] = $cards;
     $_SESSION['memory_images_folder'] = $imagesFolder;
-    $_SESSION['memory_flipped'] = array_fill(0, 18, false);
-    $_SESSION['memory_matched'] = array_fill(0, 18, false);
+    $_SESSION['memory_flipped'] = array_fill(0, 36, false);
+    $_SESSION['memory_matched'] = array_fill(0, 36, false);
     $_SESSION['memory_first_card'] = null;
     $_SESSION['memory_second_card'] = null;
     $_SESSION['memory_moves'] = 0;
@@ -31,25 +43,135 @@ function initializeMemoryGame() {
     $_SESSION['memory_game_started'] = true;
     $_SESSION['memory_game_over'] = false;
     $_SESSION['memory_waiting_for_reset'] = false;
-    $_SESSION['memory_can_click'] = true;
 }
 
-function getGameState() {
-    return [
-        'moves' => $_SESSION['memory_moves'] ?? 0,
-        'pairs_found' => $_SESSION['memory_pairs_found'] ?? 0,
-        'pairs_remaining' => 9 - ($_SESSION['memory_pairs_found'] ?? 0),
-        'game_over' => $_SESSION['memory_game_over'] ?? false
-    ];
+function handleCardClick($cardIndex) {
+    // Если ждем сброса карт или игра окончена - игнорируем клик
+    if ((isset($_SESSION['memory_waiting_for_reset']) && $_SESSION['memory_waiting_for_reset']) || 
+        (isset($_SESSION['memory_game_over']) && $_SESSION['memory_game_over'])) {
+        return;
+    }
+    
+    // Проверяем инициализацию переменных сессии
+    if (!isset($_SESSION['memory_flipped'][$cardIndex]) || 
+        !isset($_SESSION['memory_matched'][$cardIndex])) {
+        return;
+    }
+    
+    // Если карта уже перевернута или совпала - игнорируем
+    if ($_SESSION['memory_flipped'][$cardIndex] || $_SESSION['memory_matched'][$cardIndex]) {
+        return;
+    }
+    
+    // Переворачиваем карту
+    $_SESSION['memory_flipped'][$cardIndex] = true;
+    
+    // Если это первая карта в паре
+    if ($_SESSION['memory_first_card'] === null) {
+        $_SESSION['memory_first_card'] = $cardIndex;
+    } 
+    // Если это вторая карта в паре
+    elseif ($_SESSION['memory_second_card'] === null) {
+        $_SESSION['memory_second_card'] = $cardIndex;
+        $_SESSION['memory_moves']++;
+        
+        // Проверяем совпадение
+        checkForMemoryMatch();
+    }
+}
+
+function checkForMemoryMatch() {
+    $firstIndex = $_SESSION['memory_first_card'];
+    $secondIndex = $_SESSION['memory_second_card'];
+    
+    // Проверяем существование индексов
+    if (!isset($_SESSION['memory_cards'][$firstIndex]) || !isset($_SESSION['memory_cards'][$secondIndex])) {
+        return;
+    }
+    
+    $firstCard = $_SESSION['memory_cards'][$firstIndex];
+    $secondCard = $_SESSION['memory_cards'][$secondIndex];
+    
+    // Если карты совпадают
+    if ($firstCard === $secondCard) {
+        $_SESSION['memory_matched'][$firstIndex] = true;
+        $_SESSION['memory_matched'][$secondIndex] = true;
+        $_SESSION['memory_pairs_found']++;
+        
+        // Проверяем завершение игры
+        if ($_SESSION['memory_pairs_found'] === 18) {
+            $_SESSION['memory_game_over'] = true;
+        }
+        
+        // Сбрасываем текущую пару
+        $_SESSION['memory_first_card'] = null;
+        $_SESSION['memory_second_card'] = null;
+        $_SESSION['memory_waiting_for_reset'] = false;
+    } else {
+        // Если карты не совпали - устанавливаем флаг для сброса
+        $_SESSION['memory_waiting_for_reset'] = true;
+    }
+}
+
+function resetNonMatchingCards() {
+    if (isset($_SESSION['memory_waiting_for_reset']) && $_SESSION['memory_waiting_for_reset']) {
+        $firstIndex = $_SESSION['memory_first_card'];
+        $secondIndex = $_SESSION['memory_second_card'];
+        
+        // Переворачиваем обе карты обратно
+        if (isset($_SESSION['memory_flipped'][$firstIndex])) {
+            $_SESSION['memory_flipped'][$firstIndex] = false;
+        }
+        if (isset($_SESSION['memory_flipped'][$secondIndex])) {
+            $_SESSION['memory_flipped'][$secondIndex] = false;
+        }
+        
+        // Сбрасываем текущую пару и флаг
+        $_SESSION['memory_first_card'] = null;
+        $_SESSION['memory_second_card'] = null;
+        $_SESSION['memory_waiting_for_reset'] = false;
+    }
+}
+
+function isMemoryGameOver() {
+    return isset($_SESSION['memory_game_over']) && $_SESSION['memory_game_over'];
+}
+
+// Функции для безопасного получения значений сессии
+function getMemoryMoves() {
+    return isset($_SESSION['memory_moves']) ? $_SESSION['memory_moves'] : 0;
+}
+
+function getMemoryPairsFound() {
+    return isset($_SESSION['memory_pairs_found']) ? $_SESSION['memory_pairs_found'] : 0;
+}
+
+function isCardFlipped($index) {
+    return isset($_SESSION['memory_flipped'][$index]) ? $_SESSION['memory_flipped'][$index] : false;
+}
+
+function isCardMatched($index) {
+    return isset($_SESSION['memory_matched'][$index]) ? $_SESSION['memory_matched'][$index] : false;
 }
 
 function getCardImage($index) {
-    if (!isset($_SESSION['memory_cards'][$index])) {
+    if (!isset($_SESSION['memory_cards'][$index]) || !isset($_SESSION['memory_images_folder'])) {
         return 'imgs/cards/card_back.png';
     }
     
-    $imagePath = 'imgs/cards/' . $_SESSION['memory_cards'][$index];
-    return $imagePath;
+    $imagePath = $_SESSION['memory_images_folder'] . $_SESSION['memory_cards'][$index];
+    
+    // Проверяем существование файла
+    if (file_exists($imagePath)) {
+        return $imagePath;
+    } else {
+        // Если файл не найден, возвращаем запасной вариант
+        return 'imgs/cards/card_back.png';
+    }
+}
+
+function isWaitingForReset() {
+    return isset($_SESSION['memory_waiting_for_reset']) && $_SESSION['memory_waiting_for_reset'];
 }
 ?>
 
@@ -75,7 +197,7 @@ function getCardImage($index) {
         }
 
         .memory-game-container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
@@ -98,6 +220,11 @@ function getCardImage($index) {
             background-clip: text;
         }
 
+        .game-header p {
+            color: #b8b8d2;
+            font-size: 1em;
+        }
+
         .game-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -110,31 +237,51 @@ function getCardImage($index) {
             padding: 15px;
             border-radius: 12px;
             text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .stat-value {
             font-size: 1.6em;
             font-weight: bold;
             color: #ffd93d;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #b8b8d2;
+            font-size: 0.85em;
         }
 
         .memory-board {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 25px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .memory-card {
             aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 8px;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s ease;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            position: relative;
         }
 
-        .memory-card.flipped {
+        .memory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped .memory-card-inner {
             transform: rotateY(180deg);
         }
 
@@ -143,9 +290,8 @@ function getCardImage($index) {
             cursor: default;
         }
 
-        .memory-card.disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
+        .memory-card.matched .card-front {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
         }
 
         .card-front, .card-back {
@@ -155,31 +301,47 @@ function getCardImage($index) {
             backface-visibility: hidden;
             border-radius: 8px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
 
         .card-front {
             background: white;
             transform: rotateY(180deg);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
         }
 
         .card-back {
             background: linear-gradient(135deg, #8B0000, #B22222, #DC143C);
             border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.3),
+                0 4px 8px rgba(0,0,0,0.2);
         }
 
         .card-image {
-            width: 85%;
-            height: 85%;
+            width: 90%;
+            height: 90%;
             object-fit: contain;
+            border-radius: 6px;
         }
 
         .back-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched):not(.disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .memory-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
         }
 
         .game-controls {
@@ -191,27 +353,93 @@ function getCardImage($index) {
             color: white;
             border: none;
             padding: 12px 25px;
+            font-size: 1em;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255,107,107,0.4);
         }
 
         .win-message {
             text-align: center;
             background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            display: none;
+            animation: bounce 0.5s;
         }
 
-        .win-message.show {
-            display: block;
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+            80% { transform: translateY(-4px); }
         }
 
+        /* Анимация для совпавших карт */
+        @keyframes matchGlow {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .memory-card.matched {
+            animation: matchGlow 0.8s ease;
+        }
+
+        /* Анимация для несовпавших карт */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .memory-card.mismatch {
+            animation: shake 0.4s ease;
+        }
+
+        /* Адаптивность */
         @media (max-width: 768px) {
             .memory-board {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(6, 1fr);
+                gap: 4px;
+            }
+            
+            .game-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .game-header h1 {
+                font-size: 1.8em;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.4em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .memory-board {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 3px;
+            }
+            
+            .memory-game-container {
+                padding: 15px;
+            }
+            
+            body {
+                padding: 5px;
             }
         }
     </style>
@@ -220,189 +448,122 @@ function getCardImage($index) {
     <div class="memory-game-container">
         <div class="game-header">
             <h1>🎮 Игра на память с картами</h1>
-            <p>Найдите все пары одинаковых карт!</p>
+            <p>Найдите все пары одинаковых игральных карт!</p>
         </div>
 
         <div class="game-stats">
             <div class="stat-card">
-                <div class="stat-value" id="moves-counter"><?php echo $_SESSION['memory_moves'] ?? 0; ?></div>
-                <div>Ходы</div>
+                <div class="stat-value"><?php echo getMemoryMoves(); ?></div>
+                <div class="stat-label">Ходы</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="pairs-counter"><?php echo ($_SESSION['memory_pairs_found'] ?? 0) . ' / 9'; ?></div>
-                <div>Найдено пар</div>
+                <div class="stat-value"><?php echo getMemoryPairsFound(); ?> / 18</div>
+                <div class="stat-label">Найдено пар</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="remaining-counter"><?php echo 9 - ($_SESSION['memory_pairs_found'] ?? 0); ?></div>
-                <div>Осталось пар</div>
+                <div class="stat-value"><?php echo 18 - getMemoryPairsFound(); ?></div>
+                <div class="stat-label">Осталось пар</div>
             </div>
         </div>
 
-        <div class="win-message" id="win-message">
-            <h2>🎉 Поздравляем!</h2>
-            <p>Вы нашли все пары за <span id="final-moves">0</span> ходов!</p>
-        </div>
+        <?php if (isMemoryGameOver()): ?>
+            <div class="win-message">
+                <h2>🎉 Поздравляем! 🎉</h2>
+                <p>Вы нашли все 18 пар карт за <?php echo getMemoryMoves(); ?> ходов!</p>
+                <p>Отличная память! 🧠</p>
+            </div>
+        <?php endif; ?>
 
-        <div class="memory-board" id="memory-board">
-            <?php for ($i = 0; $i < 18; $i++): ?>
-                <div class="memory-card" data-index="<?php echo $i; ?>">
-                    <div class="card-front">
-                        <img src="<?php echo getCardImage($i); ?>" alt="Card" class="card-image">
-                    </div>
-                    <div class="card-back">
-                        <img src="imgs/cards/card_back.png" alt="Card Back" class="back-image">
+        <div class="memory-board">
+            <?php for ($i = 0; $i < 36; $i++): ?>
+                <div class="memory-card <?php 
+                    echo isCardFlipped($i) ? 'flipped ' : '';
+                    echo isCardMatched($i) ? 'matched' : '';
+                    echo (isWaitingForReset() && !isCardMatched($i)) ? 'disabled' : '';
+                ?>" onclick="selectMemoryCard(<?php echo $i; ?>)">
+                    <div class="memory-card-inner">
+                        <div class="card-front">
+                            <img src="<?php echo getCardImage($i); ?>" alt="Card" class="card-image" onerror="this.src='imgs/cards/card_back.png'">
+                        </div>
+                        <div class="card-back">
+                            <img src="imgs/cards/card_back.png" alt="Card Back" class="back-image">
+                        </div>
                     </div>
                 </div>
             <?php endfor; ?>
         </div>
 
         <div class="game-controls">
-            <button class="restart-btn" id="restart-btn">🔄 Новая игра</button>
+            <form method="POST">
+                <button type="submit" name="restart" class="restart-btn">
+                    🔄 Новая игра
+                </button>
+            </form>
         </div>
     </div>
 
     <script>
         let canClick = true;
-
-        // Переворот карты
-        async function flipCard(index) {
+        
+        function selectMemoryCard(cardIndex) {
+            // Блокируем клики во время анимаций или ожидания сброса
             if (!canClick) return;
             
-            const card = document.querySelector(`.memory-card[data-index="${index}"]`);
-            if (card.classList.contains('flipped') || card.classList.contains('matched')) {
-                return;
-            }
-
-            canClick = false;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.style.display = 'none';
             
-            try {
-                const response = await fetch('ajax_memory.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `action=flip&index=${index}`
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    card.classList.add('flipped');
-                    
-                    switch (data.action) {
-                        case 'first_flip':
-                            updateStats(data.game_state);
-                            break;
-                            
-                        case 'match':
-                            data.matched_cards.forEach(cardIndex => {
-                                const matchedCard = document.querySelector(`.memory-card[data-index="${cardIndex}"]`);
-                                if (matchedCard) {
-                                    matchedCard.classList.add('matched');
-                                }
-                            });
-                            updateStats(data.game_state);
-                            
-                            if (data.game_over) {
-                                showWinMessage(data.game_state.moves);
-                            }
-                            break;
-                            
-                        case 'mismatch':
-                            updateStats(data.game_state);
-                            
-                            setTimeout(() => {
-                                resetNonMatchingCards();
-                            }, 1000);
-                            return;
-                    }
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'card_index';
+            input.value = cardIndex;
             
-            canClick = true;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
-
-        // Сброс несовпавших карт
-        async function resetNonMatchingCards() {
-            try {
-                const response = await fetch('ajax_memory.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'action=reset'
-                });
+        
+        // Автоматическое обновление для разных сценариев
+        <?php if (isWaitingForReset()): ?>
+            // Если карты не совпали - переворачиваем их обратно через 1 секунду
+            setTimeout(() => {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.style.display = 'none';
                 
-                const data = await response.json();
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'reset_cards';
+                input.value = '1';
                 
-                if (data.success) {
-                    data.reset_cards.forEach(cardIndex => {
-                        const card = document.querySelector(`.memory-card[data-index="${cardIndex}"]`);
-                        if (card && !card.classList.contains('matched')) {
-                            card.classList.remove('flipped');
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            
-            canClick = true;
-        }
-
-        // Обновление статистики
-        function updateStats(gameState) {
-            document.getElementById('moves-counter').textContent = gameState.moves;
-            document.getElementById('pairs-counter').textContent = `${gameState.pairs_found} / 9`;
-            document.getElementById('remaining-counter').textContent = gameState.pairs_remaining;
-        }
-
-        // Показать сообщение о победе
-        function showWinMessage(moves) {
-            document.getElementById('final-moves').textContent = moves;
-            document.getElementById('win-message').classList.add('show');
-        }
-
-        // Новая игра
-        async function restartGame() {
-            try {
-                const response = await fetch('ajax_memory.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'action=restart'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Перезагружаем страницу для простоты
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        // Инициализация игры
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }, 1000);
+        <?php endif; ?>
+        
+        // Блокировка кликов во время анимации переворота
         document.addEventListener('DOMContentLoaded', function() {
-            // Обработчики кликов для карт
-            document.querySelectorAll('.memory-card').forEach(card => {
+            const cards = document.querySelectorAll('.memory-card');
+            cards.forEach(card => {
                 card.addEventListener('click', function() {
-                    const index = parseInt(this.dataset.index);
-                    flipCard(index);
+                    if (!canClick || this.classList.contains('disabled')) return;
+                    canClick = false;
+                    setTimeout(() => {
+                        canClick = true;
+                    }, 500);
                 });
             });
-            
-            document.getElementById('restart-btn').addEventListener('click', restartGame);
         });
     </script>
 </body>
 </html>
+
+<?php
+// Обработка сброса несовпавших карт
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_cards'])) {
+    resetNonMatchingCards();
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+?>
