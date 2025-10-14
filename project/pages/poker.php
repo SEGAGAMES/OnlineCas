@@ -14,7 +14,7 @@ function initializeMemoryGame() {
     // Папка с картинками карт
     $imagesFolder = 'imgs/cards/';
     
-    // Список картинок для карт (18 пар)
+    // Список картинок для карт (36 пар)
     $cardImages = [
         'ace_of_spades.png', 'king_of_spades.png', 'queen_of_spades.png', 'jack_of_spades.png',
         '10_of_spades.png', '9_of_spades.png', '8_of_spades.png', '7_of_spades.png', '6_of_spades.png',
@@ -26,9 +26,9 @@ function initializeMemoryGame() {
         '10_of_clubs.png', '9_of_clubs.png', '8_of_clubs.png', '7_of_clubs.png', '6_of_clubs.png'
     ];
     
-    // Выбираем случайные 18 картинок для создания 18 пар
+    // Выбираем случайные 36 картинок для создания 36 пар
     shuffle($cardImages);
-    $selectedCards = array_slice($cardImages, 0, 18);
+    $selectedCards = array_slice($cardImages, 0, 36);
     $cards = array_merge($selectedCards, $selectedCards);
     shuffle($cards);
     
@@ -99,7 +99,7 @@ function checkForMemoryMatch() {
         $_SESSION['memory_pairs_found']++;
         
         // Проверяем завершение игры
-        if ($_SESSION['memory_pairs_found'] === 18) {
+        if ($_SESSION['memory_pairs_found'] === 36) {
             $_SESSION['memory_game_over'] = true;
         }
         
@@ -457,11 +457,11 @@ function isWaitingForReset() {
                 <div class="stat-label">Ходы</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value"><?php echo getMemoryPairsFound(); ?> / 18</div>
+                <div class="stat-value"><?php echo getMemoryPairsFound(); ?> / 36</div>
                 <div class="stat-label">Найдено пар</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value"><?php echo 18 - getMemoryPairsFound(); ?></div>
+                <div class="stat-value"><?php echo 36 - getMemoryPairsFound(); ?></div>
                 <div class="stat-label">Осталось пар</div>
             </div>
         </div>
@@ -469,7 +469,7 @@ function isWaitingForReset() {
         <?php if (isMemoryGameOver()): ?>
             <div class="win-message">
                 <h2>🎉 Поздравляем! 🎉</h2>
-                <p>Вы нашли все 18 пар карт за <?php echo getMemoryMoves(); ?> ходов!</p>
+                <p>Вы нашли все 36 пар карт за <?php echo getMemoryMoves(); ?> ходов!</p>
                 <p>Отличная память! 🧠</p>
             </div>
         <?php endif; ?>
