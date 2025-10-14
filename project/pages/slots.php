@@ -65,7 +65,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             <div class="info-panel">
                 <div class="info-item">
                     <div class="info-label">Баланс</div>
-                    <div class="info-value" id="balance">1000</div>
+                    <div class="info-value" id="balance"><?php echo $_SESSION['balance']?> CEV</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Ставка</div>
@@ -160,20 +160,14 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                     <p>💡 Выигрыш = Ставка × Множитель</p>
                 </div>
             </div>
-
-            <div class="history">
-                <h3>📊 Последние игры</h3>
-                <div class="history-items" id="history"></div>
-            </div>
         </div>
     </div>
 
     <script>
         let isSpinning = false;
-        let balance = 1000;
+        let balance = <?php echo $_SESSION['balance']?>;
         let currentBet = 10;
         let wins = 0;
-        let gameHistory = [];
         const symbols = <?php echo json_encode($slotSymbols); ?>;
         const winMultipliers = {
             '7️⃣': 10,
@@ -185,8 +179,74 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             '🍋': 2,
             '🍒': 2
         };
-
-        function spinSlots() {
+        async function spinReel(reel, index, symbol, delay)
+        {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Создаем новые символы для барабана, начиная с текущей позиции
+                    let newContent = '';
+                    const currentPosition = getCurrentReelPosition(reel); // Получаем текущую позицию
+                    
+                    for (let i = 0; i < 10; i++) {
+                        const newSymbol = i === 4 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
+                        newContent += `<div class="symbol">${newSymbol}</div>`;
+                    }
+                    reel.innerHTML = newContent;
+                    
+                    // Анимация вращения от текущей позиции
+                    const spinDuration = 1500;
+                    const targetPosition = currentPosition - 3 * 100; // Прокручиваем на 3 позиции
+                    
+                    reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
+                    reel.style.transform = `translateY(${targetPosition}px)`;
+                    
+                    // Разрешаем Promise когда анимация завершится
+                    setTimeout(resolve, spinDuration + 100);
+                    
+                }, delay);
+            });
+        }
+        function stopReel(reel, symbol, delay) 
+        {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Создаем новые символы для барабана
+                    let newContent = '';
+                    const currentPosition = getCurrentReelPosition(reel);
+                    
+                    for (let i = 0; i < 10; i++) {
+                        const newSymbol = i === 4 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
+                        newContent += `<div class="symbol">${newSymbol}</div>`;
+                    }
+                    reel.innerHTML = newContent;
+                    
+                    // Анимация остановки
+                    const stopDuration = 1000;
+                    const targetPosition = currentPosition - 3 * 100;
+                    
+                    reel.style.transition = `transform ${stopDuration}ms cubic-bezier(0.2, 0.8, 0.3, 1)`;
+                    reel.style.transform = `translateY(${targetPosition}px)`;
+                    
+                    // Убираем анимацию spinning после остановки
+                    setTimeout(() => {
+                        reel.parentElement.classList.remove('spinning');
+                        resolve();
+                    }, stopDuration);
+                    
+                }, delay);
+            });
+        }
+        function getCurrentReelPosition(reel)
+        {
+            const transform = reel.style.transform;
+            if (transform) {
+                const match = transform.match(/translateY\((-?\d+)px\)/);
+                return match ? parseInt(match[1]) : 0;
+            }
+            return 0;
+        }
+        async function spinSlots()
+        {
             if (isSpinning || balance < currentBet) return;
             
             isSpinning = true;
@@ -223,52 +283,50 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             const results = [];
             
             // Сначала сбрасываем transform без анимации
-            reels.forEach(reel => {
+            reels.forEach(reel =>
+            {
                 reel.style.transition = 'none';
                 reel.style.transform = 'translateY(0)';
             });
             
             // Принудительно переflow, чтобы применить сброс transform
             void reels[0].offsetWidth;
-            
+            let randomSymbols = []; 
+            await fetch('database-api/slots-api.php?bet='+currentBet)
+                .then(response => response.text())
+                .then(data => {
+                    randomSymbols.push(data.split('|')[0]);
+                    randomSymbols.push(data.split('|')[1]);
+                    randomSymbols.push(data.split('|')[2]);
+                })
             // Теперь устанавливаем анимацию и запускаем
+            // Заменяем старую анимацию на эту:
             reels.forEach((reel, index) => {
-                const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-                results.push(randomSymbol);
-                
-                // Создаем новые символы для барабана
-                let newContent = '';
-                for (let i = 0; i < 10; i++) {
-                    const symbol = i === 4 ? randomSymbol : symbols[Math.floor(Math.random() * symbols.length)];
-                    newContent += `<div class="symbol">${symbol}</div>`;
-                }
-                reel.innerHTML = newContent;
-                
-                // Анимация вращения
-                const spinDuration = 2000 + index * 500; // Разное время остановки
-                const targetPosition = -3 * 100; // 3-я позиция (центр)
-                
-                // Включаем transition и запускаем анимацию
-                setTimeout(() => {
-                    reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
-                    reel.style.transform = `translateY(${targetPosition}px)`;
-                }, 10);
+                reel.style.transition = 'none';
+                // Сохраняем текущую позицию вместо сброса в 0
+                const currentPos = getCurrentReelPosition(reel);
+                reel.style.transform = `translateY(${currentPos}px)`;
             });
-            
-            // Проверяем результат после остановки всех барабанов
-            setTimeout(() => {
-                reels.forEach(reel => reel.parentElement.classList.remove('spinning'));
-                
-                // Проверяем выигрыш
-                checkWin(results);
-                
-                isSpinning = false;
-                spinBtn.disabled = false;
-                spinBtn.textContent = '🎯 Крутить Барабаны';
-            }, 3500);
+
+            // Принудительно переflow
+            void reels[0].offsetWidth;
+
+            // Запускаем барабаны поочередно
+            for (let i = 0; i < reels.length; i++)
+            {
+                await spinReel(reels[i], i, randomSymbols[i], i * 600); // Задержка между барабанами
+                reels[i].parentElement.classList.remove('spinning');
+            }
+
+            // Проверяем выигрыш после остановки всех барабанов
+            checkWin(randomSymbols);
+            isSpinning = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = '🎯 Крутить Барабаны';
         }
 
-        function checkWin(results) {
+        function checkWin(results)
+        {
             const resultDiv = document.getElementById('result');
             const winFrames = [
                 document.getElementById('winFrame1'),
@@ -280,126 +338,125 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             let winMessage = '';
             
             // Проверяем комбинации
-            if (results[0] === results[1] && results[1] === results[2]) {
+            if (results[0] === results[1] && results[1] === results[2]) 
+            {
                 // Три одинаковых символа
                 winAmount = currentBet * winMultipliers[results[0]];
                 winMessage = `🎉 ДЖЕКПОТ! ${results[0]} ${results[1]} ${results[2]} - Выигрыш: ${winAmount}!`;
                 
                 // Подсвечиваем все три барабана
                 winFrames.forEach(frame => frame.classList.add('active'));
-            } else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
-                // Два одинаковых символа - находим какой именно символ повторяется
-                let matchingSymbol;
-                if (results[0] === results[1]) matchingSymbol = results[0];
-                else if (results[1] === results[2]) matchingSymbol = results[1];
-                else matchingSymbol = results[0]; // results[0] === results[2]
-                
-                // Используем множитель для парного символа, но меньше чем для трёх
-                winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
-                winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;
-                
-                // Подсвечиваем соответствующие барабаны
-                if (results[0] === results[1]) {
-                    winFrames[0].classList.add('active');
-                    winFrames[1].classList.add('active');
-                }
-                if (results[1] === results[2]) {
-                    winFrames[1].classList.add('active');
-                    winFrames[2].classList.add('active');
-                }
-                if (results[0] === results[2]) {
-                    winFrames[0].classList.add('active');
-                    winFrames[2].classList.add('active');
-                }
-            } else {
-                winMessage = '😞 Попробуйте еще раз!';
-            }
+            } 
+            else
+                if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2])
+                {
+                    // Два одинаковых символа - находим какой именно символ повторяется
+                    let matchingSymbol;
+                    if (results[0] === results[1]) matchingSymbol = results[0];
+                    else
+                         if (results[1] === results[2]) matchingSymbol = results[1];
+                        else matchingSymbol = results[0];
+                    
+                    // Используем множитель для парного символа, но меньше чем для трёх
+                    winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
+                    winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;
+                    
+                    // Подсвечиваем соответствующие барабаны
+                    if (results[0] === results[1]) 
+                    {
+                        winFrames[0].classList.add('active');
+                        winFrames[1].classList.add('active');
+                    }
+                    if (results[1] === results[2]) 
+                    {
+                        winFrames[1].classList.add('active');
+                        winFrames[2].classList.add('active');
+                    }
+                    if (results[0] === results[2]) 
+                    {
+                        winFrames[0].classList.add('active');
+                        winFrames[2].classList.add('active');
+                    }
+                } 
+                else
+                    winMessage = '😞 Попробуйте еще раз!';
             
             // Обновляем баланс и статистику
-            if (winAmount > 0) {
-                balance += winAmount;
+            if (winAmount > 0) 
+            {
+                balance = <?php echo $_SESSION['balance']?>;
                 wins++;
                 resultDiv.innerHTML = `<div class="win-message">${winMessage}</div>`;
-                addToHistory(results.join(' ') + ` +${winAmount}`, true);
-            } else {
-                resultDiv.innerHTML = `<div>${winMessage}</div>`;
-                addToHistory(results.join(' ') + ' -', false);
-            }
-            
+            } 
+            else
+                resultDiv.innerHTML = `<div>${winMessage}</div>`;            
             updateDisplay();
         }
 
-        function changeBet(amount) {
+        function changeBet(amount)
+        {
             const newBet = currentBet + amount;
-            if (newBet >= 10 && newBet <= 1000 && newBet <= balance) {
+            if (newBet >= 10 && newBet <= 100000 && newBet <= balance)
+            {
                 currentBet = newBet;
                 updateDisplay();
             }
         }
 
-        function setCustomBet() {
+        function setCustomBet()
+        {
             const betInput = document.getElementById('betInput');
             let newBet = parseInt(betInput.value);
             
             // Валидация введенного значения
-            if (isNaN(newBet) || newBet < 10) {
+            if (isNaN(newBet) || newBet < 10)
                 newBet = 10;
-            } else if (newBet > 1000) {
-                newBet = 1000;
-            } else if (newBet > balance) {
-                newBet = balance;
-            }
-            
+            else
+                if (newBet > 100000)
+                    newBet = 100000;
+                else 
+                    if (newBet > balance) 
+                        newBet = balance;            
             currentBet = newBet;
             updateDisplay();
         }
 
-        function setMaxBet() {
-            // Ставим максимально возможную ставку (но не более 1000)
-            currentBet = Math.min(balance, 1000);
+        function setMaxBet() 
+        {
+            currentBet = Math.min(balance, 100000);
             updateDisplay();
         }
 
-        function updateDisplay() {
-            document.getElementById('balance').textContent = balance;
+        function updateDisplay() 
+        {
+            document.getElementById('balance').textContent = balance + " CEV";
             document.getElementById('currentBet').textContent = currentBet;
             document.getElementById('betInput').value = currentBet;
             
             // Обновляем кнопки ставок
             const betButtons = document.querySelectorAll('.bet-btn');
             betButtons.forEach(btn => {
-                if (balance < currentBet || balance < 10) {
+                if (balance < currentBet || balance < 10)
                     btn.disabled = true;
-                } else {
+                else 
                     btn.disabled = false;
-                }
             });
             
             document.getElementById('wins').textContent = wins;
             
             // Блокируем кнопку если недостаточно средств
             const spinBtn = document.getElementById('spinBtn');
-            if (balance < currentBet || balance < 10) {
+            if (balance < currentBet || balance < 10)
+            {
                 spinBtn.disabled = true;
                 spinBtn.style.background = '#666';
-            } else {
+            }
+            else
+            {
                 spinBtn.disabled = false;
                 spinBtn.style.background = '';
             }
         }
-
-        function addToHistory(result, isWin) {
-            gameHistory.unshift({ result, isWin });
-            if (gameHistory.length > 8) {
-                gameHistory.pop();
-            }
-            
-            const historyDiv = document.getElementById('history');
-            historyDiv.innerHTML = gameHistory.map(item => 
-                `<div class="history-item ${item.isWin ? 'win' : ''}">${item.result}</div>`
-            ).join('');
-        }
-
     </script>
     <style>
         .slots-container {
@@ -801,42 +858,6 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             border-top: 1px solid rgba(255,255,255,0.2);
             color: #b8b8b8;
             font-style: italic;
-        }
-
-        .history {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .history h3 {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #f8e71c;
-        }
-
-        .history-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .history-item {
-            padding: 8px 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            font-size: 0.9em;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .history-item.win {
-            background: rgba(255,215,0,0.2);
-            border-color: rgba(255,215,0,0.5);
-            color: #f8e71c;
         }
 
         @media (max-width: 768px) {
