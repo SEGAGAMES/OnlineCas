@@ -45,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 $_SESSION['user_email'] = $email;
                 $_SESSION['ava'] = "3";
                 $_SESSION['status'] = 'common';
-                
+                require_once('databesa-api/addHistory.php');
+                addToHistory('Регистрация', 1000);
                 // Перенаправляем в профиль
                 echo "<script>window.location.href = 'index.php?page=home';</script>";
                 exit;

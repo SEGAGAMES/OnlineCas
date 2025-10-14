@@ -80,12 +80,14 @@ require_once('database-api/load-items');
             $descs = $cards['desc'];
             $types = $cards['type'];
             $name = $cards['name'];
+            $cost = $cards['cost'];
+            $infid = $cards['infid'];
             // Пример данных предметов (замените на реальные данные из БД)
             for ($i = 0; $i < count($pathes); $i++)
             {
-                echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i]);
+                echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i], $infid[$i]);
             }
-            function renderItemCard($path, $id, $desc, $type, $name)
+            function renderItemCard($path, $id, $desc, $type, $name, $cost, $infid)
             {
                 return "
                 <div class='item-card' data-type=''>
@@ -95,10 +97,11 @@ require_once('database-api/load-items');
                     <div class='item-info'>
                         <h4 class='item-name'>{$name}</h4>
                         <p class='item-description'>{$desc}</p>
+                        <p class='item-cost'>Стоимость: {$cost}</p>
                     </div>
                     <div class='item-actions'>
                         <button class='btn-use' onclick='useItem({$id})'>Использовать</button>
-                        <button class='btn-sell' onclick='sellItem()'>Продать</button>
+                        <button class='btn-sell' onclick='sellItem({$infid}, {$cost})'>Продать</button>
                     </div>
                 </div>
                 ";
@@ -183,100 +186,101 @@ require_once('database-api/load-items');
 </div>
 
 <style>
-/* Стили для инвентаря */
+    /* Стили для инвентаря */
 
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-.item-card {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .item-card {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
 
-.item-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    
-}
+    .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        
+    }
 
 
-.item-image {
-    padding: 20px;
-    text-align: center;
-    background: var(--bg-secondary);
-}
+    .item-image {
+        padding: 20px;
+        text-align: center;
+        background: var(--bg-secondary);
+    }
 
-.item-image img {
-    width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid rgba(255,255,255,0.3);
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    object-fit: contain;
-}
-    
-.item-actions {
-    display: flex;
-    gap: 10px;
-    padding: 15px;
-    background: var(--bg-secondary);
-}
+    .item-image img {
+        width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        object-fit: contain;
+    }
+        
+    .item-actions {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        background: var(--bg-secondary);
+    }
 
-.btn-use, .btn-sell {
-    flex: 1;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: background-color 0.3s ease;
-}
+    .btn-use, .btn-sell {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+    }
 
-.btn-use {
-    background: #29ca1aff;
-    color: white;
-}
+    .btn-use {
+        background: #29ca1aff;
+        color: white;
+    }
 
-.btn-use:hover {
-    background: var(--accent-hover);
-}
+    .btn-use:hover {
+        background: var(--accent-hover);
+    }
 
-.btn-sell {
-    background: #dc3545;
-    color: white;
-}
+    .btn-sell {
+        background: #dc3545;
+        color: white;
+    }
 
-.btn-sell:hover {
-    background: #c82333;
-}
+    .btn-sell:hover {
+        background: #c82333;
+    }
 </style>
 
 <script>
 
-function useItem(itemId)
-{
-    if (confirm('Использовать этот предмет?')) 
+    function useItem(itemId)
     {
-        fetch('database-api/use-ava.php?id='+itemId)
-        setTimeout(() => {location.reload();}, 300);
+        if (confirm('Использовать этот предмет?')) 
+        {
+            fetch('database-api/use-ava.php?id='+itemId)
+            setTimeout(() => {location.reload();}, 300);
+        }
     }
-}
 
-function sellItem(itemId) 
-{
-    if (confirm('Продать этот предмет?'))
+    function sellItem(itemId, cost) 
     {
-        
+        if (confirm('Продать этот предмет?'))
+        {
+            fetch('database-api/sell-item.php?id='+itemId+'&cost='+cost)
+            setTimeout(() => {location.reload();}, 300);
+        }
     }
-}
 </script>

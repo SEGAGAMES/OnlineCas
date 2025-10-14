@@ -30,7 +30,7 @@ function loadHistory($page)
     $db = new Database;
     if ($db) {
         try {
-            $query = "SELECT `op_type`, `balance`, `changebalance`, `time`, `date` FROM `user_game_story` WHERE `email` = ? LIMIT 25 OFFSET " . ($page-1)*25;
+            $query = "SELECT `op_type`, `balance`, `changebalance`, `time`, `date` FROM `user_game_story` WHERE `email` = ? ORDER BY `date` DESC, `time` DESC LIMIT 25 OFFSET " . ($page-1)*25;
             $result = $db->SendQuery($query, [$_SESSION['user_email']]);
             $result = $result->fetchall();
             if (!$result) {

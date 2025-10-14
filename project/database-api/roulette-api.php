@@ -70,7 +70,7 @@ if (isset($_GET['bet']))
             echo $_SESSION['balance'];
             break;
         case 'even':
-            if($randomNumber % 2 == 0)
+            if($randomNumber % 2 == 0 & $randomNumber != 0)
                 changebalance($bet);
             else
                 changebalance(-$bet);

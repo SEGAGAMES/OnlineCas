@@ -5,7 +5,7 @@ function load_inv()
     $db = new Database;
     if ($db) {
         try {
-            $query = "SELECT i.path, i.item_id, i.description, i.item_type, i.name
+            $query = "SELECT i.path, i.item_id, i.description, i.item_type, i.name, i.cost, inv.id
             FROM inventory inv
             INNER JOIN items i on inv.item_id = i.item_id
             WHERE inv.email = ?";
@@ -19,9 +19,11 @@ function load_inv()
             http_response_code(200);
             $path = [];
             $id =[];
+            $infid = [];
             $desc = [];
             $type =[];
             $name =[];
+            $costs = [];
             foreach ($result as $res)
             {
                 $path[] = $res['path'];
@@ -29,8 +31,10 @@ function load_inv()
                 $desc[] = $res['description'];
                 $type[] = $res['item_type'];
                 $name[] = $res['name'];
-            }
-            return ['success' => true, 'code' => 200, 'message' => 'User created successfully', 'path' => $path, 'id' => $id, 'desc' => $desc, 'type'=>$type, 'name' => $name];
+                $costs[] = $res['cost'];
+                $infid[] = $res['id'];
+;            }
+            return ['success' => true, 'code' => 200, 'message' => 'User created successfully', 'path' => $path, 'id' => $id, 'desc' => $desc, 'type'=>$type, 'name' => $name, 'cost' => $costs, 'infid'=>$infid];
 
         } catch (PDOException $e) {
             http_response_code(500);
