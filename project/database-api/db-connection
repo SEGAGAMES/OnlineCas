@@ -49,7 +49,7 @@ class Database
         }
         catch (PDOException $e)
         {
-            return false;
+            return $e;
         }
     }
 }

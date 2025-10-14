@@ -1,5 +1,6 @@
 <?php
 require_once('db-connection');
+require_once('addhistory.php');
 session_start();
 if (isset($_GET['id']))
 {
@@ -30,6 +31,7 @@ if (isset($_GET['id']))
                 } catch (PDOException $e) {
                     http_response_code(500);
                 }
+                addToHistory('Покупка', -$cost);
             }
         } catch (PDOException $e) {
             http_response_code(500);

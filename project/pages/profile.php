@@ -115,13 +115,29 @@ require_once('database-api/load-items');
             <div class="chart-placeholder">
                 <p>График изменения баланса</p>
                 <div class="chart-bars">
-                    <div class="chart-bar" style="height: 40%"></div>
-                    <div class="chart-bar" style="height: 60%"></div>
-                    <div class="chart-bar" style="height: 30%"></div>
-                    <div class="chart-bar" style="height: 80%"></div>
-                    <div class="chart-bar" style="height: 50%"></div>
-                    <div class="chart-bar" style="height: 70%"></div>
-                    <div class="chart-bar" style="height: 90%"></div>
+                    <?php
+                        require_once ('database-api/addhistory.php');
+                        $cards = loadHistory(1);
+                        $balances = $cards['balance'];
+                        $min = min($balances);
+                        $max = max($balances);
+
+                        // Пример данных предметов (замените на реальные данные из БД)
+                        for ($i = 0; $i < count($balances); $i++)
+                        {
+                            echo renderChart($min, $max, $balances[$i]);
+                        }
+
+                        function renderChart($min, $max, $balance)
+                        {
+                            if ($max !== $min)
+                            $height = (($balance - $min) / ($max - $min)) * 100;
+                            else
+                                 $height = 100;
+                            $height = max(0, min(100, $height)); // ограничиваем 0-100%
+                            return '<div class="chart-bar" style="height:'. $height.'%"></div>';
+                        }
+                    ?>
                 </div>
             </div>
         </div>
@@ -134,40 +150,32 @@ require_once('database-api/load-items');
                         <th>Дата</th>
                         <th>Тип операции</th>
                         <th>Сумма</th>
-                        <th>Статус</th>
-                    </tr>
+                        </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>25.01.2024 15:30</td>
-                        <td>Пополнение</td>
-                        <td class="positive">+5 000 ₽</td>
-                        <td class="status-completed">Завершено</td>
-                    </tr>
-                    <tr>
-                        <td>24.01.2024 18:45</td>
-                        <td>Игра: Рулетка</td>
-                        <td class="negative">-1 200 ₽</td>
-                        <td class="status-completed">Завершено</td>
-                    </tr>
-                    <tr>
-                        <td>23.01.2024 12:15</td>
-                        <td>Бонусная игра</td>
-                        <td class="positive">+500 <span class="bonus-icon">🎁</span></td>
-                        <td class="status-completed">Завершено</td>
-                    </tr>
-                    <tr>
-                        <td>22.01.2024 20:30</td>
-                        <td>Игра: Слоты</td>
-                        <td class="positive">+3 500 ₽</td>
-                        <td class="status-completed">Завершено</td>
-                    </tr>
-                    <tr>
-                        <td>21.01.2024 16:20</td>
-                        <td>Пополнение</td>
-                        <td class="positive">+2 000 ₽</td>
-                        <td class="status-completed">Завершено</td>
-                    </tr>
+                    <?php
+                        require_once ('database-api/addhistory.php');
+                        $cards = loadHistory(1);
+                        $op_types = $cards['op_type'];
+                        $balances = $cards['balancechange'];
+                        $times = $cards['time'];
+                        $dates = $cards['date'];
+                        // Пример данных предметов (замените на реальные данные из БД)
+                        for ($i = 0; $i < count($op_types); $i++)
+                        {
+                            echo renderHistory($op_types[$i], $balances[$i], $times[$i], $dates[$i]);
+                        }
+                        function renderHistory($op_type, $balance, $time, $date)
+                        {
+                            return "
+                            <tr>
+                                <td>{$date} {$time}</td>
+                                <td>{$op_type}</td>" .
+                                '<td class="' . ($balance > 0 ? 'positive' : 'negative') . '">' . $balance . ' CEV</td>' . "
+                            </tr>
+                            ";
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>

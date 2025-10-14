@@ -1,5 +1,6 @@
 <?php
 require_once('db-connection');
+require_once('addhistory.php');
 session_start();
 if (isset($_GET['bet']))
 {
@@ -18,6 +19,10 @@ if (isset($_GET['bet']))
                 } catch (PDOException $e) {
                     http_response_code(500);
                 }
+        if ($bet > 0)
+            addToHistory("Выигрыш", $bet);
+        else
+            addToHistory("Проигрыш", $bet);
     }
 
     function getNumberColor($number)
