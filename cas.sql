@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Окт 09 2025 г., 22:01
+-- Время создания: Окт 14 2025 г., 01:17
 -- Версия сервера: 8.0.43
 -- Версия PHP: 8.2.28
 
@@ -43,7 +43,18 @@ INSERT INTO `inventory` (`id`, `item_id`, `email`) VALUES
 (5, 5, 'e@example.com'),
 (6, 6, 'e@example.com'),
 (14, 14, 'e@example.com'),
-(15, 18, 'e@example.com');
+(15, 18, 'e@example.com'),
+(16, 5, 'e@example.com'),
+(17, 5, 'e@example.com'),
+(18, 5, 'e@example.com'),
+(19, 5, 'e@example.com'),
+(20, 5, 'e@example.com'),
+(21, 5, 'e@example.com'),
+(22, 6, 'e@example.com'),
+(23, 9, 'e@example.com'),
+(27, 3, '1@example.com'),
+(28, 4, '1@example.com'),
+(29, 15, '1@example.com');
 
 -- --------------------------------------------------------
 
@@ -90,6 +101,17 @@ CREATE TABLE `op_types` (
   `op_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Тип операции'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Дамп данных таблицы `op_types`
+--
+
+INSERT INTO `op_types` (`op_type`) VALUES
+('Вывод'),
+('Выигрыш'),
+('Покупка'),
+('Пополнение'),
+('Проигрыш');
+
 -- --------------------------------------------------------
 
 --
@@ -132,7 +154,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`, `ava`) VALUES
-('e@example.com', '$2y$10$tE7/Bu/qbbxyLFbnsdRwUupRp0qURJC25szkbU9swXjdjkjmIlRZm', 'Админов', 'Админ', 'Палыч', 999997749, 'admin', 18);
+('1@example.com', '$2y$10$HNiE1BF18UP0Dlqrtt3EC.G/zEYQf5ZLcCnvB4L3UPxsh1rCEh2sm', 'Шиляев', 'Сергей', 'Павлович', 800, 'common', 15),
+('e@example.com', '$2y$10$tE7/Bu/qbbxyLFbnsdRwUupRp0qURJC25szkbU9swXjdjkjmIlRZm', 'Админов', 'Админ', 'Палыч', 999917519, 'admin', 14);
 
 -- --------------------------------------------------------
 
@@ -145,8 +168,18 @@ CREATE TABLE `user_game_story` (
   `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'email пользователя',
   `op_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Тип операции',
   `balance` int NOT NULL COMMENT 'Новый баланс после игры',
-  `time` datetime NOT NULL COMMENT 'Время изменения баланса'
+  `changebalance` int NOT NULL COMMENT 'Изменение баланса',
+  `time` time NOT NULL COMMENT 'Время изменения баланса',
+  `date` date NOT NULL COMMENT 'Дата операции'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `user_game_story`
+--
+
+INSERT INTO `user_game_story` (`op_id`, `email`, `op_type`, `balance`, `changebalance`, `time`, `date`) VALUES
+(21, 'e@example.com', 'Проигрыш', 999967519, -50000, '04:15:07', '2025-10-14'),
+(22, 'e@example.com', 'Проигрыш', 999917519, -50000, '04:15:11', '2025-10-14');
 
 --
 -- Индексы сохранённых таблиц
@@ -202,13 +235,19 @@ ALTER TABLE `user_game_story`
 -- AUTO_INCREMENT для таблицы `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'идентификатор предмета 1 предмет одному игроку', AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'идентификатор предмета 1 предмет одному игроку', AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT для таблицы `items`
 --
 ALTER TABLE `items`
   MODIFY `item_id` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор предмета', AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT для таблицы `user_game_story`
+--
+ALTER TABLE `user_game_story`
+  MODIFY `op_id` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор операции', AUTO_INCREMENT=23;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
