@@ -185,7 +185,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             '🍇': 3,
             '🍊': 2,
             '🍋': 2,
-            '🍒': 2
+            '🍒': 2,
+            '❌': 0
         };
         async function spinReel(reel, index, symbol, delay)
         {
@@ -316,10 +317,16 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             // Проверяем комбинации
             if (results[0] === results[1] && results[1] === results[2]) 
             {
+                if(results[0] == '❌')
+                {
+                    winMessage = `Вот это невезение!`;
+                }
+                else
+                {
                 // Три одинаковых символа
                 winAmount = currentBet * winMultipliers[results[0]];
                 winMessage = `🎉 ДЖЕКПОТ! ${results[0]} ${results[1]} ${results[2]} - Выигрыш: ${winAmount}!`;
-                
+                }
                 // Подсвечиваем все три барабана
                 winFrames.forEach(frame => frame.classList.add('active'));
             } 
@@ -334,9 +341,14 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                         else matchingSymbol = results[0];
                     
                     // Используем множитель для парного символа, но меньше чем для трёх
+                    if(matchingSymbol == '❌')
+                    {
+                        winMessage = `В этот раз не повезло!`;
+                    }
+                    else{
                     winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
-                    winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;
-                    
+                    winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;}
+
                     // Подсвечиваем соответствующие барабаны
                     if (results[0] === results[1]) 
                     {
