@@ -47,7 +47,25 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                 <button class="spin-btn" id="spinBtn" onclick="spinSlots()">
                     🎯 Крутить Барабаны
                 </button>
-                
+                <script>
+                    document.addEventListener('keydown', function(event) {
+                        const button = document.getElementById('spinBtn');
+                        
+                        switch(event.code) {
+                            case 'Enter':      // Enter
+                            case 'Space':      // Пробел
+                                event.preventDefault();
+                                button.click();
+                                button.focus(); // Добавляем фокус для визуального эффекта
+                                break;
+                        }
+                    });
+
+                    // Обработчик клика на кнопке
+                    document.getElementById('actionButton').addEventListener('click', function() {
+                        alert('Кнопка активирована!');
+                    });
+                </script>
                 <div class="bet-controls">
                     <button class="bet-btn" onclick="changeBet(-10)">-10</button>
                     <button class="bet-btn" onclick="changeBet(-1)">-</button>

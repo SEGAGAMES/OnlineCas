@@ -121,6 +121,25 @@ $betTypes = [
                     <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
                         🎯 Крутить Рулетку
                     </button>
+                                    <script>
+                    document.addEventListener('keydown', function(event) {
+                        const button = document.getElementById('spinBtn');
+                        
+                        switch(event.code) {
+                            case 'Enter':      // Enter
+                            case 'Space':      // Пробел
+                                event.preventDefault();
+                                button.click();
+                                button.focus(); // Добавляем фокус для визуального эффекта
+                                break;
+                        }
+                    });
+
+                    // Обработчик клика на кнопке
+                    document.getElementById('actionButton').addEventListener('click', function() {
+                        alert('Кнопка активирована!');
+                    });
+                </script>
                 </div>
                 <div class="history">
                     <h3>История Бросков</h3>
