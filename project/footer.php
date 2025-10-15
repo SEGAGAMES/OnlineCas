@@ -1,33 +1,38 @@
     <!-- Подвал сайта -->
     <footer>
-        <div class="footer-section">
-            <h3>О проекте</h3>
-            <a href="index.php?page=about">Информация о проекте</a>
-        </div>
-        <div class="footer-section">
-            <h3>Об авторах</h3>
-            <a href="index.php?page=authors">Команда проекта</a>
-        </div>
-        <div class="footer-section">
-            <h3>Партнерам</h3>
-            <a href="index.php?page=partners">Сотрудничество</a>
-        </div>
-        <div class="footer-section">
-            <h3>Правила</h3>
-            <a href="index.php?page=terms">Пользовательское соглашение</a>
-        </div>
-        <div class="footer-section">
-            <h3>Поддержка</h3>
-            <a href="index.php?page=support">Помощь проекту</a>
-        </div>
-        <div class="footer-section">
-            <h3>FAQ</h3>
-            <a href="index.php?page=faq">Частые вопросы</a>
+    <div class="footer-content">
+        <div class="footer-sections">
+            <div class="footer-section">
+                <h3>О проекте</h3>
+                <a href="index.php?page=about">Информация о проекте</a>
+            </div>
+            <div class="footer-section">
+                <h3>Об авторах</h3>
+                <a href="index.php?page=authors">Команда проекта</a>
+            </div>
+            <div class="footer-section">
+                <h3>Партнерам</h3>
+                <a href="index.php?page=partners">Сотрудничество</a>
+            </div>
+            <div class="footer-section">
+                <h3>Правила</h3>
+                <a href="index.php?page=terms">Пользовательское соглашение</a>
+            </div>
+            <div class="footer-section">
+                <h3>Поддержка</h3>
+                <a href="index.php?page=support">Помощь проекту</a>
+            </div>
+            <div class="footer-section">
+                <h3>FAQ</h3>
+                <a href="index.php?page=faq">Частые вопросы</a>
+            </div>
         </div>
         <div class="disclaimer">
             Учебный проект. Все материалы представлены исключительно в ознакомительных целях.
         </div>
-    </footer>
+    </div>
+</footer>
+
     <!-- Чат с менеджером -->
     <div id="chatModal" class="chat-modal">
         <div class="chat-content">

@@ -4,11 +4,11 @@
 <div class="promo-banner">
     <div class="promo-content">
         <div class="promo-badge">НОВИЧКАМ</div>
-        <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000$ + 200 фриспинов!</h2>
+        <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000$</h2>
         <p class="promo-subtitle">Увеличьте свой стартовый капитал и получите бесплатные вращения</p>
         <a href="index.php?page=register" class="cta-button promo-button">Получить бонус</a>
         <div class="wagering-info">
-            <small>Бонус подлежит отыгрышу с вейджером х35. Полные условия акции доступны в разделе "Бонусы". Минимальный депозит для получения бонуса - 10$. Фриспины начисляются для игры "Lucky Fruits".</small>
+            
         </div>
     </div>
     <div class="promo-visual">
@@ -29,88 +29,94 @@
 
     <div class="games-grid">
         <!-- Слоты -->
-        <div class="game-card slot-machine">
-            <div class="game-card-header">
-                <div class="game-icon">🎰</div>
-                <div class="game-badge popular">Популярная</div>
-            </div>
-            <div class="game-card-content">
-                <h3>Слоты</h3>
-                <p>Классические игровые автоматы с яркой графикой и бонусными раундами</p>
-                <div class="game-features">
-                    <span class="feature-tag">Высокая RTP</span>
-                    <span class="feature-tag">Бонусы</span>
-                    <span class="feature-tag">Джекпот</span>
+        <a href="index.php?page=slots" class="game-card-link">
+            <div class="game-card slot-machine">
+                <div class="game-card-header">
+                    <div class="game-icon">🎰</div>
+                    <div class="game-badge popular">Популярная</div>
                 </div>
-            </div>
-            <div class="game-card-footer">
-                <div class="game-rating">
-                    <div class="stars">★★★★★</div>
-                    <span>4.8</span>
+                <div class="game-card-content">
+                    <h3>Слоты</h3>
+                    <p>Классические игровые автоматы с яркой графикой и бонусными раундами</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Высокая RTP</span>
+                        <span class="feature-tag">Бонусы</span>
+                        <span class="feature-tag">Джекпот</span>
+                    </div>
                 </div>
-                <a href="index.php?page=games&game=slots" class="play-button">
-                    <span>Играть бесплатно</span>
-                    <div class="button-shine"></div>
-                </a>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★★</div>
+                        <span>4.8</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
             </div>
-            <div class="card-glow"></div>
-        </div>
+        </a>
 
         <!-- Покер -->
-        <div class="game-card poker-main">
-            <div class="game-card-header">
-                <div class="game-icon">♠️♥️</div>
-                <div class="game-badge new">Новая</div>
-            </div>
-            <div class="game-card-content">
-                <h3>Покер</h3>
-                <p>Техасский холдем против AI-соперников. Развивайте стратегию!</p>
-                <div class="game-features">
-                    <span class="feature-tag">Стратегия</span>
-                    <span class="feature-tag">Турниры</span>
-                    <span class="feature-tag">Рейтинг</span>
+        <a href="index.php?page=poker" class="game-card-link">
+            <div class="game-card poker-main">
+                <div class="game-card-header">
+                    <div class="game-icon">♠️♥️</div>
+                    <div class="game-badge new">Новая</div>
                 </div>
-            </div>
-            <div class="game-card-footer">
-                <div class="game-rating">
-                    <div class="stars">★★★★☆</div>
-                    <span>4.5</span>
+                <div class="game-card-content">
+                    <h3>Покер</h3>
+                    <p>Техасский холдем против AI-соперников. Развивайте стратегию!</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Стратегия</span>
+                        <span class="feature-tag">Турниры</span>
+                        <span class="feature-tag">Рейтинг</span>
+                    </div>
                 </div>
-                <a href="index.php?page=games&game=poker" class="play-button">
-                    <span>Играть бесплатно</span>
-                    <div class="button-shine"></div>
-                </a>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span>4.5</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
             </div>
-            <div class="card-glow"></div>
-        </div>
+        </a>
 
         <!-- Рулетка -->
-        <div class="game-card roulette-main">
-            <div class="game-card-header">
-                <div class="game-icon">⚫</div>
-                <div class="game-badge hot">Горячая</div>
-            </div>
-            <div class="game-card-content">
-                <h3>Рулетка</h3>
-                <p>Европейская рулетка с реалистичной физикой и красивой анимацией</p>
-                <div class="game-features">
-                    <span class="feature-tag">Реализм</span>
-                    <span class="feature-tag">Ставки</span>
-                    <span class="feature-tag">Анимация</span>
+        <a href="index.php?page=roulette" class="game-card-link">
+            <div class="game-card roulette-main">
+                <div class="game-card-header">
+                    <div class="game-icon">⚫</div>
+                    <div class="game-badge hot">Горячая</div>
                 </div>
-            </div>
-            <div class="game-card-footer">
-                <div class="game-rating">
-                    <div class="stars">★★★★★</div>
-                    <span>4.9</span>
+                <div class="game-card-content">
+                    <h3>Рулетка</h3>
+                    <p>Европейская рулетка с реалистичной физикой и красивой анимацией</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Реализм</span>
+                        <span class="feature-tag">Ставки</span>
+                        <span class="feature-tag">Анимация</span>
+                    </div>
                 </div>
-                <a href="index.php?page=games&game=roulette" class="play-button">
-                    <span>Играть бесплатно</span>
-                    <div class="button-shine"></div>
-                </a>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★★</div>
+                        <span>4.9</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
             </div>
-            <div class="card-glow"></div>
-        </div>
+        </a>
     </div>
     <?php if (!isLoggedIn()): ?>
     <div class="games-cta">
@@ -118,7 +124,7 @@
             <h3>🎁 Получите бонус для старта!</h3>
             <p>1000 виртуальных кредитов для новых игроков</p>
             <a href="index.php?page=register" class="bonus-button">
-                <span>Получить бонус</span>
+                <span>Получите бонус</span>
                 <div class="sparkle">✨</div>
             </a>
         </div>
@@ -193,6 +199,18 @@
     z-index: 2;
 }
 
+.game-card-link {
+    text-decoration: none;
+    display: block;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.game-card-link:hover {
+    transform: translateY(-10px) scale(1.02);
+    text-decoration: none;
+}
+
 .game-card {
     background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
     backdrop-filter: blur(10px);
@@ -204,10 +222,12 @@
     transition: all 0.3s ease;
     cursor: pointer;
     min-height: 280px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.game-card:hover {
-    transform: translateY(-10px) scale(1.02);
+.game-card-link:hover .game-card {
     box-shadow: 
         0 20px 40px rgba(0,0,0,0.3),
         0 0 0 1px rgba(255,255,255,0.2);
@@ -252,6 +272,7 @@
     position: relative;
     z-index: 3;
     margin-bottom: 20px;
+    flex: 1;
 }
 
 .game-card-content h3 {
@@ -324,7 +345,6 @@
     color: white;
     padding: 12px 25px;
     border-radius: 15px;
-    text-decoration: none;
     font-weight: bold;
     position: relative;
     overflow: hidden;
@@ -336,6 +356,8 @@
     line-height: 1;
     min-height: 44px;
     box-sizing: border-box;
+    border: none;
+    cursor: pointer;
 }
 
 .play-button span {
@@ -343,7 +365,7 @@
     z-index: 2;
 }
 
-.play-button:hover {
+.game-card-link:hover .play-button {
     transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
 }
@@ -364,7 +386,7 @@
     z-index: 1;
 }
 
-.game-card:hover .card-glow {
+.game-card-link:hover .card-glow {
     opacity: 1;
 }
 
@@ -427,6 +449,8 @@
 .bonus-button:hover {
     transform: scale(1.05);
     box-shadow: 0 15px 30px rgba(197, 108, 240, 0.4);
+    text-decoration: none;
+    color: white;
 }
 
 @keyframes sparkleJump {
@@ -596,6 +620,8 @@
     background: #cc0000;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-decoration: none;
+    color: white;
 }
 
 .wagering-info {
