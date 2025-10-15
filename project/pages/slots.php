@@ -282,11 +282,12 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             void reels[0].offsetWidth;
 
             // Запускаем барабаны поочередно
-            for (let i = 0; i < reels.length; i++)
-            {
-                await spinReel(reels[i], i, randomSymbols[i], i); // Задержка между барабанами
-                reels[i].parentElement.classList.remove('spinning');
-            }
+            spinReel(reels[0], 0, randomSymbols[0], 0); // Задержка между барабанами
+            reels[0].parentElement.classList.remove('spinning');
+            spinReel(reels[1], 1, randomSymbols[1], 1); // Задержка между барабанами
+            reels[1].parentElement.classList.remove('spinning');
+            await spinReel(reels[2], 2, randomSymbols[2], 2); // Задержка между барабанами
+            reels[2].parentElement.classList.remove('spinning');
 
             // Проверяем выигрыш после остановки всех барабанов
             checkWin(randomSymbols);
