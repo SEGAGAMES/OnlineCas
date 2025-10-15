@@ -24,9 +24,10 @@ if (isset($_GET['bet']))
         else
             addToHistory("Проигрыш", $bet);
     }
+    
+    $bet = $_GET['bet'];
     if ($bet > $_SESSION['balance'])
         exit;
-    $bet = $_GET['bet'];
     $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
     $winMultipliers = [
                 '7️⃣'=> 10,
