@@ -87,7 +87,7 @@ require_once('database-api/load-items');
                     </div>
                     <div class='item-actions'>
                         <button class='btn-use' onclick='useItem({$id})'>Использовать</button>
-                        <button class='btn-sell' onclick='sellItem({$infid}, {$cost})'>Продать</button>
+                        <button class='btn-sell' onclick='sellItem({$infid}, {$cost}, {$id})'>Продать</button>
                     </div>
                 </div>
                 ";
@@ -136,7 +136,7 @@ require_once('database-api/load-items');
             <table class="transactions-table">
                 <thead>
                     <tr>
-                        <th>Дата</th>
+                        <th>Дата и время операции</th>
                         <th>Тип операции</th>
                         <th>Сумма</th>
                         </tr>
@@ -149,16 +149,19 @@ require_once('database-api/load-items');
                         $balances = $cards['balancechange'];
                         $times = $cards['time'];
                         $dates = $cards['date'];
-                        // Пример данных предметов (замените на реальные данные из БД)
                         for ($i = 0; $i < count($op_types); $i++)
                         {
                             echo renderHistory($op_types[$i], $balances[$i], $times[$i], $dates[$i]);
                         }
                         function renderHistory($op_type, $balance, $time, $date)
                         {
+                            $html ='';
+                            if ($date == date('Y-m-d'))
+                                $html = "<td>Сегодня в {$time} МСК</td>";
+                            else
+                                $html = "<td>{$date} в {$time} МСК</td>";
                             return "
-                            <tr>
-                                <td>{$date} {$time}</td>
+                            <tr>".$html."
                                 <td>{$op_type}</td>" .
                                 '<td class="' . ($balance > 0 ? 'positive' : 'negative') . '">' . $balance . ' CEV</td>' . "
                             </tr>
@@ -261,12 +264,17 @@ require_once('database-api/load-items');
         }
     }
 
-    function sellItem(itemId, cost) 
+    function sellItem(itemId, cost, id) 
     {
         if (confirm('Продать этот предмет?'))
         {
-            fetch('database-api/sell-item.php?id='+itemId+'&cost='+cost)
-            setTimeout(() => {location.reload();}, 300);
+            if (id == <?php echo $_SESSION['ava']?>)
+                alert('Невозможно удалить текущий аватар');
+            else
+            {
+                fetch('database-api/sell-item.php?id='+itemId+'&cost='+cost+'&itid='+id)
+                setTimeout(() => {location.reload();}, 300);
+            }
         }
     }
 </script>

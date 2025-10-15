@@ -187,51 +187,21 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                     let newContent = '';
                     const currentPosition = getCurrentReelPosition(reel); // Получаем текущую позицию
                     
-                    for (let i = 0; i < 10; i++) {
-                        const newSymbol = i === 4 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
+                    for (let i = 0; i < 300; i++) {
+                        const newSymbol = i === 121 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
                         newContent += `<div class="symbol">${newSymbol}</div>`;
                     }
                     reel.innerHTML = newContent;
                     
                     // Анимация вращения от текущей позиции
                     const spinDuration = 1500;
-                    const targetPosition = currentPosition - 3 * 100; // Прокручиваем на 3 позиции
+                    const targetPosition = currentPosition - 120 * 100; // Прокручиваем на 3 позиции
                     
                     reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
                     reel.style.transform = `translateY(${targetPosition}px)`;
                     
                     // Разрешаем Promise когда анимация завершится
-                    setTimeout(resolve, spinDuration + 100);
-                    
-                }, delay);
-            });
-        }
-        function stopReel(reel, symbol, delay) 
-        {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    // Создаем новые символы для барабана
-                    let newContent = '';
-                    const currentPosition = getCurrentReelPosition(reel);
-                    
-                    for (let i = 0; i < 10; i++) {
-                        const newSymbol = i === 4 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
-                        newContent += `<div class="symbol">${newSymbol}</div>`;
-                    }
-                    reel.innerHTML = newContent;
-                    
-                    // Анимация остановки
-                    const stopDuration = 1000;
-                    const targetPosition = currentPosition - 3 * 100;
-                    
-                    reel.style.transition = `transform ${stopDuration}ms cubic-bezier(0.2, 0.8, 0.3, 1)`;
-                    reel.style.transform = `translateY(${targetPosition}px)`;
-                    
-                    // Убираем анимацию spinning после остановки
-                    setTimeout(() => {
-                        reel.parentElement.classList.remove('spinning');
-                        resolve();
-                    }, stopDuration);
+                    setTimeout(resolve, spinDuration + 0);
                     
                 }, delay);
             });
@@ -248,14 +218,14 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
         async function spinSlots()
         {
             if (isSpinning || balance < currentBet) return;
-            
+            const betButtons = document.querySelectorAll('.bet-btn');
+            betButtons.forEach(btn => {
+                    btn.disabled = true;
+            });
+            document.getElementById('betInput').disabled = true;
             isSpinning = true;
             const spinBtn = document.getElementById('spinBtn');
             const resultDiv = document.getElementById('result');
-            
-            // Снимаем ставку
-            balance -= currentBet;
-            updateDisplay();
             
             // Анимация вращения
             spinBtn.disabled = true;
@@ -298,9 +268,9 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                     randomSymbols.push(data.split('|')[0]);
                     randomSymbols.push(data.split('|')[1]);
                     randomSymbols.push(data.split('|')[2]);
+                    balance = data.split('|')[3];
                 })
-            // Теперь устанавливаем анимацию и запускаем
-            // Заменяем старую анимацию на эту:
+
             reels.forEach((reel, index) => {
                 reel.style.transition = 'none';
                 // Сохраняем текущую позицию вместо сброса в 0
@@ -314,7 +284,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             // Запускаем барабаны поочередно
             for (let i = 0; i < reels.length; i++)
             {
-                await spinReel(reels[i], i, randomSymbols[i], i * 600); // Задержка между барабанами
+                await spinReel(reels[i], i, randomSymbols[i], i); // Задержка между барабанами
                 reels[i].parentElement.classList.remove('spinning');
             }
 
@@ -384,12 +354,17 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             // Обновляем баланс и статистику
             if (winAmount > 0) 
             {
-                balance = <?php echo $_SESSION['balance']?>;
                 wins++;
                 resultDiv.innerHTML = `<div class="win-message">${winMessage}</div>`;
             } 
             else
-                resultDiv.innerHTML = `<div>${winMessage}</div>`;            
+                resultDiv.innerHTML = `<div>${winMessage}</div>`;           
+            const betButtons = document.querySelectorAll('.bet-btn');
+            betButtons.forEach(btn => {
+                    btn.disabled = false;
+            }); 
+            document.getElementById('betInput').disabled = false;
+
             updateDisplay();
         }
 
@@ -432,15 +407,6 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             document.getElementById('balance').textContent = balance + " CEV";
             document.getElementById('currentBet').textContent = currentBet;
             document.getElementById('betInput').value = currentBet;
-            
-            // Обновляем кнопки ставок
-            const betButtons = document.querySelectorAll('.bet-btn');
-            betButtons.forEach(btn => {
-                if (balance < currentBet || balance < 10)
-                    btn.disabled = true;
-                else 
-                    btn.disabled = false;
-            });
             
             document.getElementById('wins').textContent = wins;
             
