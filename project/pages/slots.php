@@ -251,7 +251,16 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             
             // Генерируем результаты
             const results = [];
-            
+            let randomSymbols = []; 
+
+            await fetch('database-api/slots-api.php?bet='+currentBet)
+                .then(response => response.text())
+                .then(data => {
+                    randomSymbols.push(data.split('|')[0]);
+                    randomSymbols.push(data.split('|')[1]);
+                    randomSymbols.push(data.split('|')[2]);
+                    balance = data.split('|')[3];
+                })
             // Сначала сбрасываем transform без анимации
             reels.forEach(reel =>
             {
@@ -261,15 +270,7 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
             
             // Принудительно переflow, чтобы применить сброс transform
             void reels[0].offsetWidth;
-            let randomSymbols = []; 
-            await fetch('database-api/slots-api.php?bet='+currentBet)
-                .then(response => response.text())
-                .then(data => {
-                    randomSymbols.push(data.split('|')[0]);
-                    randomSymbols.push(data.split('|')[1]);
-                    randomSymbols.push(data.split('|')[2]);
-                    balance = data.split('|')[3];
-                })
+
 
             reels.forEach((reel, index) => {
                 reel.style.transition = 'none';
@@ -278,10 +279,6 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                 reel.style.transform = `translateY(${currentPos}px)`;
             });
 
-            // Принудительно переflow
-            void reels[0].offsetWidth;
-
-            // Запускаем барабаны поочередно
             spinReel(reels[0], 0, randomSymbols[0], 0); // Задержка между барабанами
             reels[0].parentElement.classList.remove('spinning');
             spinReel(reels[1], 1, randomSymbols[1], 1); // Задержка между барабанами
