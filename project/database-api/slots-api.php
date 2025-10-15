@@ -24,7 +24,8 @@ if (isset($_GET['bet']))
         else
             addToHistory("Проигрыш", $bet);
     }
-
+    if ($bet > $_SESSION['balance'])
+        exit;
     $bet = $_GET['bet'];
     $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
     $winMultipliers = [
@@ -66,6 +67,7 @@ if (isset($_GET['bet']))
             // Обновляем баланс и статистику
         }
     changebalance($winAmount);
-
+    echo "|";
+    echo $_SESSION['balance'];
 }
 ?>

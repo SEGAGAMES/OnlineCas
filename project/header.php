@@ -124,10 +124,9 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             <?php endif; ?>
             <a href="#" id="supportBtn">Поддержка</a>
         </div>
-
-
     </header>
-
+    
+    <?php if (!isLoggedIn()): ?>
     <!-- Модальное окно входа -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -190,3 +189,4 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
             loginModal.style.display = 'none';
     });
     </script>
+    <?php endif ?>

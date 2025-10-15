@@ -6,6 +6,13 @@ if (isset($_GET['id']))
 {
     $id = $_GET['id'];
     $cost = $_GET['cost'];
+    $itid = $_GET['itid'];
+    if ($itid==$_SESSION['ava'])
+    {
+        http_response_code(500);
+        exit;
+    }
+
     $db = new Database;
     if ($db) {
         try {
