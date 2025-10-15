@@ -33,13 +33,11 @@
     <div class="donation-options">
         <div class="donation-card" data-amount="100" data-coins="100">
             <div class="card-glow"></div>
-            <div class="donation-badge popular">Популярный</div>
             <div class="donation-amount">100 ₽</div>
             <div class="coins-reward">
                 <span class="coins-amount">100</span>
                 <span class="coins-text">CEV-коинов</span>
             </div>
-            <div class="bonus-percent">+0% бонус</div>
             <button class="select-donation">
                 <span>Выбрать</span>
                 <div class="btn-sparkle">✨</div>
@@ -48,13 +46,11 @@
         
         <div class="donation-card" data-amount="500" data-coins="600">
             <div class="card-glow"></div>
-            <div class="donation-badge best-value">Выгодный</div>
             <div class="donation-amount">500 ₽</div>
             <div class="coins-reward">
                 <span class="coins-amount">600</span>
                 <span class="coins-text">CEV-коинов</span>
             </div>
-            <div class="bonus-percent">+20% бонус</div>
             <button class="select-donation">
                 <span>Выбрать</span>
                 <div class="btn-sparkle">✨</div>
@@ -63,13 +59,11 @@
         
         <div class="donation-card" data-amount="1000" data-coins="1300">
             <div class="card-glow"></div>
-            <div class="donation-badge exclusive">Эксклюзив</div>
             <div class="donation-amount">1000 ₽</div>
             <div class="coins-reward">
                 <span class="coins-amount">1300</span>
                 <span class="coins-text">CEV-коинов</span>
             </div>
-            <div class="bonus-percent">+30% бонус</div>
             <button class="select-donation">
                 <span>Выбрать</span>
                 <div class="btn-sparkle">✨</div>
@@ -78,13 +72,11 @@
         
         <div class="donation-card" data-amount="2000" data-coins="2800">
             <div class="card-glow"></div>
-            <div class="donation-badge premium">PREMIUM</div>
             <div class="donation-amount">2000 ₽</div>
             <div class="coins-reward">
                 <span class="coins-amount">2800</span>
                 <span class="coins-text">CEV-коинов</span>
             </div>
-            <div class="bonus-percent">+40% бонус</div>
             <button class="select-donation">
                 <span>Выбрать</span>
                 <div class="btn-sparkle">✨</div>
@@ -142,24 +134,11 @@
                 <div class="payment-methods">
                     <div class="payment-option">
                         <input type="radio" id="card-payment" name="payment-method" value="card" checked>
-                        <label for="card-payment">
-                            <span class="payment-icon">💳</span>
-                            Банковская карта
-                        </label>
+                         <span class="payment-icon">💳 Банковская карта</span>
                     </div>
                     <div class="payment-option">
                         <input type="radio" id="yandex-money" name="payment-method" value="yandex">
-                        <label for="yandex-money">
-                            <span class="payment-icon">🌐</span>
-                            Яндекс.Деньги
-                        </label>
-                    </div>
-                    <div class="payment-option">
-                        <input type="radio" id="qiwi" name="payment-method" value="qiwi">
-                        <label for="qiwi">
-                            <span class="payment-icon">🧡</span>
-                            QIWI Кошелек
-                        </label>
+                            <span class="payment-icon">🌐 Яндекс.Деньги</span>
                     </div>
                 </div>
                 
@@ -341,24 +320,6 @@
         opacity: 1;
     }
     
-    .donation-badge {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        padding: 6px 15px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        color: white;
-        z-index: 3;
-    }
-
-    .donation-badge.popular { background: linear-gradient(45deg, #ff6b6b, #ff8e33); }
-    .donation-badge.best-value { background: linear-gradient(45deg, #4d96ff, #6bcf7f); }
-    .donation-badge.exclusive { background: linear-gradient(45deg, #c56cf0, #ff6b6b); }
-    .donation-badge.premium { background: linear-gradient(45deg, #ffd93d, #c89b3c); color: #333; }
-    
     .donation-amount {
         font-size: 2.5rem;
         font-weight: bold;
@@ -384,14 +345,6 @@
         font-size: 1rem;
         color: #b8b8d2;
     }
-    
-    .bonus-percent {
-        color: #6bcf7f;
-        font-weight: bold;
-        margin-bottom: 20px;
-        font-size: 1.1rem;
-    }
-    
     .select-donation {
         background: linear-gradient(45deg, #4d96ff, #6bcf7f);
         color: white;
@@ -788,16 +741,6 @@
             setTimeout(() => {
                 donateModal.style.display = 'none';
             }, 300);
-        });
-        
-        // Закрытие модального окна при клике вне его
-        window.addEventListener('click', function(event) {
-            if (event.target === donateModal) {
-                donateModal.classList.remove('active');
-                setTimeout(() => {
-                    donateModal.style.display = 'none';
-                }, 300);
-            }
         });
         
         // Обработка подтверждения доната

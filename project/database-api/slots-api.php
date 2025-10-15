@@ -66,6 +66,7 @@ if (isset($_GET['bet']))
             // Обновляем баланс и статистику
         }
     changebalance($winAmount);
-
+    echo "|";
+    echo $_SESSION['balance'];
 }
 ?>
