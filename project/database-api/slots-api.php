@@ -28,7 +28,7 @@ if (isset($_GET['bet']))
     $bet = $_GET['bet'];
     if ($bet > $_SESSION['balance'])
         exit;
-    $slotSymbols = ['🍒','🍒', '🍒','🍋', '🍊', '🍋', '🍊', '🍋', '🍊', '🍇', '🔔', '🍇', '🔔', '⭐', '⭐', '7️⃣', '💎', '💎'];
+    $slotSymbols = ['❌','🍒','🍒', '🍒','🍋', '🍊', '🍋', '🍊', '🍋', '🍊', '🍇', '🔔', '🍇', '🔔', '⭐', '⭐', '7️⃣', '💎', '💎'];
     $winMultipliers = [
                 '7️⃣'=> 10,
                 '💎'=> 8,
@@ -37,7 +37,8 @@ if (isset($_GET['bet']))
                 '🍇'=> 3,
                 '🍊'=> 2,
                 '🍋'=> 2,
-                '🍒'=> 2
+                '🍒'=> 2,
+                '❌'=> 0
     ];
     $randomsymbol1 = $slotSymbols[array_rand($slotSymbols)];
     echo $randomsymbol1;

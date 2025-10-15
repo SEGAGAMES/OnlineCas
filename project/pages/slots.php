@@ -4,7 +4,7 @@ if (!isLoggedIn()):
     <script>alert("Для начала игры необходимо войти или зарегистрироваться!"); window.location.href='index.php?page=register' </script>
 <?php else:
 // Символы для слотов
-$slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
+$slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
 ?>
 
     <div class="slots-container">
@@ -116,6 +116,10 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                                 <span class="symbol">🍒 🍒 🍒</span>
                                 <span class="multiplier">×2</span>
                             </div>
+                             <div class="paytable-item">
+                                <span class="symbol">❌ ❌ ❌</span>
+                                <span class="multiplier">×0</span>
+                            </div>
                         </div>
                     </div>
                     <div class="paytable-section">
@@ -152,6 +156,10 @@ $slotSymbols = ['🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'
                             <div class="paytable-item">
                                 <span class="symbol">🍒 🍒</span>
                                 <span class="multiplier">×1</span>
+                            </div>
+                             <div class="paytable-item">
+                                <span class="symbol">❌ ❌</span>
+                                <span class="multiplier">×0</span>
                             </div>
                         </div>
                     </div>
