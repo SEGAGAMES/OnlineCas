@@ -49,10 +49,10 @@ if (isset($_GET['bet']))
     $randomsymbol3 = $slotSymbols[array_rand($slotSymbols)];
     echo $randomsymbol3;
     $winAmount = -$bet;
-    if ($randomsymbol1 === $randomsymbol2 && $randomsymbol2 === $randomsymbol3)
+    if ($randomsymbol1 === $randomsymbol2 && $randomsymbol2 === $randomsymbol3 & $randomsymbol1 != '❌')
         $winAmount = $bet * $winMultipliers[$randomsymbol1];
     else
-        if ($randomsymbol1 === $randomsymbol2 || $randomsymbol2 === $randomsymbol3 || $randomsymbol1 === $randomsymbol3)
+        if (($randomsymbol1 === $randomsymbol2 & $randomsymbol1 != '❌') || ($randomsymbol2 === $randomsymbol3 & $randomsymbol2 != '❌') || ($randomsymbol1 === $randomsymbol3 & $randomsymbol1 != '❌'))
         {
             $matchingSymbol ="";
             // Два одинаковых символа - находим какой именно символ повторяется

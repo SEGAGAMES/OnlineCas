@@ -314,7 +314,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             let winMessage = '';
             
             // Проверяем комбинации
-            if (results[0] === results[1] && results[1] === results[2]) 
+            if (results[0] === results[1] && results[1] === results[2] && results[0] != '❌') 
             {
                 // Три одинаковых символа
                 winAmount = currentBet * winMultipliers[results[0]];
@@ -324,7 +324,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                 winFrames.forEach(frame => frame.classList.add('active'));
             } 
             else
-                if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2])
+                if ((results[0] === results[1] && results[0] != '❌') || (results[1] === results[2] && results[1] != '❌') || (results[0] === results[2] && results[0] != '❌'))
                 {
                     // Два одинаковых символа - находим какой именно символ повторяется
                     let matchingSymbol;
