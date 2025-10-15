@@ -134,11 +134,6 @@ $betTypes = [
                                 break;
                         }
                     });
-
-                    // Обработчик клика на кнопке
-                    document.getElementById('actionButton').addEventListener('click', function() {
-                        alert('Кнопка активирована!');
-                    });
                 </script>
                 </div>
                 <div class="history">

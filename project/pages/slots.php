@@ -60,11 +60,6 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                                 break;
                         }
                     });
-
-                    // Обработчик клика на кнопке
-                    document.getElementById('actionButton').addEventListener('click', function() {
-                        alert('Кнопка активирована!');
-                    });
                 </script>
                 <div class="bet-controls">
                     <button class="bet-btn" onclick="changeBet(-10)">-10</button>
