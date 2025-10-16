@@ -117,6 +117,38 @@
                 <div class="card-glow"></div>
             </div>
         </a>
+        <!-- Мины -->
+         <a href="index.php?page=mines" class="game-card-link">
+            <div class="game-card poker-main">
+                <div class="game-card-header">
+                    <div class="game-icon">💥🔥💣</div>
+                    <div class="game-badge new">HOT</div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Мины</h3>
+                    <p>Испытайте удачу в поисках безопасных полей, не подорвитесь!</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Интересно</span>
+                        <span class="feature-tag">Турниры</span>
+                        <span class="feature-tag">Рейтинг</span>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span>4.7</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </a>
+        </div>
+
+       
     </div>
     <?php if (!isLoggedIn()): ?>
     <div class="games-cta">
@@ -131,7 +163,6 @@
     </div>
     <?php endif ?>
 </div>
-
 
 <style>
 .games-section {
