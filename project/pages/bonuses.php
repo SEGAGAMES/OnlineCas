@@ -170,6 +170,14 @@
 </div>
 
 <style>
+    /* Добавляем класс для блокировки прокрутки */
+    body.no-scroll {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+
     .bonus-hero {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #c89b3c 100%);
         border-radius: 25px;
@@ -444,6 +452,7 @@
         backdrop-filter: blur(5px);
         opacity: 0;
         transition: opacity 0.3s ease;
+        overflow-y: auto;
     }
     
     .modal-bonuses.active {
@@ -710,6 +719,23 @@
         const selectedAmount = document.getElementById('selected-amount');
         const selectedCoins = document.getElementById('selected-coins');
         const confirmButton = document.getElementById('confirm-donation');
+        const body = document.body;
+        
+        // Функция для блокировки прокрутки
+        function disableScroll() {
+            // Сохраняем текущую позицию прокрутки
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            body.style.top = `-${scrollY}px`;
+            body.classList.add('no-scroll');
+        }
+        
+        // Функция для разблокировки прокрутки
+        function enableScroll() {
+            const scrollY = parseInt(body.style.top || '0');
+            body.classList.remove('no-scroll');
+            body.style.top = '';
+            window.scrollTo(0, Math.abs(scrollY));
+        }
         
         // Обработка выбора суммы доната
         donationCards.forEach(card => {
@@ -727,7 +753,8 @@
                 selectedAmount.textContent = amount + ' ₽';
                 selectedCoins.textContent = coins + ' CEV';
                 
-                // Показываем модальное окно
+                // Блокируем прокрутку и показываем модальное окно
+                disableScroll();
                 donateModal.style.display = 'block';
                 setTimeout(() => {
                     donateModal.classList.add('active');
@@ -740,7 +767,19 @@
             donateModal.classList.remove('active');
             setTimeout(() => {
                 donateModal.style.display = 'none';
+                enableScroll(); // Разблокируем прокрутку
             }, 300);
+        });
+        
+        // Закрытие модального окна при клике вне его
+        donateModal.addEventListener('click', function(e) {
+            if (e.target === donateModal) {
+                donateModal.classList.remove('active');
+                setTimeout(() => {
+                    donateModal.style.display = 'none';
+                    enableScroll(); // Разблокируем прокрутку
+                }, 300);
+            }
         });
         
         // Обработка подтверждения доната
@@ -756,10 +795,11 @@
             
             alert(`💝 Спасибо за поддержку!\n\nВы выбрали пожертвование на сумму ${amount}.\nНа ваш счет будет зачислено ${coins}.\n\n🎓 Это учебный проект, реальные платежи не производятся.`);
             
-            // Закрываем модальное окно
+            // Закрываем модальное окно и разблокируем прокрутку
             donateModal.classList.remove('active');
             setTimeout(() => {
                 donateModal.style.display = 'none';
+                enableScroll();
             }, 300);
         });
 
