@@ -7,7 +7,7 @@ function addToHistory($type, $change)
         try {
             date_default_timezone_set('Europe/Moscow');
             $query = "INSERT INTO `user_game_story`(`email`, `op_type`, `balance`, `changebalance`, `time`, `date`) VALUES (?,?,?,?,?,?)";
-            $result = $db->SendQuery($query, [$_SESSION['user_email'], $type, $_SESSION['balance'], $change, date('h:i:s'), date('y.m.d')]);
+            $result = $db->SendQuery($query, [$_SESSION['user_email'], $type, $_SESSION['balance'], $change, date('H:i:s'), date('y.m.d')]);
             if (!$result) {
                 http_response_code(503);
                 return ['success' => false, 'code' => 503, 'message' => 'Service Unavailable'];

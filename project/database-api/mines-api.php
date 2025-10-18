@@ -68,10 +68,10 @@ function startGame() {
     }
     
     // Списываем ставку
-    if (!changebalance(-$bet)) {
-        echo "balance_update_failed";
-        return;
-    }
+    // if (!changebalance(-$bet)) {
+    //     echo "balance_update_failed";
+    //     return;
+    // }
     
     // Создаем игровое поле
     $board = createGameBoard($mines_count);
@@ -135,6 +135,7 @@ function revealCell() {
     if ($cell_type === 'mine') {
         // Игрок нашел мину - игра проиграна
         $game['active'] = false;
+        changebalance(-$game['bet']);
         echo "mine|0|" . $_SESSION['balance'] . "|true";
         return;
     }
