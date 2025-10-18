@@ -17,9 +17,9 @@ if (isset($_GET['action'])) {
             http_response_code(200);
             
             if ($amount > 0)
-                addToHistory("Выигрыш в Mines", $amount);
+                addToHistory("Выигрыш", $amount);
             else if ($amount < 0)
-                addToHistory("Проигрыш в Mines", $amount);
+                addToHistory("Проигрыш", $amount);
                 
             return true;
         } catch (PDOException $e) {
