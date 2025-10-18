@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Окт 14 2025 г., 05:32
--- Версия сервера: 8.0.43
+-- Время создания: Окт 18 2025 г., 09:54
+-- Версия сервера: 8.0.42
 -- Версия PHP: 8.2.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -24,13 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `cards`
+--
+
+CREATE TABLE `cards` (
+  `id` int NOT NULL COMMENT 'Идентификатор',
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Почта игрока',
+  `card_numb` varchar(19) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Номер карточки',
+  `card_date` varchar(5) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Дата на карте',
+  `card_cvc` varchar(3) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'CVC код карты'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `inventory`
 --
 
 CREATE TABLE `inventory` (
   `id` int NOT NULL COMMENT 'идентификатор предмета 1 предмет одному игроку',
   `item_id` int NOT NULL COMMENT 'идентификатор предмета',
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'идентификатор пользователя'
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'идентификатор пользователя'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -58,10 +72,10 @@ INSERT INTO `inventory` (`id`, `item_id`, `email`) VALUES
 
 CREATE TABLE `items` (
   `item_id` int NOT NULL COMMENT 'Идентификатор предмета',
-  `item_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Тип предмета',
-  `path` varchar(50) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Путь до картинки предмета',
+  `item_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Тип предмета',
+  `path` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Путь до картинки предмета',
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Описание предмета',
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Наименование предмета',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Наименование предмета',
   `cost` int NOT NULL COMMENT 'Стоимость предмета'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -92,7 +106,7 @@ INSERT INTO `items` (`item_id`, `item_type`, `path`, `description`, `name`, `cos
 --
 
 CREATE TABLE `item_type` (
-  `item_type` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
+  `item_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -133,7 +147,7 @@ INSERT INTO `op_types` (`op_type`) VALUES
 --
 
 CREATE TABLE `statuses` (
-  `status_name` varchar(25) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Статус игрока'
+  `status_name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Статус игрока'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -153,13 +167,13 @@ INSERT INTO `statuses` (`status_name`) VALUES
 --
 
 CREATE TABLE `users` (
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Почта/логин',
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Пароль',
-  `surname` varchar(100) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Фамилия',
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Имя',
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Почта/логин',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Пароль',
+  `surname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Фамилия',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Имя',
   `lastname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Отчество',
   `balance` int NOT NULL COMMENT 'Баланс',
-  `status` varchar(25) COLLATE utf8mb4_general_ci NOT NULL,
+  `status` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `ava` int NOT NULL COMMENT 'аватарка',
   `regdate` date DEFAULT NULL COMMENT 'Дата регистрации'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -169,7 +183,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balance`, `status`, `ava`, `regdate`) VALUES
-('e@example.com', '$2y$10$tE7/Bu/qbbxyLFbnsdRwUupRp0qURJC25szkbU9swXjdjkjmIlRZm', 'Админов', 'Админ', 'Палыч', 1778627088, 'Админ', 12, '2025-08-02'),
+('e@example.com', '$2y$10$tE7/Bu/qbbxyLFbnsdRwUupRp0qURJC25szkbU9swXjdjkjmIlRZm', 'Админов', 'Админ', 'Палыч', 1778627433, 'Админ', 12, '2025-08-02'),
 ('t@example.com', '$2y$10$/wES1LFM8McfvCrQBwYoOOwtM0ieRgoDptp8d7u2JRxHfhUeYRLje', 'Шиляев', 'Сергей', 'Павлович', 0, 'Обычный', 3, '2025-10-14');
 
 -- --------------------------------------------------------
@@ -180,7 +194,7 @@ INSERT INTO `users` (`email`, `password`, `surname`, `name`, `lastname`, `balanc
 
 CREATE TABLE `user_game_story` (
   `op_id` int NOT NULL COMMENT 'Идентификатор операции',
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'email пользователя',
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'email пользователя',
   `op_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Тип операции',
   `balance` int NOT NULL COMMENT 'Новый баланс после игры',
   `changebalance` int NOT NULL COMMENT 'Изменение баланса',
@@ -305,11 +319,28 @@ INSERT INTO `user_game_story` (`op_id`, `email`, `op_type`, `balance`, `changeba
 (185, 't@example.com', 'Проигрыш', 950, -320, '08:23:21', '2025-10-14'),
 (186, 't@example.com', 'Проигрыш', 310, -640, '08:23:27', '2025-10-14'),
 (187, 't@example.com', 'Проигрыш', 0, -310, '08:23:56', '2025-10-14'),
-(188, 't@example.com', 'Проигрыш', 0, 0, '08:30:30', '2025-10-14');
+(188, 't@example.com', 'Проигрыш', 0, 0, '08:30:30', '2025-10-14'),
+(192, 'e@example.com', 'Проигрыш', 1778627048, -10, '11:59:03', '2025-10-18'),
+(193, 'e@example.com', 'Проигрыш', 1778627038, -10, '11:59:26', '2025-10-18'),
+(194, 'e@example.com', 'Проигрыш', 1778627028, -10, '11:59:30', '2025-10-18'),
+(195, 'e@example.com', 'Проигрыш', 1778627018, -10, '11:59:32', '2025-10-18'),
+(196, 'e@example.com', 'Проигрыш', 1778627008, -10, '11:59:34', '2025-10-18'),
+(197, 'e@example.com', 'Выигрыш', 1778627033, 25, '11:59:40', '2025-10-18'),
+(198, 'e@example.com', 'Пополнение', 1778627133, 100, '12:49:41', '2025-10-18'),
+(199, 'e@example.com', 'Пополнение', 1778627233, 100, '12:49:51', '2025-10-18'),
+(200, 'e@example.com', 'Пополнение', 1778627333, 100, '12:50:23', '2025-10-18'),
+(201, 'e@example.com', 'Пополнение', 1778627433, 100, '12:51:09', '2025-10-18');
 
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `cards`
+--
+ALTER TABLE `cards`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `email` (`email`);
 
 --
 -- Индексы таблицы `inventory`
@@ -365,6 +396,12 @@ ALTER TABLE `user_game_story`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `cards`
+--
+ALTER TABLE `cards`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор', AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT для таблицы `inventory`
 --
 ALTER TABLE `inventory`
@@ -380,11 +417,17 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT для таблицы `user_game_story`
 --
 ALTER TABLE `user_game_story`
-  MODIFY `op_id` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор операции', AUTO_INCREMENT=189;
+  MODIFY `op_id` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор операции', AUTO_INCREMENT=202;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `cards`
+--
+ALTER TABLE `cards`
+  ADD CONSTRAINT `cards_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `inventory`

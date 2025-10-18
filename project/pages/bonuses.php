@@ -111,8 +111,8 @@
     </div>
 </div>
 
-<!-- Модальное окно для поддержки проекта -->
-<div id="donateModal" class="modal-bonuses">
+<!-- Форма для поддержки проекта -->
+<form id="donateForm" class="modal-bonuses">
     <div class="modal-bonuses-content">
         <div class="modal-bonuses-header">
             <h3>💳 Поддержка проекта</h3>
@@ -134,40 +134,40 @@
                 <div class="payment-methods">
                     <div class="payment-option">
                         <input type="radio" id="card-payment" name="payment-method" value="card" checked>
-                         <span class="payment-icon">💳 Банковская карта</span>
-                    </div>
-                    <div class="payment-option">
-                        <input type="radio" id="yandex-money" name="payment-method" value="yandex">
-                            <span class="payment-icon">🌐 Яндекс.Деньги</span>
+                        <label for="card-payment">
+                            <span class="payment-icon">💳 Банковская карта</span>
+                        </label>
                     </div>
                 </div>
                 
                 <div class="card-details">
                     <div class="input-group">
-                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19">
+                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19" name="card_numb" required>
                         <span class="input-icon">🔒</span>
                     </div>
                     <div class="card-info">
                         <div class="input-group">
-                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5">
+                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5" name="card_date" required>
                             <span class="input-icon">📅</span>
                         </div>
                         <div class="input-group">
-                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3">
+                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3" name="card_cvc" required>
                             <span class="input-icon">🛡️</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <button id="confirm-donation" class="donate-btn">
+            <input type="hidden" name="amount" id="form-amount">
+            <input type="hidden" name="coins" id="form-coins">
+            
+            <button type="submit" id="confirm-donation" class="donate-btn">
                 <span class="btn-text">Подтвердить поддержку</span>
                 <span class="btn-icon">💝</span>
             </button>
-            <p class="donation-note">🎓 Это учебный проект, реальные платежи не производятся</p>
         </div>
     </div>
-</div>
+</form>
 
 <style>
     /* Добавляем класс для блокировки прокрутки */
@@ -712,126 +712,145 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const donationCards = document.querySelectorAll('.donation-card');
-        const donateModal = document.getElementById('donateModal');
-        const closeModal = document.querySelector('.close-modal-bonuses');
-        const selectedAmount = document.getElementById('selected-amount');
-        const selectedCoins = document.getElementById('selected-coins');
-        const confirmButton = document.getElementById('confirm-donation');
-        const body = document.body;
-        
-        // Функция для блокировки прокрутки
-        function disableScroll() {
-            // Сохраняем текущую позицию прокрутки
-            const scrollY = window.scrollY || document.documentElement.scrollTop;
-            body.style.top = `-${scrollY}px`;
-            body.classList.add('no-scroll');
-        }
-        
-        // Функция для разблокировки прокрутки
-        function enableScroll() {
-            const scrollY = parseInt(body.style.top || '0');
-            body.classList.remove('no-scroll');
-            body.style.top = '';
-            window.scrollTo(0, Math.abs(scrollY));
-        }
-        
-        // Обработка выбора суммы доната
-        donationCards.forEach(card => {
-            card.addEventListener('click', function() {
-                // Убираем выделение у всех карточек
-                donationCards.forEach(c => c.classList.remove('selected'));
-                
-                // Выделяем выбранную карточку
-                this.classList.add('selected');
-                
-                // Обновляем информацию в форме
-                const amount = this.getAttribute('data-amount');
-                const coins = this.getAttribute('data-coins');
-                
-                selectedAmount.textContent = amount + ' ₽';
-                selectedCoins.textContent = coins + ' CEV';
-                
-                // Блокируем прокрутку и показываем модальное окно
-                disableScroll();
-                donateModal.style.display = 'block';
-                setTimeout(() => {
-                    donateModal.classList.add('active');
-                }, 10);
-            });
-        });
-        
-        // Закрытие модального окна
-        closeModal.addEventListener('click', function() {
-            donateModal.classList.remove('active');
+    // Обновленный скрипт для обработки формы
+document.addEventListener('DOMContentLoaded', function() {
+    const donationCards = document.querySelectorAll('.donation-card');
+    const donateForm = document.getElementById('donateForm');
+    const closeModal = document.querySelector('.close-modal-bonuses');
+    const selectedAmount = document.getElementById('selected-amount');
+    const selectedCoins = document.getElementById('selected-coins');
+    const formAmount = document.getElementById('form-amount');
+    const formCoins = document.getElementById('form-coins');
+    const body = document.body;
+    
+    // Функция для блокировки прокрутки
+    function disableScroll() {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        body.style.top = `-${scrollY}px`;
+        body.classList.add('no-scroll');
+    }
+    
+    // Функция для разблокировки прокрутки
+    function enableScroll() {
+        const scrollY = parseInt(body.style.top || '0');
+        body.classList.remove('no-scroll');
+        body.style.top = '';
+        window.scrollTo(0, Math.abs(scrollY));
+    }
+    
+    // Обработка выбора суммы доната
+    donationCards.forEach(card => {
+        card.addEventListener('click', function() {
+            donationCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            const amount = this.getAttribute('data-amount');
+            const coins = this.getAttribute('data-coins');
+            
+            selectedAmount.textContent = amount + ' ₽';
+            selectedCoins.textContent = coins + ' CEV';
+            formAmount.value = amount;
+            formCoins.value = coins;
+            
+            disableScroll();
+            donateForm.style.display = 'block';
             setTimeout(() => {
-                donateModal.style.display = 'none';
-                enableScroll(); // Разблокируем прокрутку
-            }, 300);
-        });
-        
-        // Закрытие модального окна при клике вне его
-        donateModal.addEventListener('click', function(e) {
-            if (e.target === donateModal) {
-                donateModal.classList.remove('active');
-                setTimeout(() => {
-                    donateModal.style.display = 'none';
-                    enableScroll(); // Разблокируем прокрутку
-                }, 300);
-            }
-        });
-        
-        // Обработка подтверждения доната
-        confirmButton.addEventListener('click', function() {
-            const amount = selectedAmount.textContent;
-            const coins = selectedCoins.textContent;
-            
-            // Анимация кнопки
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
-            
-            alert(`💝 Спасибо за поддержку!\n\nВы выбрали пожертвование на сумму ${amount}.\nНа ваш счет будет зачислено ${coins}.\n\n🎓 Это учебный проект, реальные платежи не производятся.`);
-            
-            // Закрываем модальное окно и разблокируем прокрутку
-            donateModal.classList.remove('active');
-            setTimeout(() => {
-                donateModal.style.display = 'none';
-                enableScroll();
-            }, 300);
-        });
-
-        // Форматирование номера карты
-        document.querySelector('.card-input').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formattedValue = '';
-            
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formattedValue += ' ';
-                }
-                formattedValue += value[i];
-            }
-            
-            e.target.value = formattedValue;
-        });
-
-        // Форматирование даты
-        document.querySelector('.card-date').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
-            
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            
-            e.target.value = value;
-        });
-
-        // Только цифры для CVV
-        document.querySelector('.card-cvv').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/[^0-9]/gi, '');
+                donateForm.classList.add('active');
+            }, 10);
         });
     });
+    
+    // Закрытие формы
+    closeModal.addEventListener('click', function() {
+        donateForm.classList.remove('active');
+        setTimeout(() => {
+            donateForm.style.display = 'none';
+            enableScroll();
+        }, 300);
+    });
+    
+    // Закрытие формы при клике вне ее
+    donateForm.addEventListener('click', function(e) {
+        if (e.target === donateForm) {
+            donateForm.classList.remove('active');
+            setTimeout(() => {
+                donateForm.style.display = 'none';
+                enableScroll();
+            }, 300);
+        }
+    });
+    
+    // Обработка отправки формы
+    donateForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const amount = formData.get('amount');
+        const cardNumb = formData.get('card_numb');
+        const cardDate = formData.get('card_date');
+        const cardcvc = formData.get('card_cvc');
+        const coins = formData.get('coins');
+        
+        const confirmButton = document.getElementById('confirm-donation');
+        confirmButton.style.transform = 'scale(0.95)';
+        
+        try {
+            const response = await fetch('database-api/deposit.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                alert(`💝 Спасибо за поддержку!\n\nВы пожертвовали на сумму ${amount}₽.\nНа ваш счет будет зачислено ${coins} бонусных CEV-коинов.`);
+                
+                donateForm.classList.remove('active');
+                setTimeout(() => {
+                    donateForm.style.display = 'none';
+                    enableScroll();
+                    donateForm.reset();
+                }, 300);
+            } else {
+                throw new Error('Ошибка при обработке платежа');
+            }
+        } catch (error) {
+            alert('Произошла ошибка при обработке платежа. Пожалуйста, попробуйте еще раз.' + error);
+            console.error('Donation error:', error);
+        }
+        
+        setTimeout(() => {
+            confirmButton.style.transform = '';
+        }, 150);
+    });
+
+    // Форматирование номера карты
+    document.querySelector('.card-input').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = '';
+        
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formattedValue += ' ';
+            }
+            formattedValue += value[i];
+        }
+        
+        e.target.value = formattedValue;
+    });
+
+    // Форматирование даты
+    document.querySelector('.card-date').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
+        
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        
+        e.target.value = value;
+    });
+
+    // Только цифры для CVV
+    document.querySelector('.card-cvv').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/gi, '');
+    });
+});
 </script>
