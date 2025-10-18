@@ -115,116 +115,137 @@ let openedCells = 0;
 let totalCells = 25;
 let gameBoard = [];
 let cashoutBtn;
+let currentGameId = null;
 
 // Множители для разного количества мин
 const multipliers = {
-    3: [1.1, 1.2, 1.3, 1.5, 1.75, 1.9, 2.2, 2.5, 2.7, 2.9, 3.1, 3.5, 4.1, 4.7, 28.8, 36.0, 45.0, 56.3, 70.4, 88.0, 110.0, 137.5, 171.9, 214.9, 268.6],
+    3: [1.1, 1.2, 1.3, 1.5, 1.75, 1.9, 2.2, 2.5, 2.7, 2.9, 3.1, 3.5, 4.1, 4.7, 5.5, 6.7, 7.7, 8.9, 70.4, 88.0, 110.0, 137.5, 171.9, 214.9, 268.6],
     5: [1.1, 1.3, 1.5, 1.9, 2.2, 2.5, 2.8, 3.5, 4.0, 4.5, 5.1, 5.5, 6.6, 41.1, 53.4, 69.4, 90.3, 117.4, 152.6, 198.4, 257.9, 335.3, 435.9, 566.7, 736.7],
     7: [1.2, 1.4, 1.6, 2.1, 2.6, 3.0, 3.8, 4.2, 4.7, 5.2, 5.9, 58.0, 81.2, 113.7, 159.2, 222.9, 312.0, 436.8, 611.5, 856.1, 1198.5, 1677.9, 2349.1, 3288.7, 4604.2],
     10: [1.5, 2.3, 3.5, 5.3, 6.5, 7.3, 18.0, 27.0, 40.5, 60.8, 91.1, 136.7, 205.1, 307.6, 461.4, 692.1, 1038.2, 1557.3, 2335.9, 3503.9, 5255.8, 7883.7, 11825.6, 17738.4, 26607.6]
 };
 
-function startGame() {
+async function startGame() {
     if (gameActive || balance < currentBet) return;
     
-    // Снимаем ставку
-    balance -= currentBet;
-    updateDisplay();
-    
-    gameActive = true;
-    openedCells = 0;
-    multiplier = 1.00;
-    
-    const startBtn = document.getElementById('startBtn');
-    startBtn.disabled = true;
-    startBtn.textContent = '🎮 Игра идет...';
-    
-    // Создаем игровое поле
-    createGameBoard();
-    
-    // Показываем кнопку "Забрать"
-    showCashoutButton();
-    
-    document.getElementById('result').innerHTML = '';
+    try {
+        const response = await fetch('database-api/mines-api.php?action=start&bet=' + currentBet + '&mines=' + minesCount);
+        const data = await response.text();
+        
+        if (data.includes('|')) {
+            const parts = data.split('|');
+            const gameId = parts[0];
+            const boardData = parts[1].split(',');
+            const newBalance = parseFloat(parts[2]);
+            
+            balance = newBalance;
+            currentGameId = gameId;
+            
+            gameActive = true;
+            openedCells = 0;
+            multiplier = 1.00;
+            
+            const startBtn = document.getElementById('startBtn');
+            startBtn.disabled = true;
+            startBtn.textContent = '🎮 Игра идет...';
+            
+            // Создаем игровое поле
+            createGameBoard(boardData);
+            
+            // Показываем кнопку "Забрать"
+            showCashoutButton();
+            
+            document.getElementById('result').innerHTML = '';
+            updateDisplay();
+        } else {
+            handleApiError(data);
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка соединения с сервером');
+    }
 }
 
-function createGameBoard() {
+function createGameBoard(boardData) {
     const board = document.getElementById('gameBoard');
     board.innerHTML = '';
-    gameBoard = [];
-    
-    // Создаем массив с минами и алмазами
-    let cells = Array(minesCount).fill('mine').concat(Array(totalCells - minesCount).fill('diamond'));
-    
-    // Перемешиваем
-    cells = shuffleArray(cells);
+    gameBoard = boardData;
     
     // Создаем игровое поле 5x5
     for (let i = 0; i < 5; i++) {
         const row = document.createElement('div');
         row.className = 'board-row';
         
-        const rowData = [];
         for (let j = 0; j < 5; j++) {
             const index = i * 5 + j;
             const cell = document.createElement('div');
             cell.className = 'board-cell';
             cell.dataset.row = i;
             cell.dataset.col = j;
-            cell.dataset.type = cells[index];
+            cell.dataset.index = index;
             
             cell.innerHTML = `
                 <div class="cell-front">?</div>
                 <div class="cell-back">
-                    ${cells[index] === 'mine' ? '💣' : '💎'}
+                    ${boardData[index] === 'mine' ? '💣' : '💎'}
                 </div>
             `;
             
-            cell.addEventListener('click', () => revealCell(i, j));
+            cell.addEventListener('click', () => revealCell(i, j, index));
             row.appendChild(cell);
-            rowData.push(cells[index]);
         }
         
         board.appendChild(row);
-        gameBoard.push(rowData);
     }
 }
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function revealCell(row, col) {
+async function revealCell(row, col, index) {
     if (!gameActive) return;
     
-    const cell = document.querySelector(`.board-cell[data-row="${row}"][data-col="${col}"]`);
+    const cell = document.querySelector(`.board-cell[data-index="${index}"]`);
     if (cell.classList.contains('revealed')) return;
     
-    cell.classList.add('revealed');
-    openedCells++;
-    
-    if (cell.dataset.type === 'mine') {
-        // Игрок нашел мину
-        cell.classList.add('mine-cell');
-        gameOver(false);
-    } else {
-        // Игрок нашел алмаз
-        cell.classList.add('diamond-cell');
-        multiplier = multipliers[minesCount][openedCells - 1];
-        updateGameStats();
+    try {
+        const response = await fetch('database-api/mines-api.php?action=reveal&game_id=' + currentGameId + '&cell_index=' + index);
+        const data = await response.text();
         
-        // Проверяем, выиграл ли игрок (открыл все алмазы)
-        if (openedCells === totalCells - minesCount) {
-            gameOver(true);
+        if (data.includes('|')) {
+            const parts = data.split('|');
+            const result = parts[0];
+            const newMultiplier = parseFloat(parts[1]);
+            const newBalance = parseFloat(parts[2]);
+            const gameCompleted = parts[3] === 'true';
+            
+            cell.classList.add('revealed');
+            openedCells++;
+            
+            if (result === 'mine') {
+                // Игрок нашел мину
+                cell.classList.add('mine-cell');
+                balance = newBalance;
+                await gameOver(false);
+            } else if (result === 'diamond') {
+                // Игрок нашел алмаз
+                cell.classList.add('diamond-cell');
+                multiplier = newMultiplier;
+                balance = newBalance;
+                updateGameStats();
+                
+                // Проверяем, выиграл ли игрок
+                if (gameCompleted) {
+                    await gameOver(true);
+                }
+            }
+        } else {
+            handleApiError(data);
         }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка соединения с сервером');
     }
 }
 
-function gameOver(isWin) {
+async function gameOver(isWin) {
     gameActive = false;
     const startBtn = document.getElementById('startBtn');
     startBtn.disabled = false;
@@ -240,7 +261,6 @@ function gameOver(isWin) {
     
     if (isWin) {
         const winAmount = currentBet * multiplier;
-        balance += winAmount;
         resultDiv.innerHTML = `<div class="win-message">🎉 Победа! Вы нашли все алмазы! Выигрыш: ${winAmount.toFixed(2)} CEV</div>`;
     } else {
         resultDiv.innerHTML = `<div class="lose-message">💥 Вы наткнулись на мину! Ставка потеряна.</div>`;
@@ -249,27 +269,47 @@ function gameOver(isWin) {
     updateDisplay();
 }
 
-function cashout() {
+async function cashout() {
     if (!gameActive || openedCells === 0) return;
     
-    const winAmount = currentBet * multiplier;
-    balance += winAmount;
-    
-    gameActive = false;
-    const startBtn = document.getElementById('startBtn');
-    startBtn.disabled = false;
-    startBtn.textContent = '🎮 Начать игру';
-    
-    // Показываем все клетки
-    revealAllCells();
-    
-    // Убираем кнопку "Забрать"
-    hideCashoutButton();
-    
-    document.getElementById('result').innerHTML = 
-        `<div class="win-message">💰 Вы забрали выигрыш! ${winAmount.toFixed(2)} CEV</div>`;
-    
-    updateDisplay();
+    try {
+        const response = await fetch('database-api/mines-api.php?action=cashout&game_id=' + currentGameId);
+        const data = await response.text();
+        
+        if (data.includes('|')) {
+            const parts = data.split('|');
+            const result = parts[0];
+            const winAmount = parseFloat(parts[1]);
+            const newBalance = parseFloat(parts[2]);
+            
+            if (result === 'success') {
+                balance = newBalance;
+                
+                gameActive = false;
+                const startBtn = document.getElementById('startBtn');
+                startBtn.disabled = false;
+                startBtn.textContent = '🎮 Начать игру';
+                
+                // Показываем все клетки
+                revealAllCells();
+                
+                // Убираем кнопку "Забрать"
+                hideCashoutButton();
+                
+                document.getElementById('result').innerHTML = 
+                    `<div class="win-message">💰 Вы забрали выигрыш! ${winAmount.toFixed(2)} CEV</div>`;
+                
+                updateDisplay();
+            } else {
+                handleApiError(data);
+            }
+        } else {
+            handleApiError(data);
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Ошибка соединения с сервером');
+    }
 }
 
 function revealAllCells() {
@@ -289,6 +329,7 @@ function showCashoutButton() {
         controls.appendChild(cashoutBtn);
     } else {
         cashoutBtn.style.display = 'block';
+        cashoutBtn.innerHTML = '💰 Забрать ' + (currentBet * multiplier).toFixed(2) + ' CEV';
     }
 }
 
@@ -355,6 +396,34 @@ function updateDisplay() {
     }
     
     updateGameStats();
+}
+
+function handleApiError(errorCode) {
+    switch(errorCode) {
+        case 'invalid_bet':
+            alert('Неверная ставка. Минимальная ставка: 10 CEV');
+            break;
+        case 'insufficient_funds':
+            alert('Недостаточно средств на балансе');
+            break;
+        case 'invalid_mines_count':
+            alert('Неверное количество мин');
+            break;
+        case 'game_not_found':
+            alert('Игра не найдена. Начните новую игру');
+            break;
+        case 'invalid_cell_index':
+            alert('Неверный индекс клетки');
+            break;
+        case 'cell_already_revealed':
+            alert('Эта клетка уже открыта');
+            break;
+        case 'balance_update_failed':
+            alert('Ошибка обновления баланса. Попробуйте еще раз');
+            break;
+        default:
+            alert('Неизвестная ошибка: ' + errorCode);
+    }
 }
 
 // Инициализация при загрузке
