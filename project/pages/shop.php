@@ -166,6 +166,7 @@
         margin-bottom: 10px;
         font-size: 1.4rem;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        min-height: 75px;
     }
 
     .product-description {
@@ -173,6 +174,7 @@
         margin-bottom: 15px;
         line-height: 1.4;
         font-size: 0.95rem;
+        min-height: 50px;
     }
 
     .product-price {
