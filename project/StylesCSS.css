@@ -262,7 +262,6 @@ footer::before {
 .footer-sections {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
     width: 100%;
     justify-content: center;
     justify-items: center;
