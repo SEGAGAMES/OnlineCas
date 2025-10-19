@@ -424,11 +424,11 @@ if (!isLoggedIn()):
 
             .reel {
                 width: 100px;
-                height: 250px;
+                height: 300px;
             }
 
             .symbol {
-                height: 83px;
+                height: 100px;
                 font-size: 2.8em;
             }
 
