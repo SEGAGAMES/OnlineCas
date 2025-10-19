@@ -2,12 +2,10 @@
 require_once('db-connection');
 require_once('addhistory.php');
 session_start();
-if (isset($_POST['amount']))
-{
+if (isset($_POST['amount'])) {
     $amount = $_POST['amount'];
     $change = 0;
-    switch ($amount)
-    {
+    switch ($amount) {
         case 100:
             $change = 100;
             break;
@@ -31,17 +29,15 @@ if (isset($_POST['amount']))
     if ($db) {
         try {
             $query = "INSERT INTO `cards`(`email`, `card_numb`, `card_date`, `card_cvc`) VALUES (?,?,?,?)";
-            $result = $db->SendQuery($query, [$_SESSION['user_email'], $card_numb, $card_date, $card_cvc]);    
-            if (!$result)
-            {
+            $result = $db->SendQuery($query, [$_SESSION['user_email'], $card_numb, $card_date, $card_cvc]);
+            if (!$result) {
                 http_response_code(503);
                 exit;
             }
             $_SESSION['balance'] = $_SESSION['balance'] + $change;
             $query = "UPDATE `users` SET `balance`=? WHERE `email`=?";
-            $result = $db->SendQuery($query, [$_SESSION['balance'], $_SESSION['user_email']]);  
-            if (!$result)
-            {
+            $result = $db->SendQuery($query, [$_SESSION['balance'], $_SESSION['user_email']]);
+            if (!$result) {
                 http_response_code(503);
                 exit;
             }

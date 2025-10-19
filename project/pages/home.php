@@ -1,140 +1,3 @@
-<h1>Добро пожаловать в Non-lossing Play!</h1>
-<?php if (!isLoggedIn()): ?>
-    <!-- Промо-предложение с бонусом -->
-    <div class="promo-banner">
-        <div class="promo-content">
-            <div class="promo-badge">НОВИЧКАМ</div>
-            <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000$</h2>
-            <p class="promo-subtitle">Увеличьте свой стартовый капитал и получите бесплатные вращения</p>
-            <a href="index.php?page=register" class="cta-button promo-button">Получить бонус</a>
-            <div class="wagering-info">
-
-            </div>
-        </div>
-        <div class="promo-visual">
-            <div class="promo-animation">
-                <div class="coin">🪙</div>
-                <div class="diamond">💎</div>
-                <div class="seven">7️⃣</div>
-                <div class="money-bag">💰</div>
-            </div>
-        </div>
-    </div>
-<?php endif ?>
-<div class="games-section">
-    <div class="section-header">
-        <h2>🎮 Игровая коллекция</h2>
-        <p>Откройте для себя мир захватывающих развлечений</p>
-    </div>
-
-    <div class="games-grid">
-        <!-- Слоты -->
-        <a href="index.php?page=slots" class="game-card-link">
-            <div class="game-card slot-machine">
-                <div class="game-card-header">
-                    <div class="game-icon">🎰</div>
-                    <div class="game-badge popular">Популярная</div>
-                </div>
-                <div class="game-card-content">
-                    <h3>Слоты</h3>
-                    <p>Классические игровые автоматы с яркой графикой и бонусными раундами</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Высокая RTP</span>
-                        <span class="feature-tag">Бонусы</span>
-                        <span class="feature-tag">Джекпот</span>
-                    </div>
-                </div>
-                <div class="game-card-footer">
-                    <div class="game-rating">
-                        <div class="stars">★★★★★</div>
-                        <span>4.8</span>
-                    </div>
-                    <div class="play-button">
-                        <span>Играть бесплатно</span>
-                        <div class="button-shine"></div>
-                    </div>
-                </div>
-                <div class="card-glow"></div>
-            </div>
-        </a>
-
-        <!-- Мины -->
-        <a href="index.php?page=mines" class="game-card-link">
-            <div class="game-card poker-main">
-                <div class="game-card-header">
-                    <div class="game-icon">💥🔥💣</div>
-                    <div class="game-badge new">HOT</div>
-                </div>
-                <div class="game-card-content">
-                    <h3>Мины</h3>
-                    <p>Испытайте удачу в поисках безопасных полей, не подорвитесь!</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Интересно</span>
-                        <span class="feature-tag">Турниры</span>
-                        <span class="feature-tag">Рейтинг</span>
-                    </div>
-                </div>
-                <div class="game-card-footer">
-                    <div class="game-rating">
-                        <div class="stars">★★★★☆</div>
-                        <span>4.7</span>
-                    </div>
-                    <div class="play-button">
-                        <span>Играть бесплатно</span>
-                        <div class="button-shine"></div>
-                    </div>
-                </div>
-                <div class="card-glow"></div>
-            </div>
-        </a>
-
-        <!-- Рулетка -->
-        <a href="index.php?page=roulette" class="game-card-link">
-            <div class="game-card roulette-main">
-                <div class="game-card-header">
-                    <div class="game-icon">⚫</div>
-                    <div class="game-badge hot">Горячая</div>
-                </div>
-                <div class="game-card-content">
-                    <h3>Рулетка</h3>
-                    <p>Европейская рулетка с реалистичной физикой и красивой анимацией</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Реализм</span>
-                        <span class="feature-tag">Ставки</span>
-                        <span class="feature-tag">Анимация</span>
-                    </div>
-                </div>
-                <div class="game-card-footer">
-                    <div class="game-rating">
-                        <div class="stars">★★★★★</div>
-                        <span>4.9</span>
-                    </div>
-                    <div class="play-button">
-                        <span>Играть бесплатно</span>
-                        <div class="button-shine"></div>
-                    </div>
-                </div>
-                <div class="card-glow"></div>
-            </div>
-        </a>
-    </div>
-
-
-</div>
-<?php if (!isLoggedIn()): ?>
-    <div class="games-cta">
-        <div class="cta-content">
-            <h3>🎁 Получите бонус для старта!</h3>
-            <p>1000 виртуальных кредитов для новых игроков</p>
-            <a href="index.php?page=register" class="bonus-button">
-                <span>Получите бонус</span>
-                <div class="sparkle">✨</div>
-            </a>
-        </div>
-    </div>
-<?php endif ?>
-</div>
-
 <style>
     .games-section {
         padding: 60px 20px;
@@ -594,9 +457,7 @@
             padding: 3px 8px;
         }
     }
-</style>
 
-<style>
     .promo-banner {
         background: linear-gradient(135deg, #ffd700, #ff6b00);
         border-radius: 15px;
@@ -767,3 +628,139 @@
         }
     }
 </style>
+
+<h1>Добро пожаловать в Non-lossing Play!</h1>
+<?php if (!isLoggedIn()): ?>
+    <!-- Промо-предложение с бонусом -->
+    <div class="promo-banner">
+        <div class="promo-content">
+            <div class="promo-badge">НОВИЧКАМ</div>
+            <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000$</h2>
+            <p class="promo-subtitle">Увеличьте свой стартовый капитал и получите бесплатные вращения</p>
+            <a href="index.php?page=register" class="cta-button promo-button">Получить бонус</a>
+            <div class="wagering-info">
+
+            </div>
+        </div>
+        <div class="promo-visual">
+            <div class="promo-animation">
+                <div class="coin">🪙</div>
+                <div class="diamond">💎</div>
+                <div class="seven">7️⃣</div>
+                <div class="money-bag">💰</div>
+            </div>
+        </div>
+    </div>
+<?php endif ?>
+<div class="games-section">
+    <div class="section-header">
+        <h2>🎮 Игровая коллекция</h2>
+        <p>Откройте для себя мир захватывающих развлечений</p>
+    </div>
+
+    <div class="games-grid">
+        <!-- Слоты -->
+        <a href="index.php?page=slots" class="game-card-link">
+            <div class="game-card slot-machine">
+                <div class="game-card-header">
+                    <div class="game-icon">🎰</div>
+                    <div class="game-badge popular">Популярная</div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Слоты</h3>
+                    <p>Классические игровые автоматы с яркой графикой и бонусными раундами</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Высокая RTP</span>
+                        <span class="feature-tag">Бонусы</span>
+                        <span class="feature-tag">Джекпот</span>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★★</div>
+                        <span>4.8</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </a>
+
+        <!-- Мины -->
+        <a href="index.php?page=mines" class="game-card-link">
+            <div class="game-card poker-main">
+                <div class="game-card-header">
+                    <div class="game-icon">💥🔥💣</div>
+                    <div class="game-badge new">HOT</div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Мины</h3>
+                    <p>Испытайте удачу в поисках безопасных полей, не подорвитесь!</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Интересно</span>
+                        <span class="feature-tag">Турниры</span>
+                        <span class="feature-tag">Рейтинг</span>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★☆</div>
+                        <span>4.7</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </a>
+
+        <!-- Рулетка -->
+        <a href="index.php?page=roulette" class="game-card-link">
+            <div class="game-card roulette-main">
+                <div class="game-card-header">
+                    <div class="game-icon">⚫</div>
+                    <div class="game-badge hot">Горячая</div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Рулетка</h3>
+                    <p>Европейская рулетка с реалистичной физикой и красивой анимацией</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Реализм</span>
+                        <span class="feature-tag">Ставки</span>
+                        <span class="feature-tag">Анимация</span>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <div class="game-rating">
+                        <div class="stars">★★★★★</div>
+                        <span>4.9</span>
+                    </div>
+                    <div class="play-button">
+                        <span>Играть бесплатно</span>
+                        <div class="button-shine"></div>
+                    </div>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+        </a>
+    </div>
+
+</div>
+<?php if (!isLoggedIn()): ?>
+    <div class="games-cta">
+        <div class="cta-content">
+            <h3>🎁 Получите бонус для старта!</h3>
+            <p>1000 виртуальных кредитов для новых игроков</p>
+            <a href="index.php?page=register" class="bonus-button">
+                <span>Получите бонус</span>
+                <div class="sparkle">✨</div>
+            </a>
+        </div>
+    </div>
+<?php endif ?>
+</div>

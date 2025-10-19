@@ -1,3 +1,18 @@
+<style>
+    .faq-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 4px solid #c89b3c;
+    }
+
+    .faq-item h3 {
+        color: #0e2a38;
+        margin-bottom: 10px;
+    }
+</style>
+
 <h1>Часто задаваемые вопросы</h1>
 <h2>Общие вопросы</h2>
 
@@ -56,17 +71,3 @@
     <p>Да, мы постоянно работаем над улучшением проекта и добавлением нового функционала для демонстрации различных
         аспектов веб-разработки.</p>
 </div>
-<style>
-    .faq-item {
-        margin-bottom: 20px;
-        padding: 15px;
-        background: #f9f9f9;
-        border-radius: 8px;
-        border-left: 4px solid #c89b3c;
-    }
-
-    .faq-item h3 {
-        color: #0e2a38;
-        margin-bottom: 10px;
-    }
-</style>

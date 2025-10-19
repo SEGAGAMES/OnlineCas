@@ -7,7 +7,212 @@ if (!isLoggedIn()) {
 require_once('database-api/load-items');
 ?>
 
+<style>
+    /* Стили для инвентаря */
+
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .item-card {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+    }
+
+
+    .item-image {
+        padding: 20px;
+        text-align: center;
+        background: var(--bg-secondary);
+    }
+
+    .item-image img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        object-fit: contain;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        background: var(--bg-secondary);
+    }
+
+    .btn-use,
+    .btn-sell {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-use {
+        background: #29ca1aff;
+        color: white;
+    }
+
+    .btn-use:hover {
+        background: var(--accent-hover);
+    }
+
+    .btn-sell {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-sell:hover {
+        background: #c82333;
+    }
+
+    .custom-alert {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .alert-content {
+        background: linear-gradient(145deg, #2d2d44, #252536);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 300px;
+        max-width: 90%;
+        border: 2px solid #444466;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .alert-content h3 {
+        color: #f8e71c;
+        margin-bottom: 15px;
+    }
+
+    .alert-content p {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+
+    #alertOk {
+        padding: 12px 30px;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    #alertOk:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .custom-confirm {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .confirm-content {
+        background: linear-gradient(145deg, #2d2d44, #252536);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 320px;
+        max-width: 90%;
+        border: 2px solid #444466;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .confirm-content h3 {
+        color: #f8e71c;
+        margin-bottom: 15px;
+    }
+
+    .confirm-content p {
+        color: #fff;
+        margin-bottom: 25px;
+        font-size: 1.1em;
+    }
+
+    .confirm-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    #confirmYes,
+    #confirmNo {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        min-width: 100px;
+    }
+
+    #confirmYes {
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        color: white;
+    }
+
+    #confirmYes:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    #confirmNo {
+        background: linear-gradient(45deg, #666, #888);
+        color: white;
+    }
+
+    #confirmNo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 102, 102, 0.4);
+    }
+</style>
+
 <h1>Личный кабинет</h1>
+
 <div id="customAlert" class="custom-alert">
     <div class="alert-content">
         <h3 id="alertTitle">Уведомление</h3>
@@ -15,6 +220,18 @@ require_once('database-api/load-items');
         <button id="alertOk">OK</button>
     </div>
 </div>
+
+<div id="customConfirm" class="custom-confirm">
+    <div class="confirm-content">
+        <h3 id="confirmTitle">Подтверждение</h3>
+        <p id="confirmMessage"></p>
+        <div class="confirm-buttons">
+            <button id="confirmYes">Да</button>
+            <button id="confirmNo">Нет</button>
+        </div>
+    </div>
+</div>
+
 <div class="profile-container">
     <!-- Блок с основной информацией -->
     <div class="profile-info">
@@ -207,147 +424,6 @@ require_once('database-api/load-items');
         </div>
     </div>
 </div>
-<div id="customConfirm" class="custom-confirm">
-    <div class="confirm-content">
-        <h3 id="confirmTitle">Подтверждение</h3>
-        <p id="confirmMessage"></p>
-        <div class="confirm-buttons">
-            <button id="confirmYes">Да</button>
-            <button id="confirmNo">Нет</button>
-        </div>
-    </div>
-</div>
-<style>
-    /* Стили для инвентаря */
-
-    .inventory-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .item-card {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        position: relative;
-    }
-
-    .item-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-
-    }
-
-
-    .item-image {
-        padding: 20px;
-        text-align: center;
-        background: var(--bg-secondary);
-    }
-
-    .item-image img {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        object-fit: contain;
-    }
-
-    .item-actions {
-        display: flex;
-        gap: 10px;
-        padding: 15px;
-        background: var(--bg-secondary);
-    }
-
-    .btn-use,
-    .btn-sell {
-        flex: 1;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9em;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-use {
-        background: #29ca1aff;
-        color: white;
-    }
-
-    .btn-use:hover {
-        background: var(--accent-hover);
-    }
-
-    .btn-sell {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-sell:hover {
-        background: #c82333;
-    }
-
-    .custom-alert {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .alert-content {
-        background: linear-gradient(145deg, #2d2d44, #252536);
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        min-width: 300px;
-        max-width: 90%;
-        border: 2px solid #444466;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .alert-content h3 {
-        color: #f8e71c;
-        margin-bottom: 15px;
-    }
-
-    .alert-content p {
-        color: #fff;
-        margin-bottom: 20px;
-        font-size: 1.1em;
-    }
-
-    #alertOk {
-        padding: 12px 30px;
-        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 1em;
-        transition: all 0.3s ease;
-    }
-
-    #alertOk:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-    }
-</style>
 
 <script>
     function customConfirm(message, title = 'Подтверждение') {
@@ -433,76 +509,3 @@ require_once('database-api/load-items');
         }
     }
 </script>
-<style>
-    .custom-confirm {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .confirm-content {
-        background: linear-gradient(145deg, #2d2d44, #252536);
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        min-width: 320px;
-        max-width: 90%;
-        border: 2px solid #444466;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .confirm-content h3 {
-        color: #f8e71c;
-        margin-bottom: 15px;
-    }
-
-    .confirm-content p {
-        color: #fff;
-        margin-bottom: 25px;
-        font-size: 1.1em;
-    }
-
-    .confirm-buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    #confirmYes,
-    #confirmNo {
-        padding: 12px 30px;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 1em;
-        transition: all 0.3s ease;
-        min-width: 100px;
-    }
-
-    #confirmYes {
-        background: linear-gradient(45deg, #4ecdc4, #44a08d);
-        color: white;
-    }
-
-    #confirmYes:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
-    }
-
-    #confirmNo {
-        background: linear-gradient(45deg, #666, #888);
-        color: white;
-    }
-
-    #confirmNo:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 102, 102, 0.4);
-    }
-</style>

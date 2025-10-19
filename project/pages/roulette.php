@@ -40,360 +40,6 @@ if (!isLoggedIn()):
         'dozen3' => 'Третья дюжина (25-36)'
     ];
     ?>
-    <div class="roulette-container">
-        <div class="header">
-            <h1>Европейская Рулетка</h1>
-            <p>Сделайте ставку и испытайте удачу!</p>
-        </div>
-
-        <div class="game-area">
-            <div class="wheel-section">
-                <div class="roulette-wheel-container">
-                    <div class="pointer"></div>
-                    <div class="roulette-wheel" id="rouletteWheel">
-                        <div class="wheel-center"></div>
-                        <?php foreach ($rouletteNumbers as $index => $number): ?>
-                            <?php
-                            $angle = ($index / 37) * 360;
-                            $colorClass = getNumberClass($number);
-                            ?>
-                            <div class="number-slot <?php echo $colorClass; ?>"
-                                style="transform: rotate(<?php echo $angle; ?>deg);" data-number="<?php echo $number; ?>">
-                                <span style="transform: rotate(<?php echo -$angle; ?>deg); display: block;">
-                                    <?php echo $number; ?>
-                                </span>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="controls-section">
-                <!-- Система ставок -->
-                <div class="betting-system">
-                    <div class="balance-section">
-                        <div class="balance-display">
-                            <span>Баланс: $</span>
-                            <span id="balance"><?php echo $_SESSION['balance'] ?> CEV</span>
-                        </div>
-                        <div class="bet-amount">
-                            <label>Сумма ставки:</label>
-                            <div class="amount-controls">
-                                <button class="amount-btn" onclick="defaultBet()">10</button>
-                                <button class="amount-btn" onclick="changeBetAmount(-10)">-10</button>
-                                <input type="number" id="betAmount" value="10" min="10" max="100000">
-                                <button class="amount-btn" onclick="changeBetAmount(10)">+10</button>
-                                <button class="amount-btn" onclick="X2Bet(-10)">X2</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bet-type-selector">
-                        <label>Тип ставки:</label>
-                        <select id="betType" onchange="updateBetOptions()">
-                            <?php foreach ($betTypes as $key => $value): ?>
-                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="number-selector" id="numberSelector">
-                        <label>Выберите число:</label>
-                        <div class="number-grid">
-                            <?php for ($i = 0; $i <= 36; $i++): ?>
-                                <div class="bet-number <?php echo getNumberClass($i); ?>" data-number="<?php echo $i; ?>"
-                                    onclick="selectNumber(<?php echo $i; ?>)">
-                                    <?php echo $i; ?>
-                                </div>
-                            <?php endfor; ?>
-                        </div>
-                    </div>
-
-                    <div class="current-bet">
-                        <h4>Текущая ставка</h4>
-                        <div id="currentBetInfo">Не выбрана</div>
-                        <div id="currentBetAmount">$0</div>
-                    </div>
-                </div>
-
-                <div class="controls">
-                    <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
-                        🎯 Крутить Рулетку
-                    </button>
-                    <script>
-                        document.addEventListener('keydown', function (event) {
-                            const button = document.getElementById('spinBtn');
-
-                            switch (event.code) {
-                                case 'Enter':      // Enter
-                                case 'Space':      // Пробел
-                                    event.preventDefault();
-                                    button.click();
-                                    button.focus(); // Добавляем фокус для визуального эффекта
-                                    break;
-                            }
-                        });
-                    </script>
-                </div>
-                <div class="history">
-                    <h3>История Бросков</h3>
-                    <div class="history-items" id="history"></div>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <div class="stat-value" id="redCount">0</div>
-                            <div>Красные</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="blackCount">0</div>
-                            <div>Черные</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="greenCount">0</div>
-                            <div>Зеленые</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="customAlert" class="custom-alert">
-        <div class="alert-content">
-            <h3 id="alertTitle">Уведомление</h3>
-            <p id="alertMessage"></p>
-            <button id="alertOk">OK</button>
-        </div>
-    </div>
-    <script>
-        // Заменяем стандартный alert
-        function customAlert(message, title = 'Уведомление') {
-            const alert = document.getElementById('customAlert');
-            const alertMessage = document.getElementById('alertMessage');
-            const alertTitle = document.getElementById('alertTitle');
-            const alertOk = document.getElementById('alertOk');
-
-            alertTitle.textContent = title;
-            alertMessage.textContent = message;
-            alert.style.display = 'flex';
-
-            // Закрытие по кнопке
-            alertOk.onclick = function () {
-                alert.style.display = 'none';
-            };
-
-            // Закрытие по клику вне окна
-            alert.onclick = function (e) {
-                if (e.target === alert) {
-                    alert.style.display = 'none';
-                }
-            };
-
-            // Закрытие по Escape
-            document.addEventListener('keydown', function closeOnEscape(e) {
-                if (e.key === 'Escape') {
-                    alert.style.display = 'none';
-                    document.removeEventListener('keydown', closeOnEscape);
-                }
-            });
-        }
-        let spinHistory = [];
-        let isSpinning = false;
-        let stats = { red: 0, black: 0, green: 0 };
-        let balance = <?php echo $_SESSION['balance'] ?>;
-        let currentBet = null;
-        let selectedNumber = null;
-        function updateBetOptions() {
-            const betType = document.getElementById('betType').value;
-            const numberSelector = document.getElementById('numberSelector');
-            if (betType === 'number')
-                numberSelector.style.display = 'block';
-            else {
-                numberSelector.style.display = 'none';
-                selectedNumber = null;
-                updateCurrentBet();
-            }
-        }
-
-        function selectNumber(number) {
-            const betType = document.getElementById('betType').value;
-            if (betType !== 'number') return;
-            selectedNumber = number;
-            document.querySelectorAll('.bet-number').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`.bet-number[data-number="${number}"]`).classList.add('selected');
-            updateCurrentBet();
-        }
-
-        function updateCurrentBet() {
-            const betType = document.getElementById('betType').value;
-            const betAmount = parseInt(document.getElementById('betAmount').value);
-            const betTypeNames = <?php echo json_encode($betTypes); ?>;
-
-            let betInfo = '';
-
-            if (betType === 'number' && selectedNumber !== null) {
-                betInfo = `Число ${selectedNumber}`;
-                currentBet = { type: betType, value: selectedNumber, amount: betAmount };
-            } else if (betType !== 'number') {
-                betInfo = betTypeNames[betType];
-                currentBet = { type: betType, value: null, amount: betAmount };
-            } else {
-                betInfo = 'Не выбрана';
-                currentBet = null;
-            }
-
-            document.getElementById('currentBetInfo').textContent = betInfo;
-            document.getElementById('currentBetAmount').textContent = currentBet ? `$${betAmount}` : '$0';
-        }
-        function defaultBet() {
-            const betAmountInput = document.getElementById('betAmount');
-            let newAmount = 10;
-
-            if (newAmount > balance) newAmount = balance;
-
-            betAmountInput.value = newAmount;
-            updateCurrentBet();
-        }
-        function X2Bet() {
-            const betAmountInput = document.getElementById('betAmount');
-            let currentAmount = parseInt(betAmountInput.value);
-            let newAmount = currentAmount * 2;
-
-            if (newAmount > balance) newAmount = balance;
-
-            betAmountInput.value = newAmount;
-            updateCurrentBet();
-        }
-        function changeBetAmount(change) {
-            const betAmountInput = document.getElementById('betAmount');
-            let currentAmount = parseInt(betAmountInput.value);
-            let newAmount = currentAmount + change;
-
-            if (newAmount < 1) newAmount = 1;
-            if (newAmount > balance) newAmount = balance;
-
-            betAmountInput.value = newAmount;
-            updateCurrentBet();
-        }
-
-        async function spinRoulette() {
-            const betType = document.getElementById('betType').value;
-            if (isSpinning) return;
-            if (!currentBet) {
-                customAlert('Сделайте ставку перед вращением!');
-                return;
-            }
-
-            const betAmount = parseInt(document.getElementById('betAmount').value);
-            if (betAmount > balance) {
-                customAlert('Недостаточно средств на балансе!');
-                return;
-            }
-
-            isSpinning = true;
-            const spinBtn = document.getElementById('spinBtn');
-            const wheel = document.getElementById('rouletteWheel');
-            const winLoseMessage = document.getElementById('winLoseMessage');
-            let winningNumber = 0;
-
-            // Случайное число от 0 до 36
-            if (betType === 'number' && selectedNumber !== null)
-                await fetch('database-api/roulette-api.php?bet=' + betAmount + '&bettype=' + betType + '&number=' + selectedNumber)
-                    .then(response => response.text())
-                    .then(data => {
-                        winningNumber = data.split('|')[0];
-                        balance = data.split('|')[1];
-                    })
-            else
-                await fetch('database-api/roulette-api.php?bet=' + betAmount + '&bettype=' + betType)
-                    .then(response => response.text())
-                    .then(data => {
-                        winningNumber = data.split('|')[0];
-                        balance = data.split('|')[1];
-                    })
-
-            const color = getNumberColor(winningNumber);
-
-            // Сбрасываем трансформацию перед началом вращения
-            wheel.style.transition = 'none';
-            wheel.style.transform = 'rotate(0deg)';
-
-            // Даем браузеру время применить сброс
-            setTimeout(() => {
-                // Включаем плавную анимацию
-                wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
-
-                // Добавляем анимацию вращения
-                wheel.classList.add('spinning');
-                spinBtn.disabled = true;
-                spinBtn.textContent = '🌀 Вращается...';
-
-                const fullRotations = 5; // Фиксированное количество полных оборотов
-                const numberAngle = (winningNumber / 37) * 360; // Угол конкретного числа (0-360)
-                const targetAngle = fullRotations * 360 + (360 - numberAngle); // Всегда в одну сторону
-
-                // Запускаем вращение
-                wheel.style.transform = `rotate(${targetAngle}deg)`;
-
-                // Показываем результат после завершения анимации
-                setTimeout(() => {
-                    wheel.classList.remove('spinning');
-
-                    // Добавляем в историю и обновляем статистику
-                    addToHistory(winningNumber, color);
-                    updateStats(color);
-
-                    isSpinning = false;
-                    spinBtn.disabled = false;
-                    spinBtn.textContent = '🎯 Крутить Рулетку';
-
-                    document.getElementById('balance').innerText = balance + " CEV";
-
-                }, 4000);
-            }, 50); // Небольшая задержка для применения сброса
-        }
-
-        function addToHistory(number, color) {
-            spinHistory.unshift({ number, color });
-            if (spinHistory.length > 12) {
-                spinHistory.pop();
-            }
-
-            const historyDiv = document.getElementById('history');
-            historyDiv.innerHTML = spinHistory.map(item =>
-                `<div class="history-item" style="background: ${item.color === 'red' ? '#d40000' : item.color === 'black' ? '#000000' : '#008000'}">
-                    ${item.number}
-                 </div>`
-            ).join('');
-        }
-
-        function updateStats(color) {
-            stats[color]++;
-            updateStatsDisplay();
-        }
-
-        function updateStatsDisplay() {
-            document.getElementById('redCount').textContent = stats.red;
-            document.getElementById('blackCount').textContent = stats.black;
-            document.getElementById('greenCount').textContent = stats.green;
-        }
-
-        function getNumberColor(number) {
-            if (number == 0) return 'green';
-
-            if ((number >= 1 && number <= 10) || (number >= 19 && number <= 28)) {
-                return number % 2 == 0 ? 'black' : 'red';
-            } else {
-                return number % 2 == 0 ? 'red' : 'black';
-            }
-        }
-
-        // Инициализация
-        document.getElementById('betAmount').addEventListener('input', updateCurrentBet);
-        document.getElementById('betType').addEventListener('change', updateCurrentBet);
-        updateBetOptions();
-        updateCurrentBet();
-    </script>
 
     <style>
         .roulette-container {
@@ -914,4 +560,361 @@ if (!isLoggedIn()):
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
     </style>
+
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-content">
+            <h3 id="alertTitle">Уведомление</h3>
+            <p id="alertMessage"></p>
+            <button id="alertOk">OK</button>
+        </div>
+    </div>
+
+    <div class="roulette-container">
+        <div class="header">
+            <h1>Европейская Рулетка</h1>
+            <p>Сделайте ставку и испытайте удачу!</p>
+        </div>
+
+        <div class="game-area">
+            <div class="wheel-section">
+                <div class="roulette-wheel-container">
+                    <div class="pointer"></div>
+                    <div class="roulette-wheel" id="rouletteWheel">
+                        <div class="wheel-center"></div>
+                        <?php foreach ($rouletteNumbers as $index => $number): ?>
+                            <?php
+                            $angle = ($index / 37) * 360;
+                            $colorClass = getNumberClass($number);
+                            ?>
+                            <div class="number-slot <?php echo $colorClass; ?>"
+                                style="transform: rotate(<?php echo $angle; ?>deg);" data-number="<?php echo $number; ?>">
+                                <span style="transform: rotate(<?php echo -$angle; ?>deg); display: block;">
+                                    <?php echo $number; ?>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <!-- Система ставок -->
+                <div class="betting-system">
+                    <div class="balance-section">
+                        <div class="balance-display">
+                            <span>Баланс: $</span>
+                            <span id="balance"><?php echo $_SESSION['balance'] ?> CEV</span>
+                        </div>
+                        <div class="bet-amount">
+                            <label>Сумма ставки:</label>
+                            <div class="amount-controls">
+                                <button class="amount-btn" onclick="defaultBet()">10</button>
+                                <button class="amount-btn" onclick="changeBetAmount(-10)">-10</button>
+                                <input type="number" id="betAmount" value="10" min="10" max="100000">
+                                <button class="amount-btn" onclick="changeBetAmount(10)">+10</button>
+                                <button class="amount-btn" onclick="X2Bet(-10)">X2</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bet-type-selector">
+                        <label>Тип ставки:</label>
+                        <select id="betType" onchange="updateBetOptions()">
+                            <?php foreach ($betTypes as $key => $value): ?>
+                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="number-selector" id="numberSelector">
+                        <label>Выберите число:</label>
+                        <div class="number-grid">
+                            <?php for ($i = 0; $i <= 36; $i++): ?>
+                                <div class="bet-number <?php echo getNumberClass($i); ?>" data-number="<?php echo $i; ?>"
+                                    onclick="selectNumber(<?php echo $i; ?>)">
+                                    <?php echo $i; ?>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+
+                    <div class="current-bet">
+                        <h4>Текущая ставка</h4>
+                        <div id="currentBetInfo">Не выбрана</div>
+                        <div id="currentBetAmount">$0</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
+                        🎯 Крутить Рулетку
+                    </button>
+                    <script>
+                        document.addEventListener('keydown', function (event) {
+                            const button = document.getElementById('spinBtn');
+
+                            switch (event.code) {
+                                case 'Enter':      // Enter
+                                case 'Space':      // Пробел
+                                    event.preventDefault();
+                                    button.click();
+                                    button.focus(); // Добавляем фокус для визуального эффекта
+                                    break;
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="history">
+                    <h3>История Бросков</h3>
+                    <div class="history-items" id="history"></div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="redCount">0</div>
+                            <div>Красные</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="blackCount">0</div>
+                            <div>Черные</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="greenCount">0</div>
+                            <div>Зеленые</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Заменяем стандартный alert
+        function customAlert(message, title = 'Уведомление') {
+            const alert = document.getElementById('customAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertTitle = document.getElementById('alertTitle');
+            const alertOk = document.getElementById('alertOk');
+
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+            alert.style.display = 'flex';
+
+            // Закрытие по кнопке
+            alertOk.onclick = function () {
+                alert.style.display = 'none';
+            };
+
+            // Закрытие по клику вне окна
+            alert.onclick = function (e) {
+                if (e.target === alert) {
+                    alert.style.display = 'none';
+                }
+            };
+
+            // Закрытие по Escape
+            document.addEventListener('keydown', function closeOnEscape(e) {
+                if (e.key === 'Escape') {
+                    alert.style.display = 'none';
+                    document.removeEventListener('keydown', closeOnEscape);
+                }
+            });
+        }
+        let spinHistory = [];
+        let isSpinning = false;
+        let stats = { red: 0, black: 0, green: 0 };
+        let balance = <?php echo $_SESSION['balance'] ?>;
+        let currentBet = null;
+        let selectedNumber = null;
+        function updateBetOptions() {
+            const betType = document.getElementById('betType').value;
+            const numberSelector = document.getElementById('numberSelector');
+            if (betType === 'number')
+                numberSelector.style.display = 'block';
+            else {
+                numberSelector.style.display = 'none';
+                selectedNumber = null;
+                updateCurrentBet();
+            }
+        }
+
+        function selectNumber(number) {
+            const betType = document.getElementById('betType').value;
+            if (betType !== 'number') return;
+            selectedNumber = number;
+            document.querySelectorAll('.bet-number').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.bet-number[data-number="${number}"]`).classList.add('selected');
+            updateCurrentBet();
+        }
+
+        function updateCurrentBet() {
+            const betType = document.getElementById('betType').value;
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            const betTypeNames = <?php echo json_encode($betTypes); ?>;
+
+            let betInfo = '';
+
+            if (betType === 'number' && selectedNumber !== null) {
+                betInfo = `Число ${selectedNumber}`;
+                currentBet = { type: betType, value: selectedNumber, amount: betAmount };
+            } else if (betType !== 'number') {
+                betInfo = betTypeNames[betType];
+                currentBet = { type: betType, value: null, amount: betAmount };
+            } else {
+                betInfo = 'Не выбрана';
+                currentBet = null;
+            }
+
+            document.getElementById('currentBetInfo').textContent = betInfo;
+            document.getElementById('currentBetAmount').textContent = currentBet ? `$${betAmount}` : '$0';
+        }
+        function defaultBet() {
+            const betAmountInput = document.getElementById('betAmount');
+            let newAmount = 10;
+
+            if (newAmount > balance) newAmount = balance;
+
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
+        function X2Bet() {
+            const betAmountInput = document.getElementById('betAmount');
+            let currentAmount = parseInt(betAmountInput.value);
+            let newAmount = currentAmount * 2;
+
+            if (newAmount > balance) newAmount = balance;
+
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
+        function changeBetAmount(change) {
+            const betAmountInput = document.getElementById('betAmount');
+            let currentAmount = parseInt(betAmountInput.value);
+            let newAmount = currentAmount + change;
+
+            if (newAmount < 1) newAmount = 1;
+            if (newAmount > balance) newAmount = balance;
+
+            betAmountInput.value = newAmount;
+            updateCurrentBet();
+        }
+
+        async function spinRoulette() {
+            const betType = document.getElementById('betType').value;
+            if (isSpinning) return;
+            if (!currentBet) {
+                customAlert('Сделайте ставку перед вращением!');
+                return;
+            }
+
+            const betAmount = parseInt(document.getElementById('betAmount').value);
+            if (betAmount > balance) {
+                customAlert('Недостаточно средств на балансе!');
+                return;
+            }
+
+            isSpinning = true;
+            const spinBtn = document.getElementById('spinBtn');
+            const wheel = document.getElementById('rouletteWheel');
+            const winLoseMessage = document.getElementById('winLoseMessage');
+            let winningNumber = 0;
+
+            // Случайное число от 0 до 36
+            if (betType === 'number' && selectedNumber !== null)
+                await fetch('database-api/roulette-api.php?bet=' + betAmount + '&bettype=' + betType + '&number=' + selectedNumber)
+                    .then(response => response.text())
+                    .then(data => {
+                        winningNumber = data.split('|')[0];
+                        balance = data.split('|')[1];
+                    })
+            else
+                await fetch('database-api/roulette-api.php?bet=' + betAmount + '&bettype=' + betType)
+                    .then(response => response.text())
+                    .then(data => {
+                        winningNumber = data.split('|')[0];
+                        balance = data.split('|')[1];
+                    })
+
+            const color = getNumberColor(winningNumber);
+
+            // Сбрасываем трансформацию перед началом вращения
+            wheel.style.transition = 'none';
+            wheel.style.transform = 'rotate(0deg)';
+
+            // Даем браузеру время применить сброс
+            setTimeout(() => {
+                // Включаем плавную анимацию
+                wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
+
+                // Добавляем анимацию вращения
+                wheel.classList.add('spinning');
+                spinBtn.disabled = true;
+                spinBtn.textContent = '🌀 Вращается...';
+
+                const fullRotations = 5; // Фиксированное количество полных оборотов
+                const numberAngle = (winningNumber / 37) * 360; // Угол конкретного числа (0-360)
+                const targetAngle = fullRotations * 360 + (360 - numberAngle); // Всегда в одну сторону
+
+                // Запускаем вращение
+                wheel.style.transform = `rotate(${targetAngle}deg)`;
+
+                // Показываем результат после завершения анимации
+                setTimeout(() => {
+                    wheel.classList.remove('spinning');
+
+                    // Добавляем в историю и обновляем статистику
+                    addToHistory(winningNumber, color);
+                    updateStats(color);
+
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = '🎯 Крутить Рулетку';
+
+                    document.getElementById('balance').innerText = balance + " CEV";
+
+                }, 4000);
+            }, 50); // Небольшая задержка для применения сброса
+        }
+
+        function addToHistory(number, color) {
+            spinHistory.unshift({ number, color });
+            if (spinHistory.length > 12) {
+                spinHistory.pop();
+            }
+
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = spinHistory.map(item =>
+                `<div class="history-item" style="background: ${item.color === 'red' ? '#d40000' : item.color === 'black' ? '#000000' : '#008000'}">
+                    ${item.number}
+                 </div>`
+            ).join('');
+        }
+
+        function updateStats(color) {
+            stats[color]++;
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('redCount').textContent = stats.red;
+            document.getElementById('blackCount').textContent = stats.black;
+            document.getElementById('greenCount').textContent = stats.green;
+        }
+
+        function getNumberColor(number) {
+            if (number == 0) return 'green';
+
+            if ((number >= 1 && number <= 10) || (number >= 19 && number <= 28)) {
+                return number % 2 == 0 ? 'black' : 'red';
+            } else {
+                return number % 2 == 0 ? 'red' : 'black';
+            }
+        }
+
+        // Инициализация
+        document.getElementById('betAmount').addEventListener('input', updateCurrentBet);
+        document.getElementById('betType').addEventListener('change', updateCurrentBet);
+        updateBetOptions();
+        updateCurrentBet();
+    </script>
 <? endif ?>

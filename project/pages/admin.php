@@ -26,8 +26,6 @@ if (isset($_SESSION['status'])):
                 if (in_array($file_type, $allowed_types)) {
                     // Перемещаем файл
                     if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_path)) {
-                        // Здесь можно сохранить данные в базу данных
-                        // Для примера просто выводим сообщение об успехе
                         send_photo($photo_type, $target_path, $description, $photo_name, $price);
                     }
                 }
@@ -38,7 +36,6 @@ if (isset($_SESSION['status'])):
         }
         ?>
         <style>
-            /* Стили для админ панели в игровой тематике */
             .admin-container {
                 max-width: 1400px;
                 margin: 20px auto;
@@ -370,83 +367,80 @@ if (isset($_SESSION['status'])):
             }
         </style>
 
-        <body>
-            <h1>Админ панель</h1>
-            <div class="admin-container">
-                <div class="header">
-                    <button class="btn" id="openModalBtn">Добавить предмет</button>
-                </div>
+        <h1>Админ панель</h1>
+        <div class="admin-container">
+            <div class="header">
+                <button class="btn" id="openModalBtn">Добавить предмет</button>
             </div>
+        </div>
 
-            <!-- Модальное окно -->
-            <div id="uploadModal" class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>Загрузка фото</h2>
-                        <button class="close">&times;</button>
+        <!-- Модальное окно -->
+        <div id="uploadModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Загрузка фото</h2>
+                    <button class="close">&times;</button>
+                </div>
+
+                <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="form-group">
+                        <label for="photo">Выберите фото:</label>
+                        <input type="file" id="photo" name="photo" accept="image/*" required>
                     </div>
 
-                    <form action="" method="POST" enctype="multipart/form-data" id="uploadForm">
-                        <div class="form-group">
-                            <label for="photo">Выберите фото:</label>
-                            <input type="file" id="photo" name="photo" accept="image/*" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="photo_name">Название фото:</label>
+                        <input type="text" id="photo_name" name="photo_name" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="photo_name">Название фото:</label>
-                            <input type="text" id="photo_name" name="photo_name" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="description">Описание:</label>
+                        <textarea id="description" name="description"></textarea>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="description">Описание:</label>
-                            <textarea id="description" name="description"></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="price">Стоимость:</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0">
+                    </div>
 
-                        <div class="form-group">
-                            <label for="price">Стоимость:</label>
-                            <input type="number" id="price" name="price" step="0.01" min="0">
-                        </div>
+                    <div class="form-group">
+                        <label for="description">Тип (аватар/предмет):</label>
+                        <textarea id="type" name="type"></textarea>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="description">Тип (аватар/предмет):</label>
-                            <textarea id="type" name="type"></textarea>
-                        </div>
-
-                        <button type="submit" name="upload_photo" value="1" class="btn submit-btn">Загрузить фото</button>
-                    </form>
-                </div>
+                    <button type="submit" name="upload_photo" value="1" class="btn submit-btn">Загрузить фото</button>
+                </form>
             </div>
+        </div>
 
-            <script>
-                // Управление модальным окном
-                const modal = document.getElementById('uploadModal');
-                const openBtn = document.getElementById('openModalBtn');
-                const closeBtn = document.querySelector('.close');
-                const form = document.getElementById('uploadForm');
+        <script>
+            // Управление модальным окном
+            const modal = document.getElementById('uploadModal');
+            const openBtn = document.getElementById('openModalBtn');
+            const closeBtn = document.querySelector('.close');
+            const form = document.getElementById('uploadForm');
 
-                // Открыть модальное окно
-                openBtn.addEventListener('click', () => {
-                    modal.style.display = 'block';
-                });
+            // Открыть модальное окно
+            openBtn.addEventListener('click', () => {
+                modal.style.display = 'block';
+            });
 
-                // Закрыть модальное окно
-                closeBtn.addEventListener('click', () => {
+            // Закрыть модальное окно
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Закрыть при клике вне окна
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
                     modal.style.display = 'none';
-                });
-
-                // Закрыть при клике вне окна
-                window.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                });
-                // Очистка формы при закрытии
-                modal.addEventListener('hide', () => {
-                    form.reset();
-                });
-            </script>
-        </body>
-
-        </html>
+                }
+            });
+            // Очистка формы при закрытии
+            modal.addEventListener('hide', () => {
+                form.reset();
+            });
+        </script>
     <? endif; else:
-    echo "<script> window.location.href='index.php?pages=home.php' </script>"; endif ?>
+    echo "<script> window.location.href='index.php?pages=home.php' </script>";
+endif ?>

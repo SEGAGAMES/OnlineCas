@@ -1,186 +1,55 @@
-<div class="bonus-hero">
-    <div class="hero-content">
-        <h1>🎁 Поддержка проекта</h1>
-        <p class="hero-subtitle">Ваш вклад помогает развивать учебную платформу и создавать новые возможности для
-            обучения!</p>
-        <div class="hero-stats">
-            <div class="hero-stat">
-                <span class="stat-number">1,247</span>
-                <span class="stat-label">Поддержавших</span>
-            </div>
-            <div class="hero-stat">
-                <span class="stat-number">4.9</span>
-                <span class="stat-label">Рейтинг доверия</span>
-            </div>
-            <div class="hero-stat">
-                <span class="stat-number">100%</span>
-                <span class="stat-label">Безопасность</span>
-            </div>
-        </div>
-    </div>
-    <div class="hero-decoration">
-        <div class="floating-heart">💝</div>
-        <div class="floating-star">⭐</div>
-        <div class="floating-coin">🪙</div>
-    </div>
-</div>
-
-<div class="support-section">
-    <div class="section-header">
-        <h2>💎 Выберите сумму поддержки</h2>
-        <p>Получите бонусные CEV-коины за вашу поддержку проекта</p>
-    </div>
-
-    <div class="donation-options">
-        <div class="donation-card" data-amount="100" data-coins="100">
-            <div class="card-glow"></div>
-            <div class="donation-amount">100 ₽</div>
-            <div class="coins-reward">
-                <span class="coins-amount">100</span>
-                <span class="coins-text">CEV-коинов</span>
-            </div>
-            <button class="select-donation">
-                <span>Выбрать</span>
-                <div class="btn-sparkle">✨</div>
-            </button>
-        </div>
-
-        <div class="donation-card" data-amount="500" data-coins="600">
-            <div class="card-glow"></div>
-            <div class="donation-amount">500 ₽</div>
-            <div class="coins-reward">
-                <span class="coins-amount">600</span>
-                <span class="coins-text">CEV-коинов</span>
-            </div>
-            <button class="select-donation">
-                <span>Выбрать</span>
-                <div class="btn-sparkle">✨</div>
-            </button>
-        </div>
-
-        <div class="donation-card" data-amount="1000" data-coins="1300">
-            <div class="card-glow"></div>
-            <div class="donation-amount">1000 ₽</div>
-            <div class="coins-reward">
-                <span class="coins-amount">1300</span>
-                <span class="coins-text">CEV-коинов</span>
-            </div>
-            <button class="select-donation">
-                <span>Выбрать</span>
-                <div class="btn-sparkle">✨</div>
-            </button>
-        </div>
-
-        <div class="donation-card" data-amount="2000" data-coins="2800">
-            <div class="card-glow"></div>
-            <div class="donation-amount">2000 ₽</div>
-            <div class="coins-reward">
-                <span class="coins-amount">2800</span>
-                <span class="coins-text">CEV-коинов</span>
-            </div>
-            <button class="select-donation">
-                <span>Выбрать</span>
-                <div class="btn-sparkle">✨</div>
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="benefits-section">
-    <h3>🌟 Что вы получаете?</h3>
-    <div class="benefits-grid">
-        <div class="benefit-card">
-            <div class="benefit-icon">🎮</div>
-            <h4>CEV-коины</h4>
-            <p>Используйте для покупок в магазине</p>
-        </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">⭐</div>
-            <h4>Особый статус</h4>
-            <p>Выделяйтесь среди других игроков</p>
-        </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">🚀</div>
-            <h4>Развитие проекта</h4>
-            <p>Помогаете создавать новый контент</p>
-        </div>
-        <div class="benefit-card">
-            <div class="benefit-icon">💝</div>
-            <h4>Наша благодарность</h4>
-            <p>Ваше имя в списке поддержавших</p>
-        </div>
-    </div>
-</div>
-
-<!-- Форма для поддержки проекта -->
-<form id="donateForm" class="modal-bonuses">
-    <div class="modal-bonuses-content">
-        <div class="modal-bonuses-header">
-            <h3>💳 Поддержка проекта</h3>
-            <span class="close-modal-bonuses">&times;</span>
-        </div>
-        <div class="modal-bonuses-body">
-            <div class="donation-summary">
-                <div class="summary-card">
-                    <div class="summary-icon">💰</div>
-                    <div class="summary-info">
-                        <div class="summary-amount" id="selected-amount">0 ₽</div>
-                        <div class="summary-coins" id="selected-coins">0 CEV</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="payment-section">
-                <h4>💳 Способ оплаты</h4>
-                <div class="payment-methods">
-                    <div class="payment-option">
-                        <input type="radio" id="card-payment" name="payment-method" value="card" checked>
-                        <label for="card-payment">
-                            <span class="payment-icon">💳 Банковская карта</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="card-details">
-                    <div class="input-group">
-                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19" name="card_numb"
-                            required>
-                        <span class="input-icon">🔒</span>
-                    </div>
-                    <div class="card-info">
-                        <div class="input-group">
-                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5" name="card_date"
-                                required>
-                            <span class="input-icon">📅</span>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3" name="card_cvc"
-                                required>
-                            <span class="input-icon">🛡️</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <input type="hidden" name="amount" id="form-amount">
-            <input type="hidden" name="coins" id="form-coins">
-
-            <button type="submit" id="confirm-donation" class="donate-btn">
-                <span class="btn-text">Подтвердить поддержку</span>
-                <span class="btn-icon">💝</span>
-            </button>
-        </div>
-    </div>
-</form>
-<div id="customAlert" class="custom-alert">
-    <div class="alert-content">
-        <h3 id="alertTitle">Уведомление</h3>
-        <p id="alertMessage"></p>
-        <button id="alertOk">OK</button>
-    </div>
-</div>
 <style>
-    /* Добавляем класс для блокировки прокрутки */
+    .custom-alert {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .alert-content {
+        background: linear-gradient(145deg, #2d2d44, #252536);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 300px;
+        max-width: 90%;
+        border: 2px solid #444466;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .alert-content h3 {
+        color: #f8e71c;
+        margin-bottom: 15px;
+    }
+
+    .alert-content p {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+
+    #alertOk {
+        padding: 12px 30px;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
+
+    #alertOk:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
     body.no-scroll {
         overflow: hidden;
         position: fixed;
@@ -752,6 +621,189 @@
     }
 </style>
 
+<div class="bonus-hero">
+    <div class="hero-content">
+        <h1>🎁 Поддержка проекта</h1>
+        <p class="hero-subtitle">Ваш вклад помогает развивать учебную платформу и создавать новые возможности для
+            обучения!</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="stat-number">1,247</span>
+                <span class="stat-label">Поддержавших</span>
+            </div>
+            <div class="hero-stat">
+                <span class="stat-number">4.9</span>
+                <span class="stat-label">Рейтинг доверия</span>
+            </div>
+            <div class="hero-stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Безопасность</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-decoration">
+        <div class="floating-heart">💝</div>
+        <div class="floating-star">⭐</div>
+        <div class="floating-coin">🪙</div>
+    </div>
+</div>
+
+<div class="support-section">
+    <div class="section-header">
+        <h2>💎 Выберите сумму поддержки</h2>
+        <p>Получите бонусные CEV-коины за вашу поддержку проекта</p>
+    </div>
+
+    <div class="donation-options">
+        <div class="donation-card" data-amount="100" data-coins="100">
+            <div class="card-glow"></div>
+            <div class="donation-amount">100 ₽</div>
+            <div class="coins-reward">
+                <span class="coins-amount">100</span>
+                <span class="coins-text">CEV-коинов</span>
+            </div>
+            <button class="select-donation">
+                <span>Выбрать</span>
+                <div class="btn-sparkle">✨</div>
+            </button>
+        </div>
+
+        <div class="donation-card" data-amount="500" data-coins="600">
+            <div class="card-glow"></div>
+            <div class="donation-amount">500 ₽</div>
+            <div class="coins-reward">
+                <span class="coins-amount">600</span>
+                <span class="coins-text">CEV-коинов</span>
+            </div>
+            <button class="select-donation">
+                <span>Выбрать</span>
+                <div class="btn-sparkle">✨</div>
+            </button>
+        </div>
+
+        <div class="donation-card" data-amount="1000" data-coins="1300">
+            <div class="card-glow"></div>
+            <div class="donation-amount">1000 ₽</div>
+            <div class="coins-reward">
+                <span class="coins-amount">1300</span>
+                <span class="coins-text">CEV-коинов</span>
+            </div>
+            <button class="select-donation">
+                <span>Выбрать</span>
+                <div class="btn-sparkle">✨</div>
+            </button>
+        </div>
+
+        <div class="donation-card" data-amount="2000" data-coins="2800">
+            <div class="card-glow"></div>
+            <div class="donation-amount">2000 ₽</div>
+            <div class="coins-reward">
+                <span class="coins-amount">2800</span>
+                <span class="coins-text">CEV-коинов</span>
+            </div>
+            <button class="select-donation">
+                <span>Выбрать</span>
+                <div class="btn-sparkle">✨</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="benefits-section">
+    <h3>🌟 Что вы получаете?</h3>
+    <div class="benefits-grid">
+        <div class="benefit-card">
+            <div class="benefit-icon">🎮</div>
+            <h4>CEV-коины</h4>
+            <p>Используйте для покупок в магазине</p>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">⭐</div>
+            <h4>Особый статус</h4>
+            <p>Выделяйтесь среди других игроков</p>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">🚀</div>
+            <h4>Развитие проекта</h4>
+            <p>Помогаете создавать новый контент</p>
+        </div>
+        <div class="benefit-card">
+            <div class="benefit-icon">💝</div>
+            <h4>Наша благодарность</h4>
+            <p>Ваше имя в списке поддержавших</p>
+        </div>
+    </div>
+</div>
+
+<!-- Форма для поддержки проекта -->
+<form id="donateForm" class="modal-bonuses">
+    <div class="modal-bonuses-content">
+        <div class="modal-bonuses-header">
+            <h3>💳 Поддержка проекта</h3>
+            <span class="close-modal-bonuses">&times;</span>
+        </div>
+        <div class="modal-bonuses-body">
+            <div class="donation-summary">
+                <div class="summary-card">
+                    <div class="summary-icon">💰</div>
+                    <div class="summary-info">
+                        <div class="summary-amount" id="selected-amount">0 ₽</div>
+                        <div class="summary-coins" id="selected-coins">0 CEV</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-section">
+                <h4>💳 Способ оплаты</h4>
+                <div class="payment-methods">
+                    <div class="payment-option">
+                        <input type="radio" id="card-payment" name="payment-method" value="card" checked>
+                        <label for="card-payment">
+                            <span class="payment-icon">💳 Банковская карта</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="input-group">
+                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19" name="card_numb"
+                            required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+                    <div class="card-info">
+                        <div class="input-group">
+                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5" name="card_date"
+                                required>
+                            <span class="input-icon">📅</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3" name="card_cvc"
+                                required>
+                            <span class="input-icon">🛡️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="amount" id="form-amount">
+            <input type="hidden" name="coins" id="form-coins">
+
+            <button type="submit" id="confirm-donation" class="donate-btn">
+                <span class="btn-text">Подтвердить поддержку</span>
+                <span class="btn-icon">💝</span>
+            </button>
+        </div>
+    </div>
+</form>
+<!-- Кастомное уведомление -->
+<div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+        <h3 id="alertTitle">Уведомление</h3>
+        <p id="alertMessage"></p>
+        <button id="alertOk">OK</button>
+    </div>
+</div>
+
 <script>
     // Обновленный скрипт для обработки формы
     document.addEventListener('DOMContentLoaded', function () {
@@ -925,59 +977,4 @@
             }
         });
     }
-
-    // Использование:
-    // customAlert('Текст сообщения', 'Заголовок');
 </script>
-<style>
-    .custom-alert {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .alert-content {
-        background: linear-gradient(145deg, #2d2d44, #252536);
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        min-width: 300px;
-        max-width: 90%;
-        border: 2px solid #444466;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .alert-content h3 {
-        color: #f8e71c;
-        margin-bottom: 15px;
-    }
-
-    .alert-content p {
-        color: #fff;
-        margin-bottom: 20px;
-        font-size: 1.1em;
-    }
-
-    #alertOk {
-        padding: 12px 30px;
-        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 1em;
-        transition: all 0.3s ease;
-    }
-
-    #alertOk:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-    }
-</style>

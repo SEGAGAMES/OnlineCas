@@ -1,157 +1,3 @@
-<h1>🛍️ Магазин</h1>
-<p class="shop-subtitle">Коллекция эксклюзивных аватарок для вашего уникального стиля!</p>
-
-<div class="shop-grid">
-    <?php
-    require_once('database-api/load-items');
-    $cards = loadAllItems();
-    $pathes = $cards['path'];
-    $ids = $cards['item_id'];
-    $descs = $cards['desc'];
-    $types = $cards['item_type'];
-    $name = $cards['name'];
-    $cost = $cards['cost'];
-    // Пример данных предметов (замените на реальные данные из БД)
-    for ($i = 0; $i < count($pathes); $i++) {
-        echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i]);
-    }
-    function renderItemCard($path, $id, $desc, $type, $name, $cost)
-    {
-        return "
-                <div class='product-card'>
-                    <!--<div class='product-badge popular'>Популярная</div>-->
-                    <div class='product-image'>
-                        <img src='{$path}' alt='{$name}' class='circle-image'>
-                    </div>
-                    <div class='product-content'>
-                        <h3>{$name}</h3>
-                        <p class='product-description'>{$desc}</p>
-                        <div class='product-price'>
-                            <span class='price-amount'>{$cost} CEV</span>
-                        </div>
-                        <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
-                            <span class='btn-text'>Купить сейчас</span>
-                            <span class='btn-sparkle'>✨</span>
-                        </button>
-                    </div>
-                    <div class='product-glow'></div>
-                </div>";
-    }
-    ?>
-</div>
-<div id="customConfirm" class="custom-confirm">
-    <div class="confirm-content">
-        <h3 id="confirmTitle">Подтверждение</h3>
-        <p id="confirmMessage"></p>
-        <div class="confirm-buttons">
-            <button id="confirmYes">Да</button>
-            <button id="confirmNo">Нет</button>
-        </div>
-    </div>
-</div>
-<script>
-    async function buyConfirm(name, cost, itemid) {
-        <?php if (isLoggedIn()): ?>
-            const result = await customConfirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?");
-            if (result) {
-                fetch("database-api/buyitem.php?id=" + itemid + "&cost=" + cost);
-                setTimeout(() => { location.reload(); }, 300);
-            }
-        <?php else: ?>
-            const result = await customConfirm("Для покупки необходимо войти или зарегистрироваться, продолжить?");
-            if (result)
-                loginModal.style.display = 'block';
-        <?php endif ?>
-    }
-    function customConfirm(message, title = 'Подтверждение') {
-        return new Promise((resolve) => {
-            const confirm = document.getElementById('customConfirm');
-            const confirmMessage = document.getElementById('confirmMessage');
-            const confirmTitle = document.getElementById('confirmTitle');
-            const confirmYes = document.getElementById('confirmYes');
-            const confirmNo = document.getElementById('confirmNo');
-
-            confirmTitle.textContent = title;
-            confirmMessage.textContent = message;
-            confirm.style.display = 'flex';
-
-            // Очищаем предыдущие обработчики
-            confirmYes.onclick = null;
-            confirmNo.onclick = null;
-            confirm.onclick = null;
-
-            // Да
-            confirmYes.onclick = function () {
-                confirm.style.display = 'none';
-                resolve(true);
-            };
-
-            // Нет
-            confirmNo.onclick = function () {
-                confirm.style.display = 'none';
-                resolve(false);
-            };
-
-            // Закрытие по клику вне окна
-            confirm.onclick = function (e) {
-                if (e.target === confirm) {
-                    confirm.style.display = 'none';
-                    resolve(false);
-                }
-            };
-
-            // Закрытие по Escape
-            const closeOnEscape = function (e) {
-                if (e.key === 'Escape') {
-                    confirm.style.display = 'none';
-                    document.removeEventListener('keydown', closeOnEscape);
-                    resolve(false);
-                }
-            };
-
-            document.addEventListener('keydown', closeOnEscape);
-        });
-    }
-
-    // Использование с async/await:
-    async function exampleUsage() {
-        const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
-        if (result) {
-            // Действие при подтверждении
-            console.log('Пользователь подтвердил');
-        } else {
-            // Действие при отказе
-            console.log('Пользователь отказался');
-        }
-    }
-
-    // Использование с then():
-    function exampleUsage2() {
-        customConfirm('Вы уверены, что хотите выйти?', 'Подтверждение выхода')
-            .then((result) => {
-                if (result) {
-                    // Действие при подтверждении
-                    console.log('Выход подтвержден');
-                } else {
-                    // Действие при отказе
-                    console.log('Выход отменен');
-                }
-            });
-    }
-</script>
-
-<?php if (!isLoggedIn()): ?>
-    <div class="shop-promo">
-        <div class="promo-content">
-            <h3>🎁 Получи бонус за регистрацию!</h3>
-            <button class="promo-copy-btn">Зарегистрироваться</button>
-        </div>
-        <div class="promo-decoration">
-            <div class="floating-gift">🎁</div>
-            <div class="floating-star">⭐</div>
-        </div>
-    </div>
-<?php endif ?>
 <style>
     .custom-confirm {
         display: none;
@@ -519,3 +365,160 @@
         }
     }
 </style>
+
+<div id="customConfirm" class="custom-confirm">
+    <div class="confirm-content">
+        <h3 id="confirmTitle">Подтверждение</h3>
+        <p id="confirmMessage"></p>
+        <div class="confirm-buttons">
+            <button id="confirmYes">Да</button>
+            <button id="confirmNo">Нет</button>
+        </div>
+    </div>
+</div>
+
+<h1>🛍️ Магазин</h1>
+<p class="shop-subtitle">Коллекция эксклюзивных аватарок для вашего уникального стиля!</p>
+
+<div class="shop-grid">
+    <?php
+    require_once('database-api/load-items');
+    $cards = loadAllItems();
+    $pathes = $cards['path'];
+    $ids = $cards['item_id'];
+    $descs = $cards['desc'];
+    $types = $cards['item_type'];
+    $name = $cards['name'];
+    $cost = $cards['cost'];
+    // Пример данных предметов (замените на реальные данные из БД)
+    for ($i = 0; $i < count($pathes); $i++) {
+        echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i]);
+    }
+    function renderItemCard($path, $id, $desc, $type, $name, $cost)
+    {
+        return "
+                <div class='product-card'>
+                    <!--<div class='product-badge popular'>Популярная</div>-->
+                    <div class='product-image'>
+                        <img src='{$path}' alt='{$name}' class='circle-image'>
+                    </div>
+                    <div class='product-content'>
+                        <h3>{$name}</h3>
+                        <p class='product-description'>{$desc}</p>
+                        <div class='product-price'>
+                            <span class='price-amount'>{$cost} CEV</span>
+                        </div>
+                        <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
+                            <span class='btn-text'>Купить сейчас</span>
+                            <span class='btn-sparkle'>✨</span>
+                        </button>
+                    </div>
+                    <div class='product-glow'></div>
+                </div>";
+    }
+    ?>
+</div>
+
+<script>
+    async function buyConfirm(name, cost, itemid) {
+        <?php if (isLoggedIn()): ?>
+            const result = await customConfirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?");
+            if (result) {
+                fetch("database-api/buyitem.php?id=" + itemid + "&cost=" + cost);
+                setTimeout(() => { location.reload(); }, 300);
+            }
+        <?php else: ?>
+            const result = await customConfirm("Для покупки необходимо войти или зарегистрироваться, продолжить?");
+            if (result)
+                loginModal.style.display = 'block';
+        <?php endif ?>
+    }
+    function customConfirm(message, title = 'Подтверждение') {
+        return new Promise((resolve) => {
+            const confirm = document.getElementById('customConfirm');
+            const confirmMessage = document.getElementById('confirmMessage');
+            const confirmTitle = document.getElementById('confirmTitle');
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
+
+            confirmTitle.textContent = title;
+            confirmMessage.textContent = message;
+            confirm.style.display = 'flex';
+
+            // Очищаем предыдущие обработчики
+            confirmYes.onclick = null;
+            confirmNo.onclick = null;
+            confirm.onclick = null;
+
+            // Да
+            confirmYes.onclick = function () {
+                confirm.style.display = 'none';
+                resolve(true);
+            };
+
+            // Нет
+            confirmNo.onclick = function () {
+                confirm.style.display = 'none';
+                resolve(false);
+            };
+
+            // Закрытие по клику вне окна
+            confirm.onclick = function (e) {
+                if (e.target === confirm) {
+                    confirm.style.display = 'none';
+                    resolve(false);
+                }
+            };
+
+            // Закрытие по Escape
+            const closeOnEscape = function (e) {
+                if (e.key === 'Escape') {
+                    confirm.style.display = 'none';
+                    document.removeEventListener('keydown', closeOnEscape);
+                    resolve(false);
+                }
+            };
+
+            document.addEventListener('keydown', closeOnEscape);
+        });
+    }
+
+    // Использование с async/await:
+    async function exampleUsage() {
+        const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
+        if (result) {
+            // Действие при подтверждении
+            console.log('Пользователь подтвердил');
+        } else {
+            // Действие при отказе
+            console.log('Пользователь отказался');
+        }
+    }
+
+    // Использование с then():
+    function exampleUsage2() {
+        customConfirm('Вы уверены, что хотите выйти?', 'Подтверждение выхода')
+            .then((result) => {
+                if (result) {
+                    // Действие при подтверждении
+                    console.log('Выход подтвержден');
+                } else {
+                    // Действие при отказе
+                    console.log('Выход отменен');
+                }
+            });
+    }
+</script>
+
+<?php if (!isLoggedIn()): ?>
+    <div class="shop-promo">
+        <div class="promo-content">
+            <h3>🎁 Получи бонус за регистрацию!</h3>
+            <button class="promo-copy-btn">Зарегистрироваться</button>
+        </div>
+        <div class="promo-decoration">
+            <div class="floating-gift">🎁</div>
+            <div class="floating-star">⭐</div>
+        </div>
+    </div>
+<?php endif ?>

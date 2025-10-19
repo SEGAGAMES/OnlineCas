@@ -1,102 +1,3 @@
-<h1>🎯 Играй и выигрывай! 🎯</h1>
-
-<div class="games-header-stats">
-    <div class="stat-bubble">
-        <span class="stat-number">10K+</span>
-        <span class="stat-label">Игроков онлайн</span>
-    </div>
-    <div class="stat-bubble">
-        <span class="stat-number">99.7%</span>
-        <span class="stat-label">RTP</span>
-    </div>
-    <div class="stat-bubble">
-        <span class="stat-number">24/7</span>
-        <span class="stat-label">Доступность</span>
-    </div>
-</div>
-
-<div class="games-grid">
-    <a href="index.php?page=roulette" class="game-link">
-        <div class="game-card roulette-enhanced">
-            <div class="game-glow"></div>
-            <div class="game-icon">⚡</div>
-            <div class="game-content">
-                <h3>🎰 Рулетка</h3>
-                <p>Классическая европейская рулетка с 37 секторами и живой анимацией</p>
-                <div class="game-features">
-                    <span class="feature-tag">🔥 Популярная</span>
-                    <span class="feature-tag">🎯 Простая</span>
-                </div>
-                <button class="play-btn-enhanced">
-                    <span>Играть сейчас</span>
-                    <div class="btn-sparkle">✨</div>
-                </button>
-            </div>
-            <div class="game-badge hot">HOT</div>
-        </div>
-    </a>
-
-    <a href="index.php?page=slots" class="game-link">
-        <div class="game-card slots-enhanced">
-            <div class="game-glow"></div>
-            <div class="game-icon">🎮</div>
-            <div class="game-content">
-                <h3>🎪 Слоты</h3>
-                <p>Классические игровые автоматы с тремя барабанами и бонусными раундами</p>
-                <div class="game-features">
-                    <span class="feature-tag">🎁 Бонусы</span>
-                    <span class="feature-tag">💰 Джекпот</span>
-                </div>
-                <button class="play-btn-enhanced">
-                    <span>Играть сейчас</span>
-                    <div class="btn-sparkle">✨</div>
-                </button>
-            </div>
-            <div class="game-badge new">NEW</div>
-        </div>
-    </a>
-
-    <a href="index.php?page=mines" class="game-link">
-        <div class="game-card poker-enhanced">
-            <div class="game-glow"></div>
-            <div class="game-icon">💥🔥💣</div>
-            <div class="game-content">
-                <h3>🃏 Мины</h3>
-                <p>Испытайте удачу в поисках безопасных полей, не подорвитесь!</p>
-                <div class="game-features">
-                    <span class="feature-tag">🧠 Стратегия</span>
-                    <span class="feature-tag">🏆 Большие выигрыши</span>
-                </div>
-                <button class="play-btn-enhanced">
-                    <span>Играть сейчас</span>
-                    <div class="btn-sparkle">✨</div>
-                </button>
-            </div>
-            <div class="game-badge vip">VIP</div>
-        </div>
-    </a>
-</div>
-<?php if (!isLoggedIn()): ?>
-
-    <div class="games-promo-banner">
-        <div class="promo-content">
-            <div class="promo-badge">ЭКСКЛЮЗИВ</div>
-            <h3>🎁 Получи 1000 кредитов для старта!</h3>
-            <p>Начни играть прямо сейчас с бонусным капиталом</p>
-            <button class="promo-btn" onclick="goToPage()">Забрать бонус 🎯</button>
-        </div>
-
-        <script>
-            function goToPage() {
-                window.location.href = "index.php?page=register";
-            }
-        </script>
-        <div class="promo-animation">
-            <div class="rotating-coin">🪙</div>
-            <div class="jumping-diamond">💎</div>
-        </div>
-    </div>
-<?php endif ?>
 <style>
     /* Стили для страницы игр */
     .games-header-stats {
@@ -472,3 +373,102 @@
         }
     }
 </style>
+<h1>🎯 Играй и выигрывай! 🎯</h1>
+
+<div class="games-header-stats">
+    <div class="stat-bubble">
+        <span class="stat-number">10K+</span>
+        <span class="stat-label">Игроков онлайн</span>
+    </div>
+    <div class="stat-bubble">
+        <span class="stat-number">99.7%</span>
+        <span class="stat-label">RTP</span>
+    </div>
+    <div class="stat-bubble">
+        <span class="stat-number">24/7</span>
+        <span class="stat-label">Доступность</span>
+    </div>
+</div>
+
+<div class="games-grid">
+    <a href="index.php?page=roulette" class="game-link">
+        <div class="game-card roulette-enhanced">
+            <div class="game-glow"></div>
+            <div class="game-icon">⚡</div>
+            <div class="game-content">
+                <h3>🎰 Рулетка</h3>
+                <p>Классическая европейская рулетка с 37 секторами и живой анимацией</p>
+                <div class="game-features">
+                    <span class="feature-tag">🔥 Популярная</span>
+                    <span class="feature-tag">🎯 Простая</span>
+                </div>
+                <button class="play-btn-enhanced">
+                    <span>Играть сейчас</span>
+                    <div class="btn-sparkle">✨</div>
+                </button>
+            </div>
+            <div class="game-badge hot">HOT</div>
+        </div>
+    </a>
+
+    <a href="index.php?page=slots" class="game-link">
+        <div class="game-card slots-enhanced">
+            <div class="game-glow"></div>
+            <div class="game-icon">🎮</div>
+            <div class="game-content">
+                <h3>🎪 Слоты</h3>
+                <p>Классические игровые автоматы с тремя барабанами и бонусными раундами</p>
+                <div class="game-features">
+                    <span class="feature-tag">🎁 Бонусы</span>
+                    <span class="feature-tag">💰 Джекпот</span>
+                </div>
+                <button class="play-btn-enhanced">
+                    <span>Играть сейчас</span>
+                    <div class="btn-sparkle">✨</div>
+                </button>
+            </div>
+            <div class="game-badge new">NEW</div>
+        </div>
+    </a>
+
+    <a href="index.php?page=mines" class="game-link">
+        <div class="game-card poker-enhanced">
+            <div class="game-glow"></div>
+            <div class="game-icon">💥🔥💣</div>
+            <div class="game-content">
+                <h3>🃏 Мины</h3>
+                <p>Испытайте удачу в поисках безопасных полей, не подорвитесь!</p>
+                <div class="game-features">
+                    <span class="feature-tag">🧠 Стратегия</span>
+                    <span class="feature-tag">🏆 Большие выигрыши</span>
+                </div>
+                <button class="play-btn-enhanced">
+                    <span>Играть сейчас</span>
+                    <div class="btn-sparkle">✨</div>
+                </button>
+            </div>
+            <div class="game-badge vip">VIP</div>
+        </div>
+    </a>
+</div>
+<?php if (!isLoggedIn()): ?>
+
+    <div class="games-promo-banner">
+        <div class="promo-content">
+            <div class="promo-badge">ЭКСКЛЮЗИВ</div>
+            <h3>🎁 Получи 1000 кредитов для старта!</h3>
+            <p>Начни играть прямо сейчас с бонусным капиталом</p>
+            <button class="promo-btn" onclick="goToPage()">Забрать бонус 🎯</button>
+        </div>
+
+        <script>
+            function goToPage() {
+                window.location.href = "index.php?page=register";
+            }
+        </script>
+        <div class="promo-animation">
+            <div class="rotating-coin">🪙</div>
+            <div class="jumping-diamond">💎</div>
+        </div>
+    </div>
+<?php endif ?>
