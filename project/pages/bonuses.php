@@ -1,7 +1,8 @@
 <div class="bonus-hero">
     <div class="hero-content">
         <h1>🎁 Поддержка проекта</h1>
-        <p class="hero-subtitle">Ваш вклад помогает развивать учебную платформу и создавать новые возможности для обучения!</p>
+        <p class="hero-subtitle">Ваш вклад помогает развивать учебную платформу и создавать новые возможности для
+            обучения!</p>
         <div class="hero-stats">
             <div class="hero-stat">
                 <span class="stat-number">1,247</span>
@@ -29,7 +30,7 @@
         <h2>💎 Выберите сумму поддержки</h2>
         <p>Получите бонусные CEV-коины за вашу поддержку проекта</p>
     </div>
-    
+
     <div class="donation-options">
         <div class="donation-card" data-amount="100" data-coins="100">
             <div class="card-glow"></div>
@@ -43,7 +44,7 @@
                 <div class="btn-sparkle">✨</div>
             </button>
         </div>
-        
+
         <div class="donation-card" data-amount="500" data-coins="600">
             <div class="card-glow"></div>
             <div class="donation-amount">500 ₽</div>
@@ -56,7 +57,7 @@
                 <div class="btn-sparkle">✨</div>
             </button>
         </div>
-        
+
         <div class="donation-card" data-amount="1000" data-coins="1300">
             <div class="card-glow"></div>
             <div class="donation-amount">1000 ₽</div>
@@ -69,7 +70,7 @@
                 <div class="btn-sparkle">✨</div>
             </button>
         </div>
-        
+
         <div class="donation-card" data-amount="2000" data-coins="2800">
             <div class="card-glow"></div>
             <div class="donation-amount">2000 ₽</div>
@@ -128,7 +129,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="payment-section">
                 <h4>💳 Способ оплаты</h4>
                 <div class="payment-methods">
@@ -139,28 +140,31 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div class="card-details">
                     <div class="input-group">
-                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19" name="card_numb" required>
+                        <input type="text" placeholder="Номер карты" class="card-input" maxlength="19" name="card_numb"
+                            required>
                         <span class="input-icon">🔒</span>
                     </div>
                     <div class="card-info">
                         <div class="input-group">
-                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5" name="card_date" required>
+                            <input type="text" placeholder="ММ/ГГ" class="card-date" maxlength="5" name="card_date"
+                                required>
                             <span class="input-icon">📅</span>
                         </div>
                         <div class="input-group">
-                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3" name="card_cvc" required>
+                            <input type="text" placeholder="CVV" class="card-cvv" maxlength="3" name="card_cvc"
+                                required>
                             <span class="input-icon">🛡️</span>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <input type="hidden" name="amount" id="form-amount">
             <input type="hidden" name="coins" id="form-coins">
-            
+
             <button type="submit" id="confirm-donation" class="donate-btn">
                 <span class="btn-text">Подтвердить поддержку</span>
                 <span class="btn-icon">💝</span>
@@ -200,12 +204,12 @@
         font-size: 3rem;
         color: white;
         margin-bottom: 15px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .hero-subtitle {
         font-size: 1.3rem;
-        color: rgba(255,255,255,0.9);
+        color: rgba(255, 255, 255, 0.9);
         margin-bottom: 30px;
         max-width: 600px;
     }
@@ -228,7 +232,7 @@
 
     .stat-label {
         font-size: 0.9rem;
-        color: rgba(255,255,255,0.8);
+        color: rgba(255, 255, 255, 0.8);
     }
 
     .hero-decoration {
@@ -237,7 +241,9 @@
         height: 150px;
     }
 
-    .floating-heart, .floating-star, .floating-coin {
+    .floating-heart,
+    .floating-star,
+    .floating-coin {
         position: absolute;
         font-size: 2.5rem;
         animation: float 3s ease-in-out infinite;
@@ -262,8 +268,15 @@
     }
 
     @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(10deg); }
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(10deg);
+        }
     }
 
     .support-section {
@@ -288,18 +301,18 @@
         font-size: 1.2rem;
         color: #b8b8d2;
     }
-    
+
     .donation-options {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
         margin: 40px 0;
     }
-    
+
     .donation-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
         backdrop-filter: blur(15px);
-        border: 2px solid rgba(255,255,255,0.2);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 25px;
         padding: 30px;
         text-align: center;
@@ -308,8 +321,9 @@
         position: relative;
         overflow: hidden;
     }
-    
-    .donation-card:hover, .donation-card.selected {
+
+    .donation-card:hover,
+    .donation-card.selected {
         border-color: #c89b3c;
         transform: translateY(-10px) scale(1.02);
         box-shadow: 0 20px 40px rgba(200, 155, 60, 0.3);
@@ -322,9 +336,9 @@
         right: 0;
         bottom: 0;
         border-radius: 25px;
-        box-shadow: 
-            inset 0 0 50px rgba(255,255,255,0.1),
-            0 0 30px rgba(255,255,255,0.1);
+        box-shadow:
+            inset 0 0 50px rgba(255, 255, 255, 0.1),
+            0 0 30px rgba(255, 255, 255, 0.1);
         opacity: 0;
         transition: opacity 0.3s ease;
         pointer-events: none;
@@ -333,7 +347,7 @@
     .donation-card:hover .card-glow {
         opacity: 1;
     }
-    
+
     .donation-amount {
         font-size: 2.5rem;
         font-weight: bold;
@@ -343,7 +357,7 @@
         background-clip: text;
         margin: 20px 0 10px 0;
     }
-    
+
     .coins-reward {
         margin-bottom: 15px;
     }
@@ -359,6 +373,7 @@
         font-size: 1rem;
         color: #b8b8d2;
     }
+
     .select-donation {
         background: linear-gradient(45deg, #4d96ff, #6bcf7f);
         color: white;
@@ -377,7 +392,7 @@
         overflow: hidden;
         box-shadow: 0 8px 25px rgba(77, 150, 255, 0.3);
     }
-    
+
     .select-donation:hover {
         transform: translateY(-3px);
         box-shadow: 0 12px 30px rgba(77, 150, 255, 0.5);
@@ -388,8 +403,17 @@
     }
 
     @keyframes sparkle {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.2); opacity: 0.7; }
+
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.2);
+            opacity: 0.7;
+        }
     }
 
     .benefits-section {
@@ -414,9 +438,9 @@
     }
 
     .benefit-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         padding: 30px;
         text-align: center;
@@ -425,13 +449,13 @@
 
     .benefit-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     }
 
     .benefit-icon {
         font-size: 3rem;
         margin-bottom: 15px;
-        filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
 
     .benefit-card h4 {
@@ -444,7 +468,7 @@
         color: #b8b8d2;
         line-height: 1.5;
     }
-    
+
     /* Стили модального окна */
     .modal-bonuses {
         display: none;
@@ -460,11 +484,11 @@
         transition: opacity 0.3s ease;
         overflow-y: auto;
     }
-    
+
     .modal-bonuses.active {
         opacity: 1;
     }
-    
+
     .modal-bonuses-content {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         margin: 5% auto;
@@ -475,14 +499,14 @@
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         transform: translateY(-50px) scale(0.9);
         transition: all 0.4s ease;
-        border: 2px solid rgba(255,255,255,0.1);
+        border: 2px solid rgba(255, 255, 255, 0.1);
         overflow: hidden;
     }
-    
+
     .modal-bonuses.active .modal-bonuses-content {
         transform: translateY(0) scale(1);
     }
-    
+
     .modal-bonuses-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -491,37 +515,37 @@
         justify-content: space-between;
         align-items: center;
     }
-    
+
     .modal-bonuses-header h3 {
         margin: 0;
         font-size: 1.5rem;
     }
-    
+
     .close-modal-bonuses {
-        color: rgba(255,255,255,0.8);
+        color: rgba(255, 255, 255, 0.8);
         font-size: 32px;
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s ease;
     }
-    
+
     .close-modal-bonuses:hover {
         color: white;
         transform: scale(1.1);
     }
-    
+
     .modal-bonuses-body {
         padding: 30px;
     }
-    
+
     .donation-summary {
         margin-bottom: 30px;
     }
 
     .summary-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         padding: 25px;
         display: flex;
@@ -531,7 +555,7 @@
 
     .summary-icon {
         font-size: 3rem;
-        filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
     }
 
     .summary-amount {
@@ -546,40 +570,40 @@
         color: #ffd93d;
         font-weight: bold;
     }
-    
+
     .payment-section {
         margin-bottom: 25px;
     }
-    
+
     .payment-section h4 {
         color: white;
         margin-bottom: 20px;
         font-size: 1.2rem;
     }
-    
+
     .payment-methods {
         margin-bottom: 25px;
     }
-    
+
     .payment-option {
         margin: 12px 0;
         padding: 15px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         transition: all 0.3s ease;
         cursor: pointer;
     }
 
     .payment-option:hover {
-        background: rgba(255,255,255,0.1);
-        border-color: rgba(255,255,255,0.2);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
-    .payment-option input[type="radio"]:checked + label {
+    .payment-option input[type="radio"]:checked+label {
         color: #ffd93d;
     }
-    
+
     .payment-option label {
         margin-left: 12px;
         cursor: pointer;
@@ -592,7 +616,7 @@
     .payment-icon {
         font-size: 1.2rem;
     }
-    
+
     .card-details h4 {
         color: white;
         margin-bottom: 15px;
@@ -603,21 +627,25 @@
         position: relative;
         margin-bottom: 15px;
     }
-    
-    .card-input, .card-date, .card-cvv {
+
+    .card-input,
+    .card-date,
+    .card-cvv {
         width: 100%;
         padding: 15px 45px 15px 15px;
         border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
         color: white;
         font-size: 1rem;
         transition: all 0.3s ease;
     }
 
-    .card-input:focus, .card-date:focus, .card-cvv:focus {
+    .card-input:focus,
+    .card-date:focus,
+    .card-cvv:focus {
         border-color: #4d96ff;
-        background: rgba(255,255,255,0.08);
+        background: rgba(255, 255, 255, 0.08);
         outline: none;
     }
 
@@ -628,20 +656,20 @@
         transform: translateY(-50%);
         color: #b8b8d2;
     }
-    
+
     .card-info {
         display: flex;
         gap: 15px;
     }
-    
+
     .card-date {
         flex: 2;
     }
-    
+
     .card-cvv {
         flex: 1;
     }
-    
+
     .donate-btn {
         background: linear-gradient(45deg, #ff6b6b, #c56cf0);
         color: white;
@@ -660,7 +688,7 @@
         box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
         margin-bottom: 15px;
     }
-    
+
     .donate-btn:hover {
         background: linear-gradient(45deg, #c56cf0, #ff6b6b);
         transform: translateY(-3px);
@@ -672,10 +700,17 @@
     }
 
     @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.2); }
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
     }
-    
+
     .donation-note {
         text-align: center;
         margin-top: 20px;
@@ -719,230 +754,230 @@
 
 <script>
     // Обновленный скрипт для обработки формы
-document.addEventListener('DOMContentLoaded', function() {
-    const donationCards = document.querySelectorAll('.donation-card');
-    const donateForm = document.getElementById('donateForm');
-    const closeModal = document.querySelector('.close-modal-bonuses');
-    const selectedAmount = document.getElementById('selected-amount');
-    const selectedCoins = document.getElementById('selected-coins');
-    const formAmount = document.getElementById('form-amount');
-    const formCoins = document.getElementById('form-coins');
-    const body = document.body;
-    
-    // Функция для блокировки прокрутки
-    function disableScroll() {
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        body.style.top = `-${scrollY}px`;
-        body.classList.add('no-scroll');
-    }
-    
-    // Функция для разблокировки прокрутки
-    function enableScroll() {
-        const scrollY = parseInt(body.style.top || '0');
-        body.classList.remove('no-scroll');
-        body.style.top = '';
-        window.scrollTo(0, Math.abs(scrollY));
-    }
-    
-    // Обработка выбора суммы доната
-    donationCards.forEach(card => {
-        card.addEventListener('click', function() {
-            donationCards.forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-            
-            const amount = this.getAttribute('data-amount');
-            const coins = this.getAttribute('data-coins');
-            
-            selectedAmount.textContent = amount + ' ₽';
-            selectedCoins.textContent = coins + ' CEV';
-            formAmount.value = amount;
-            formCoins.value = coins;
-            
-            disableScroll();
-            donateForm.style.display = 'block';
-            setTimeout(() => {
-                donateForm.classList.add('active');
-            }, 10);
+    document.addEventListener('DOMContentLoaded', function () {
+        const donationCards = document.querySelectorAll('.donation-card');
+        const donateForm = document.getElementById('donateForm');
+        const closeModal = document.querySelector('.close-modal-bonuses');
+        const selectedAmount = document.getElementById('selected-amount');
+        const selectedCoins = document.getElementById('selected-coins');
+        const formAmount = document.getElementById('form-amount');
+        const formCoins = document.getElementById('form-coins');
+        const body = document.body;
+
+        // Функция для блокировки прокрутки
+        function disableScroll() {
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            body.style.top = `-${scrollY}px`;
+            body.classList.add('no-scroll');
+        }
+
+        // Функция для разблокировки прокрутки
+        function enableScroll() {
+            const scrollY = parseInt(body.style.top || '0');
+            body.classList.remove('no-scroll');
+            body.style.top = '';
+            window.scrollTo(0, Math.abs(scrollY));
+        }
+
+        // Обработка выбора суммы доната
+        donationCards.forEach(card => {
+            card.addEventListener('click', function () {
+                donationCards.forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+
+                const amount = this.getAttribute('data-amount');
+                const coins = this.getAttribute('data-coins');
+
+                selectedAmount.textContent = amount + ' ₽';
+                selectedCoins.textContent = coins + ' CEV';
+                formAmount.value = amount;
+                formCoins.value = coins;
+
+                disableScroll();
+                donateForm.style.display = 'block';
+                setTimeout(() => {
+                    donateForm.classList.add('active');
+                }, 10);
+            });
         });
-    });
-    
-    // Закрытие формы
-    closeModal.addEventListener('click', function() {
-        donateForm.classList.remove('active');
-        setTimeout(() => {
-            donateForm.style.display = 'none';
-            enableScroll();
-        }, 300);
-    });
-    
-    // Закрытие формы при клике вне ее
-    donateForm.addEventListener('click', function(e) {
-        if (e.target === donateForm) {
+
+        // Закрытие формы
+        closeModal.addEventListener('click', function () {
             donateForm.classList.remove('active');
             setTimeout(() => {
                 donateForm.style.display = 'none';
                 enableScroll();
             }, 300);
-        }
-    });
-    
-    // Обработка отправки формы
-    donateForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const amount = formData.get('amount');
-        const cardNumb = formData.get('card_numb');
-        const cardDate = formData.get('card_date');
-        const cardcvc = formData.get('card_cvc');
-        const coins = formData.get('coins');
-        
-        const confirmButton = document.getElementById('confirm-donation');
-        confirmButton.style.transform = 'scale(0.95)';
-        
-        try {
-            const response = await fetch('database-api/deposit.php', {
-                method: 'POST',
-                body: formData
-            });
-            
-            if (response.ok) {
-                
-                customAlert(`💝 Спасибо за поддержку!\n\nВы пожертвовали на сумму ${amount}₽.\nНа ваш счет будет зачислено ${coins} бонусных CEV-коинов.`);
+        });
+
+        // Закрытие формы при клике вне ее
+        donateForm.addEventListener('click', function (e) {
+            if (e.target === donateForm) {
                 donateForm.classList.remove('active');
                 setTimeout(() => {
                     donateForm.style.display = 'none';
                     enableScroll();
-                    donateForm.reset();
                 }, 300);
-            } else {
-                throw new Error('Ошибка при обработке платежа');
             }
-        } catch (error) {
-            customAlert('Произошла ошибка при обработке платежа. Пожалуйста, попробуйте еще раз.' + error);
-            console.error('Donation error:', error);
-        }
-        
-        setTimeout(() => {
-            confirmButton.style.transform = '';
-        }, 150);
-    });
+        });
 
-    // Форматирование номера карты
-    document.querySelector('.card-input').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-        let formattedValue = '';
-        
-        for (let i = 0; i < value.length; i++) {
-            if (i > 0 && i % 4 === 0) {
-                formattedValue += ' ';
+        // Обработка отправки формы
+        donateForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const amount = formData.get('amount');
+            const cardNumb = formData.get('card_numb');
+            const cardDate = formData.get('card_date');
+            const cardcvc = formData.get('card_cvc');
+            const coins = formData.get('coins');
+
+            const confirmButton = document.getElementById('confirm-donation');
+            confirmButton.style.transform = 'scale(0.95)';
+
+            try {
+                const response = await fetch('database-api/deposit.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+
+                    customAlert(`💝 Спасибо за поддержку!\n\nВы пожертвовали на сумму ${amount}₽.\nНа ваш счет будет зачислено ${coins} бонусных CEV-коинов.`);
+                    donateForm.classList.remove('active');
+                    setTimeout(() => {
+                        donateForm.style.display = 'none';
+                        enableScroll();
+                        donateForm.reset();
+                    }, 300);
+                } else {
+                    throw new Error('Ошибка при обработке платежа');
+                }
+            } catch (error) {
+                customAlert('Произошла ошибка при обработке платежа. Пожалуйста, попробуйте еще раз.' + error);
+                console.error('Donation error:', error);
             }
-            formattedValue += value[i];
-        }
-        
-        e.target.value = formattedValue;
-    });
 
-    // Форматирование даты
-    document.querySelector('.card-date').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
-        
-        if (value.length >= 2) {
-            value = value.substring(0, 2) + '/' + value.substring(2, 4);
-        }
-        
-        e.target.value = value;
-    });
+            setTimeout(() => {
+                confirmButton.style.transform = '';
+            }, 150);
+        });
 
-    // Только цифры для CVV
-    document.querySelector('.card-cvv').addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/[^0-9]/gi, '');
+        // Форматирование номера карты
+        document.querySelector('.card-input').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+
+            e.target.value = formattedValue;
+        });
+
+        // Форматирование даты
+        document.querySelector('.card-date').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
+
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+
+            e.target.value = value;
+        });
+
+        // Только цифры для CVV
+        document.querySelector('.card-cvv').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^0-9]/gi, '');
+        });
     });
-});
-// Заменяем стандартный alert
+    // Заменяем стандартный alert
     function customAlert(message, title = 'Уведомление') {
-    const alert = document.getElementById('customAlert');
-    const alertMessage = document.getElementById('alertMessage');
-    const alertTitle = document.getElementById('alertTitle');
-    const alertOk = document.getElementById('alertOk');
-    
-    alertTitle.textContent = title;
-    alertMessage.textContent = message;
-    alert.style.display = 'flex';
-    
-    // Закрытие по кнопке
-    alertOk.onclick = function() {
-        alert.style.display = 'none';
-    };
-    
-    // Закрытие по клику вне окна
-    alert.onclick = function(e) {
-        if (e.target === alert) {
-        alert.style.display = 'none';
-        }
-    };
-    
-    // Закрытие по Escape
-    document.addEventListener('keydown', function closeOnEscape(e) {
-        if (e.key === 'Escape') {
-        alert.style.display = 'none';
-        document.removeEventListener('keydown', closeOnEscape);
-        }
-    });
+        const alert = document.getElementById('customAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertOk = document.getElementById('alertOk');
+
+        alertTitle.textContent = title;
+        alertMessage.textContent = message;
+        alert.style.display = 'flex';
+
+        // Закрытие по кнопке
+        alertOk.onclick = function () {
+            alert.style.display = 'none';
+        };
+
+        // Закрытие по клику вне окна
+        alert.onclick = function (e) {
+            if (e.target === alert) {
+                alert.style.display = 'none';
+            }
+        };
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function closeOnEscape(e) {
+            if (e.key === 'Escape') {
+                alert.style.display = 'none';
+                document.removeEventListener('keydown', closeOnEscape);
+            }
+        });
     }
 
-// Использование:
-// customAlert('Текст сообщения', 'Заголовок');
+    // Использование:
+    // customAlert('Текст сообщения', 'Заголовок');
 </script>
 <style>
     .custom-alert {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
-}
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
 
-.alert-content {
-  background: linear-gradient(145deg, #2d2d44, #252536);
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-  min-width: 300px;
-  max-width: 90%;
-  border: 2px solid #444466;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
+    .alert-content {
+        background: linear-gradient(145deg, #2d2d44, #252536);
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        min-width: 300px;
+        max-width: 90%;
+        border: 2px solid #444466;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
 
-.alert-content h3 {
-  color: #f8e71c;
-  margin-bottom: 15px;
-}
+    .alert-content h3 {
+        color: #f8e71c;
+        margin-bottom: 15px;
+    }
 
-.alert-content p {
-  color: #fff;
-  margin-bottom: 20px;
-  font-size: 1.1em;
-}
+    .alert-content p {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
 
-#alertOk {
-  padding: 12px 30px;
-  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1em;
-  transition: all 0.3s ease;
-}
+    #alertOk {
+        padding: 12px 30px;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+    }
 
-#alertOk:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255,107,107,0.4);
-}
+    #alertOk:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
 </style>

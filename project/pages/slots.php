@@ -1,11 +1,11 @@
 <?php
 if (!isLoggedIn()):
     ?>
-    <script>window.location.href='index.php?page=register' </script>
+    <script>window.location.href = 'index.php?page=register' </script>
 <?php else:
-// Символы для слотов
-$slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
-?>
+    // Символы для слотов
+    $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣', '💎'];
+    ?>
 
     <div class="slots-container">
         <div class="header">
@@ -40,7 +40,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                         <?php endfor; ?>
                     </div>
                 </div>
-                  <div class="right-arrow">⬅</div>
+                <div class="right-arrow">⬅</div>
             </div>
 
             <div class="controls">
@@ -48,10 +48,10 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                     🎯 Крутить Барабаны
                 </button>
                 <script>
-                    document.addEventListener('keydown', function(event) {
+                    document.addEventListener('keydown', function (event) {
                         const button = document.getElementById('spinBtn');
-                        
-                        switch(event.code) {
+
+                        switch (event.code) {
                             case 'Enter':      // Enter
                             case 'Space':      // Пробел
                                 event.preventDefault();
@@ -64,7 +64,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                 <div class="bet-controls">
                     <button class="bet-btn" onclick="changeBet(-10)">-10</button>
                     <button class="bet-btn" onclick="changeBet(-1)">-</button>
-                    <input type="number" class="bet-input" id="betInput" value="10" min="10" max="1000" onchange="setCustomBet()">
+                    <input type="number" class="bet-input" id="betInput" value="10" min="10" max="1000"
+                        onchange="setCustomBet()">
                     <button class="bet-btn" onclick="changeBet(1)">+</button>
                     <button class="bet-btn" onclick="changeBet(10)">+10</button>
                     <button class="bet-btn max-bet" onclick="setMaxBet()">MAX</button>
@@ -78,7 +79,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             <div class="info-panel">
                 <div class="info-item">
                     <div class="info-label">Баланс</div>
-                    <div class="info-value" id="balance"><?php echo $_SESSION['balance']?> CEV</div>
+                    <div class="info-value" id="balance"><?php echo $_SESSION['balance'] ?> CEV</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Ставка</div>
@@ -129,7 +130,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                                 <span class="symbol">🍒 🍒 🍒</span>
                                 <span class="multiplier">×2</span>
                             </div>
-                             <div class="paytable-item">
+                            <div class="paytable-item">
                                 <span class="symbol">❌ ❌ ❌</span>
                                 <span class="multiplier">×0</span>
                             </div>
@@ -170,7 +171,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                                 <span class="symbol">🍒 🍒</span>
                                 <span class="multiplier">×1</span>
                             </div>
-                             <div class="paytable-item">
+                            <div class="paytable-item">
                                 <span class="symbol">❌ ❌</span>
                                 <span class="multiplier">×0</span>
                             </div>
@@ -186,7 +187,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
 
     <script>
         let isSpinning = false;
-        let balance = <?php echo $_SESSION['balance']?>;
+        let balance = <?php echo $_SESSION['balance'] ?>;
         let currentBet = 10;
         let wins = 0;
         const symbols = <?php echo json_encode($slotSymbols); ?>;
@@ -201,35 +202,33 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             '🍒': 2,
             '❌': 0
         };
-        async function spinReel(reel, index, symbol, delay)
-        {
+        async function spinReel(reel, index, symbol, delay) {
             return new Promise(resolve => {
                 setTimeout(() => {
                     // Создаем новые символы для барабана, начиная с текущей позиции
                     let newContent = '';
                     const currentPosition = getCurrentReelPosition(reel); // Получаем текущую позицию
-                    
+
                     for (let i = 0; i < 300; i++) {
                         const newSymbol = i === 121 ? symbol : symbols[Math.floor(Math.random() * symbols.length)];
                         newContent += `<div class="symbol">${newSymbol}</div>`;
                     }
                     reel.innerHTML = newContent;
-                    
+
                     // Анимация вращения от текущей позиции
                     const spinDuration = 1500;
                     const targetPosition = currentPosition - 120 * 100; // Прокручиваем на 3 позиции
-                    
+
                     reel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.1, 0.7, 0.3, 1)`;
                     reel.style.transform = `translateY(${targetPosition}px)`;
-                    
+
                     // Разрешаем Promise когда анимация завершится
                     setTimeout(resolve, spinDuration + 0);
-                    
+
                 }, delay);
             });
         }
-        function getCurrentReelPosition(reel)
-        {
+        function getCurrentReelPosition(reel) {
             const transform = reel.style.transform;
             if (transform) {
                 const match = transform.match(/translateY\((-?\d+)px\)/);
@@ -237,45 +236,44 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             }
             return 0;
         }
-        async function spinSlots()
-        {
+        async function spinSlots() {
             if (isSpinning || balance < currentBet) return;
             const betButtons = document.querySelectorAll('.bet-btn');
             betButtons.forEach(btn => {
-                    btn.disabled = true;
+                btn.disabled = true;
             });
             document.getElementById('betInput').disabled = true;
             isSpinning = true;
             const spinBtn = document.getElementById('spinBtn');
             const resultDiv = document.getElementById('result');
-            
+
             // Анимация вращения
             spinBtn.disabled = true;
             spinBtn.textContent = '🌀 Вращается...';
-            
+
             const reels = [
                 document.getElementById('reelInner1'),
                 document.getElementById('reelInner2'),
                 document.getElementById('reelInner3')
             ];
-            
+
             const winFrames = [
                 document.getElementById('winFrame1'),
                 document.getElementById('winFrame2'),
                 document.getElementById('winFrame3')
             ];
-            
+
             // Скрываем рамки выигрыша
             winFrames.forEach(frame => frame.classList.remove('active'));
-            
+
             // Добавляем анимацию вращения
             reels.forEach(reel => reel.parentElement.classList.add('spinning'));
-            
+
             // Генерируем результаты
             const results = [];
-            let randomSymbols = []; 
+            let randomSymbols = [];
 
-            await fetch('database-api/slots-api.php?bet='+currentBet)
+            await fetch('database-api/slots-api.php?bet=' + currentBet)
                 .then(response => response.text())
                 .then(data => {
                     randomSymbols.push(data.split('|')[0]);
@@ -284,12 +282,11 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                     balance = data.split('|')[3];
                 })
             // Сначала сбрасываем transform без анимации
-            reels.forEach(reel =>
-            {
+            reels.forEach(reel => {
                 reel.style.transition = 'none';
                 reel.style.transform = 'translateY(0)';
             });
-            
+
             // Принудительно переflow, чтобы применить сброс transform
             void reels[0].offsetWidth;
 
@@ -315,141 +312,125 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             spinBtn.textContent = '🎯 Крутить Барабаны';
         }
 
-        function checkWin(results)
-        {
+        function checkWin(results) {
             const resultDiv = document.getElementById('result');
             const winFrames = [
                 document.getElementById('winFrame1'),
                 document.getElementById('winFrame2'),
                 document.getElementById('winFrame3')
             ];
-            
+
             let winAmount = 0;
             let winMessage = '';
-            
+
             // Проверяем комбинации
-            if (results[0] === results[1] && results[1] === results[2] && results[0] != '❌') 
-            {
-                if(results[0] == '❌')
-                {
+            if (results[0] === results[1] && results[1] === results[2] && results[0] != '❌') {
+                if (results[0] == '❌') {
                     winMessage = `Вот это невезение!`;
                 }
-                else
-                {
-                // Три одинаковых символа
-                winAmount = currentBet * winMultipliers[results[0]];
-                winMessage = `🎉 ДЖЕКПОТ! ${results[0]} ${results[1]} ${results[2]} - Выигрыш: ${winAmount}!`;
+                else {
+                    // Три одинаковых символа
+                    winAmount = currentBet * winMultipliers[results[0]];
+                    winMessage = `🎉 ДЖЕКПОТ! ${results[0]} ${results[1]} ${results[2]} - Выигрыш: ${winAmount}!`;
                 }
                 // Подсвечиваем все три барабана
                 winFrames.forEach(frame => frame.classList.add('active'));
-            } 
+            }
             else
-                if ((results[0] === results[1] && results[0] != '❌') || (results[1] === results[2] && results[1] != '❌') || (results[0] === results[2] && results[0] != '❌'))
-                {
+                if ((results[0] === results[1] && results[0] != '❌') || (results[1] === results[2] && results[1] != '❌') || (results[0] === results[2] && results[0] != '❌')) {
                     // Два одинаковых символа - находим какой именно символ повторяется
                     let matchingSymbol;
                     if (results[0] === results[1]) matchingSymbol = results[0];
                     else
-                         if (results[1] === results[2]) matchingSymbol = results[1];
+                        if (results[1] === results[2]) matchingSymbol = results[1];
                         else matchingSymbol = results[0];
-                    
+
                     // Используем множитель для парного символа, но меньше чем для трёх
-                    if(matchingSymbol == '❌')
-                    {
+                    if (matchingSymbol == '❌') {
                         winMessage = `В этот раз не повезло!`;
                     }
-                    else{
-                    winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
-                    winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;}
+                    else {
+                        winAmount = Math.floor(currentBet * (winMultipliers[matchingSymbol] * 0.5));
+                        winMessage = `👍 Два ${matchingSymbol}! Выигрыш: ${winAmount}`;
+                    }
 
                     // Подсвечиваем соответствующие барабаны
-                    if (results[0] === results[1]) 
-                    {
+                    if (results[0] === results[1]) {
                         winFrames[0].classList.add('active');
                         winFrames[1].classList.add('active');
                     }
-                    if (results[1] === results[2]) 
-                    {
+                    if (results[1] === results[2]) {
                         winFrames[1].classList.add('active');
                         winFrames[2].classList.add('active');
                     }
-                    if (results[0] === results[2]) 
-                    {
+                    if (results[0] === results[2]) {
                         winFrames[0].classList.add('active');
                         winFrames[2].classList.add('active');
                     }
-                } 
+                }
                 else
                     winMessage = '😞 Попробуйте еще раз!';
-            
+
             // Обновляем баланс и статистику
-            if (winAmount > 0) 
-            {
+            if (winAmount > 0) {
                 wins++;
                 resultDiv.innerHTML = `<div class="win-message">${winMessage}</div>`;
-            } 
+            }
             else
-                resultDiv.innerHTML = `<div>${winMessage}</div>`;           
+                resultDiv.innerHTML = `<div>${winMessage}</div>`;
             const betButtons = document.querySelectorAll('.bet-btn');
             betButtons.forEach(btn => {
-                    btn.disabled = false;
-            }); 
+                btn.disabled = false;
+            });
             document.getElementById('betInput').disabled = false;
 
             updateDisplay();
         }
 
-        function changeBet(amount)
-        {
+        function changeBet(amount) {
             const newBet = currentBet + amount;
-            if (newBet >= 10 && newBet <= 100000 && newBet <= balance)
-            {
+            if (newBet >= 10 && newBet <= 100000 && newBet <= balance) {
                 currentBet = newBet;
                 updateDisplay();
             }
         }
 
-        function setCustomBet()
-        {
+        function setCustomBet() {
             const betInput = document.getElementById('betInput');
             let newBet = parseInt(betInput.value);
-            
+
             // Валидация введенного значения
             if (isNaN(newBet) || newBet < 10)
                 newBet = 10;
             else
                 if (newBet > 100000)
                     newBet = 100000;
-                else 
-                    if (newBet > balance) 
-                        newBet = balance;            
+                else
+                    if (newBet > balance)
+                        newBet = balance;
             currentBet = newBet;
             updateDisplay();
         }
 
-        function setMaxBet() 
-        {
+        function setMaxBet() {
             currentBet = Math.min(balance, 100000);
             updateDisplay();
         }
 
-        function updateDisplay() 
-        {
+        function updateDisplay() {
             document.getElementById('balance').textContent = balance + " CEV";
             document.getElementById('currentBet').textContent = currentBet;
             document.getElementById('betInput').value = currentBet;
-            
+
             document.getElementById('wins').textContent = wins;
-            
+
             // Блокируем кнопку если недостаточно средств
             const spinBtn = document.getElementById('spinBtn');
-            if (balance < currentBet || balance < 10)
-            {
+            if (balance < currentBet || balance < 10) {
                 spinBtn.disabled = true;
                 spinBtn.style.background = '#666';
             }
-            else
-            {
+            else {
                 spinBtn.disabled = false;
                 spinBtn.style.background = '';
             }
@@ -474,7 +455,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             background: linear-gradient(45deg, #ff6b6b, #f8e71c, #4ecdc4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
@@ -486,9 +467,9 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             background: linear-gradient(145deg, #2d2d44, #252536);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 
-                0 20px 40px rgba(0,0,0,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             border: 2px solid #444466;
             position: relative;
             overflow: hidden;
@@ -522,9 +503,9 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             position: relative;
             overflow: hidden;
             border: 3px solid #555577;
-            box-shadow: 
-                inset 0 0 20px rgba(0,0,0,0.8),
-                0 5px 15px rgba(0,0,0,0.3);
+            box-shadow:
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 5px 15px rgba(0, 0, 0, 0.3);
             transform-style: preserve-3d;
         }
 
@@ -542,8 +523,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             align-items: center;
             justify-content: center;
             font-size: 3.5em;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
@@ -560,9 +541,9 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             height: 100px;
             border: 3px solid gold;
             border-radius: 10px;
-            box-shadow: 
+            box-shadow:
                 0 0 30px gold,
-                inset 0 0 20px rgba(255,215,0,0.3);
+                inset 0 0 20px rgba(255, 215, 0, 0.3);
             z-index: 5;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -575,14 +556,15 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
 
         @keyframes pulse {
             from {
-                box-shadow: 
+                box-shadow:
                     0 0 20px gold,
-                    inset 0 0 15px rgba(255,215,0,0.3);
+                    inset 0 0 15px rgba(255, 215, 0, 0.3);
             }
+
             to {
-                box-shadow: 
+                box-shadow:
                     0 0 40px gold,
-                    inset 0 0 25px rgba(255,215,0,0.5);
+                    inset 0 0 25px rgba(255, 215, 0, 0.5);
             }
         }
 
@@ -603,9 +585,9 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 
-                0 5px 15px rgba(255,107,107,0.4),
-                0 0 0 3px rgba(255,255,255,0.1);
+            box-shadow:
+                0 5px 15px rgba(255, 107, 107, 0.4),
+                0 0 0 3px rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -617,7 +599,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: left 0.5s;
         }
 
@@ -627,9 +609,9 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
 
         .spin-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 
-                0 8px 25px rgba(255,107,107,0.6),
-                0 0 0 3px rgba(255,255,255,0.2);
+            box-shadow:
+                0 8px 25px rgba(255, 107, 107, 0.6),
+                0 0 0 3px rgba(255, 255, 255, 0.2);
         }
 
         .spin-btn:disabled {
@@ -647,11 +629,11 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 15px 20px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -660,8 +642,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 1em;
             cursor: pointer;
@@ -672,8 +654,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
         }
 
         .bet-btn:hover:not(:disabled) {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         .bet-btn:disabled {
@@ -692,8 +674,8 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
         .bet-input {
             width: 80px;
             height: 45px;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             color: #f8e71c;
             font-size: 1.2em;
             font-weight: bold;
@@ -712,7 +694,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             justify-content: space-around;
             margin-top: 25px;
             padding-top: 25px;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .info-item {
@@ -743,17 +725,23 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
         .win-message {
             font-size: 1.5em;
             font-weight: bold;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             animation: bounce 0.5s ease-in-out;
         }
 
         @keyframes bounce {
-            0%, 20%, 60%, 100% {
+
+            0%,
+            20%,
+            60%,
+            100% {
                 transform: translateY(0);
             }
+
             40% {
                 transform: translateY(-10px);
             }
+
             80% {
                 transform: translateY(-5px);
             }
@@ -765,25 +753,26 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
 
         @keyframes reelGlow {
             from {
-                box-shadow: 
-                    inset 0 0 20px rgba(0,0,0,0.8),
-                    0 5px 15px rgba(0,0,0,0.3);
+                box-shadow:
+                    inset 0 0 20px rgba(0, 0, 0, 0.8),
+                    0 5px 15px rgba(0, 0, 0, 0.3);
             }
+
             to {
-                box-shadow: 
-                    inset 0 0 30px rgba(255,215,0,0.3),
-                    0 5px 20px rgba(255,215,0,0.2);
+                box-shadow:
+                    inset 0 0 30px rgba(255, 215, 0, 0.3),
+                    0 5px 20px rgba(255, 215, 0, 0.2);
             }
         }
 
         /* Стили для таблицы выплат */
         .paytable {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 15px;
             margin-top: 25px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .paytable h3 {
@@ -808,7 +797,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.1em;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             padding-bottom: 8px;
         }
 
@@ -823,14 +812,14 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             justify-content: space-between;
             align-items: center;
             padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
         .paytable-item:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateX(5px);
         }
 
@@ -852,7 +841,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             text-align: center;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             color: #b8b8b8;
             font-style: italic;
         }
@@ -867,28 +856,28 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                 width: 100px;
                 height: 250px;
             }
-            
+
             .symbol {
                 height: 83px;
                 font-size: 2.8em;
             }
-            
+
             .spin-btn {
                 padding: 15px 30px;
                 font-size: 1.2em;
             }
-            
+
             .bet-controls {
                 gap: 8px;
                 padding: 12px 15px;
             }
-            
+
             .bet-btn {
                 width: 40px;
                 height: 40px;
                 font-size: 0.9em;
             }
-            
+
             .bet-input {
                 width: 70px;
                 height: 40px;
@@ -904,13 +893,13 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
                 font-size: 1.2em;
             }
         }
-        
+
         .left-arrow {
             position: absolute;
             left: -20px;
             font-size: 3em;
             color: gold;
-            text-shadow: 0 0 10px rgba(255,215,0,0.7);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
             z-index: 10;
             animation: arrowPulse 2s infinite;
             top: 50%;
@@ -922,7 +911,7 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
             right: -20px;
             font-size: 3em;
             color: gold;
-            text-shadow: 0 0 10px rgba(255,215,0,0.7);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
             z-index: 10;
             animation: arrowPulse 2s infinite;
             top: 50%;
@@ -930,14 +919,17 @@ $slotSymbols = ['❌', '🍒', '🍋', '🍊', '🍇', '🔔', '⭐', '7️⃣',
         }
 
         @keyframes arrowPulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0.7;
                 transform: translateY(-50%) scale(1);
             }
+
             50% {
                 opacity: 1;
                 transform: translateY(-50%) scale(1.1);
             }
         }
     </style>
-    <? endif?>
+<? endif ?>
