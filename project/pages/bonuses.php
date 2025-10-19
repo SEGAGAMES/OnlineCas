@@ -168,7 +168,13 @@
         </div>
     </div>
 </form>
-
+<div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+        <h3 id="alertTitle">Уведомление</h3>
+        <p id="alertMessage"></p>
+        <button id="alertOk">OK</button>
+    </div>
+</div>
 <style>
     /* Добавляем класс для блокировки прокрутки */
     body.no-scroll {
@@ -801,8 +807,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             if (response.ok) {
-                alert(`💝 Спасибо за поддержку!\n\nВы пожертвовали на сумму ${amount}₽.\nНа ваш счет будет зачислено ${coins} бонусных CEV-коинов.`);
                 
+                customAlert(`💝 Спасибо за поддержку!\n\nВы пожертвовали на сумму ${amount}₽.\nНа ваш счет будет зачислено ${coins} бонусных CEV-коинов.`);
                 donateForm.classList.remove('active');
                 setTimeout(() => {
                     donateForm.style.display = 'none';
@@ -813,7 +819,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('Ошибка при обработке платежа');
             }
         } catch (error) {
-            alert('Произошла ошибка при обработке платежа. Пожалуйста, попробуйте еще раз.' + error);
+            customAlert('Произошла ошибка при обработке платежа. Пожалуйста, попробуйте еще раз.' + error);
             console.error('Donation error:', error);
         }
         
@@ -853,4 +859,90 @@ document.addEventListener('DOMContentLoaded', function() {
         e.target.value = e.target.value.replace(/[^0-9]/gi, '');
     });
 });
+// Заменяем стандартный alert
+    function customAlert(message, title = 'Уведомление') {
+    const alert = document.getElementById('customAlert');
+    const alertMessage = document.getElementById('alertMessage');
+    const alertTitle = document.getElementById('alertTitle');
+    const alertOk = document.getElementById('alertOk');
+    
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
+    alert.style.display = 'flex';
+    
+    // Закрытие по кнопке
+    alertOk.onclick = function() {
+        alert.style.display = 'none';
+    };
+    
+    // Закрытие по клику вне окна
+    alert.onclick = function(e) {
+        if (e.target === alert) {
+        alert.style.display = 'none';
+        }
+    };
+    
+    // Закрытие по Escape
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+        alert.style.display = 'none';
+        document.removeEventListener('keydown', closeOnEscape);
+        }
+    });
+    }
+
+// Использование:
+// customAlert('Текст сообщения', 'Заголовок');
 </script>
+<style>
+    .custom-alert {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert-content {
+  background: linear-gradient(145deg, #2d2d44, #252536);
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  min-width: 300px;
+  max-width: 90%;
+  border: 2px solid #444466;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.alert-content h3 {
+  color: #f8e71c;
+  margin-bottom: 15px;
+}
+
+.alert-content p {
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+}
+
+#alertOk {
+  padding: 12px 30px;
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+#alertOk:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+}
+</style>

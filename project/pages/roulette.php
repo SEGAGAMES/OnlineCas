@@ -1,7 +1,7 @@
 <?php
 if (!isLoggedIn()):
     ?>
-    <script>alert("Для начала игры необходимо войти или зарегистрироваться!"); window.location.href='index.php?page=register' </script>
+    <script>window.location.href='index.php?page=register' </script>
 <?php else:
 // Генерация чисел рулетки
 $rouletteNumbers = [];
@@ -157,8 +157,45 @@ $betTypes = [
             </div>
         </div>
     </div>
-
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-content">
+            <h3 id="alertTitle">Уведомление</h3>
+            <p id="alertMessage"></p>
+            <button id="alertOk">OK</button>
+        </div>
+    </div>
     <script>
+        // Заменяем стандартный alert
+        function customAlert(message, title = 'Уведомление') {
+        const alert = document.getElementById('customAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertOk = document.getElementById('alertOk');
+        
+        alertTitle.textContent = title;
+        alertMessage.textContent = message;
+        alert.style.display = 'flex';
+        
+        // Закрытие по кнопке
+        alertOk.onclick = function() {
+            alert.style.display = 'none';
+        };
+        
+        // Закрытие по клику вне окна
+        alert.onclick = function(e) {
+            if (e.target === alert) {
+            alert.style.display = 'none';
+            }
+        };
+        
+        // Закрытие по Escape
+        document.addEventListener('keydown', function closeOnEscape(e) {
+            if (e.key === 'Escape') {
+            alert.style.display = 'none';
+            document.removeEventListener('keydown', closeOnEscape);
+            }
+        });
+        }
         let spinHistory = [];
         let isSpinning = false;
         let stats = { red: 0, black: 0, green: 0 };
@@ -253,13 +290,13 @@ $betTypes = [
             const betType = document.getElementById('betType').value;
             if (isSpinning) return;
             if (!currentBet) {
-                alert('Сделайте ставку перед вращением!');
+                customAlert('Сделайте ставку перед вращением!');
                 return;
             }
             
             const betAmount = parseInt(document.getElementById('betAmount').value);
             if (betAmount > balance) {
-                alert('Недостаточно средств на балансе!');
+                customAlert('Недостаточно средств на балансе!');
                 return;
             }
 
@@ -830,5 +867,55 @@ $betTypes = [
                 grid-template-columns: repeat(6, 1fr);
             }
         }
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            }
+
+        .alert-content {
+            background: linear-gradient(145deg, #2d2d44, #252536);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 90%;
+            border: 2px solid #444466;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+
+        .alert-content h3 {
+            color: #f8e71c;
+            margin-bottom: 15px;
+            }
+
+        .alert-content p {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            }
+
+        #alertOk {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            }
+
+        #alertOk:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+            }
     </style>
     <? endif ?>

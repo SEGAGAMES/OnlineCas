@@ -1,12 +1,17 @@
 <?php
 if (!isLoggedIn()):
 ?>
-<script>
-alert("Для начала игры необходимо войти или зарегистрироваться!"); 
-window.location.href='index.php?page=register';
-</script>
+    <script>
+    window.location.href='index.php?page=register';
+    </script>
 <?php else: ?>
-
+<div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+        <h3 id="alertTitle">Уведомление</h3>
+        <p id="alertMessage"></p>
+        <button id="alertOk">OK</button>
+    </div>
+</div>
 <div class="mines-container">
     <div class="header">
         <h1>💣 Игра "Мины" 💣</h1>
@@ -162,7 +167,7 @@ async function startGame() {
         }
     } catch (error) {
         console.error('Ошибка:', error);
-        alert('Ошибка соединения с сервером');
+        customAlert('Ошибка соединения с сервером');
     }
 }
 
@@ -241,7 +246,7 @@ async function revealCell(row, col, index) {
         }
     } catch (error) {
         console.error('Ошибка:', error);
-        alert('Ошибка соединения с сервером');
+        customAlert('Ошибка соединения с сервером');
     }
 }
 
@@ -308,7 +313,7 @@ async function cashout() {
         }
     } catch (error) {
         console.error('Ошибка:', error);
-        alert('Ошибка соединения с сервером');
+        customAlert('Ошибка соединения с сервером');
     }
 }
 
@@ -401,28 +406,28 @@ function updateDisplay() {
 function handleApiError(errorCode) {
     switch(errorCode) {
         case 'invalid_bet':
-            alert('Неверная ставка. Минимальная ставка: 10 CEV');
+            customAlert('Неверная ставка. Минимальная ставка: 10 CEV');
             break;
         case 'insufficient_funds':
-            alert('Недостаточно средств на балансе');
+            customAlert('Недостаточно средств на балансе');
             break;
         case 'invalid_mines_count':
-            alert('Неверное количество мин');
+            customAlert('Неверное количество мин');
             break;
         case 'game_not_found':
-            alert('Игра не найдена. Начните новую игру');
+            customAlert('Игра не найдена. Начните новую игру');
             break;
         case 'invalid_cell_index':
-            alert('Неверный индекс клетки');
+            customAlert('Неверный индекс клетки');
             break;
         case 'cell_already_revealed':
-            alert('Эта клетка уже открыта');
+            customAlert('Эта клетка уже открыта');
             break;
         case 'balance_update_failed':
-            alert('Ошибка обновления баланса. Попробуйте еще раз');
+            customAlert('Ошибка обновления баланса. Попробуйте еще раз');
             break;
         default:
-            alert('Неизвестная ошибка: ' + errorCode);
+            customAlert('Неизвестная ошибка: ' + errorCode);
     }
 }
 
@@ -431,457 +436,538 @@ document.addEventListener('DOMContentLoaded', function() {
     updateGameSettings();
     updateDisplay();
 });
+// Заменяем стандартный alert
+function customAlert(message, title = 'Уведомление') {
+  const alert = document.getElementById('customAlert');
+  const alertMessage = document.getElementById('alertMessage');
+  const alertTitle = document.getElementById('alertTitle');
+  const alertOk = document.getElementById('alertOk');
+  
+  alertTitle.textContent = title;
+  alertMessage.textContent = message;
+  alert.style.display = 'flex';
+  
+  // Закрытие по кнопке
+  alertOk.onclick = function() {
+    alert.style.display = 'none';
+  };
+  
+  // Закрытие по клику вне окна
+  alert.onclick = function(e) {
+    if (e.target === alert) {
+      alert.style.display = 'none';
+    }
+  };
+  
+  // Закрытие по Escape
+  document.addEventListener('keydown', function closeOnEscape(e) {
+    if (e.key === 'Escape') {
+      alert.style.display = 'none';
+      document.removeEventListener('keydown', closeOnEscape);
+    }
+  });
+}
 </script>
 
 <style>
-.mines-container {
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.header h1 {
-    font-size: 2.8em;
-    margin-bottom: 10px;
-    background: linear-gradient(45deg, #ff6b6b, #f8e71c, #4ecdc4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-.header p {
-    color: #b8b8b8;
-    font-size: 1.2em;
-}
-
-.mines-game {
-    background: linear-gradient(145deg, #2d2d44, #252536);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 
-        0 20px 40px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.1);
-    border: 2px solid #444466;
-    position: relative;
-    overflow: hidden;
-}
-
-.mines-game::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #ff6b6b, #f8e71c, #4ecdc4);
-    z-index: 2;
-}
-
-.game-info {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.info-item {
-    background: rgba(255,255,255,0.1);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.info-label {
-    color: #b8b8b8;
-    font-size: 0.9em;
-    margin-bottom: 5px;
-}
-
-.info-value {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: #f8e71c;
-}
-
-.controls {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-bottom: 25px;
-}
-
-.bet-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.1);
-    padding: 15px 20px;
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.bet-btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.1);
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bet-btn:hover:not(:disabled) {
-    background: rgba(255,255,255,0.2);
-    border-color: rgba(255,255,255,0.5);
-}
-
-.bet-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.max-bet {
-    width: auto;
-    padding: 0 15px;
-    border-radius: 25px;
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-    font-weight: bold;
-}
-
-.bet-input {
-    width: 80px;
-    height: 45px;
-    border: 2px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.1);
-    color: #f8e71c;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 10px;
-    outline: none;
-}
-
-.bet-input:focus {
-    border-color: #f8e71c;
-    box-shadow: 0 0 10px rgba(248, 231, 28, 0.5);
-}
-
-.mines-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    justify-content: center;
-    color: white;
-}
-
-.mines-controls select {
-    background: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.3);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-    outline: none;
-}
-
-.mines-controls select option {
-    background: #2d2d44;
-    color: white;
-}
-
-.start-btn {
-    padding: 20px 50px;
-    font-size: 1.4em;
-    font-weight: bold;
-    background: linear-gradient(45deg, #4ecdc4, #44a08d);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 
-        0 5px 15px rgba(78, 205, 196, 0.4),
-        0 0 0 3px rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
-}
-
-.start-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 8px 25px rgba(78, 205, 196, 0.6),
-        0 0 0 3px rgba(255,255,255,0.2);
-}
-
-.start-btn:disabled {
-    background: #666;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-.cashout-btn {
-    padding: 20px 50px;
-    font-size: 1.4em;
-    font-weight: bold;
-    background: linear-gradient(45deg, #f8e71c, #ffd700);
-    color: #333;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 
-        0 5px 15px rgba(248, 231, 28, 0.4),
-        0 0 0 3px rgba(255,255,255,0.1);
-    margin-top: 10px;
-}
-
-.cashout-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 8px 25px rgba(248, 231, 28, 0.6),
-        0 0 0 3px rgba(255,255,255,0.2);
-}
-
-.game-board {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 25px;
-    perspective: 1000px;
-}
-
-.board-row {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-}
-
-.board-cell {
-    width: 60px;
-    height: 60px;
-    position: relative;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    transition: transform 0.6s ease;
-}
-
-.board-cell.revealed {
-    transform: rotateY(180deg);
-}
-
-.cell-front, .cell-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.8em;
-}
-
-.cell-front {
-    background: linear-gradient(145deg, #444466, #333355);
-    border: 2px solid #555577;
-    transform: rotateY(0deg);
-}
-
-.cell-back {
-    transform: rotateY(180deg);
-}
-
-.diamond-cell .cell-back {
-    background: linear-gradient(145deg, #4ecdc4, #44a08d);
-    border: 2px solid #6bffb8;
-}
-
-.mine-cell .cell-back {
-    background: linear-gradient(145deg, #ff6b6b, #ee5a24);
-    border: 2px solid #ff8e8e;
-}
-
-.result {
-    text-align: center;
-    margin: 20px 0;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.win-message {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #4ecdc4;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    animation: bounce 0.5s ease-in-out;
-}
-
-.lose-message {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #ff6b6b;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-@keyframes bounce {
-    0%, 20%, 60%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    80% {
-        transform: translateY(-5px);
-    }
-}
-
-.game-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.stats-item {
-    background: rgba(255,255,255,0.05);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-.stats-label {
-    color: #b8b8b8;
-    font-size: 0.9em;
-    margin-bottom: 5px;
-}
-
-.stats-value {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: white;
-}
-
-.rules {
-    background: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.rules h3 {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #f8e71c;
-    font-size: 1.4em;
-}
-
-.rules-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.rule-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-}
-
-.rule-icon {
-    font-size: 1.5em;
-    flex-shrink: 0;
-}
-
-.rule-text {
-    color: #b8b8b8;
-    font-size: 0.9em;
-}
-
-@media (max-width: 768px) {
     .mines-container {
-        padding: 10px;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
     }
-    
-    .game-info, .game-stats {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
     }
-    
-    .rules-content {
-        grid-template-columns: 1fr;
+
+    .header h1 {
+        font-size: 2.8em;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #ff6b6b, #f8e71c, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     }
-    
-    .board-cell {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .cell-front, .cell-back {
-        font-size: 1.5em;
-    }
-    
-    .start-btn, .cashout-btn {
-        padding: 15px 30px;
+
+    .header p {
+        color: #b8b8b8;
         font-size: 1.2em;
     }
-    
-    .bet-controls {
-        gap: 8px;
-        padding: 12px 15px;
-    }
-    
-    .bet-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9em;
-    }
-    
-    .bet-input {
-        width: 70px;
-        height: 40px;
-        font-size: 1.1em;
-    }
-}
 
-@media (max-width: 480px) {
-    .game-info, .game-stats {
-        grid-template-columns: 1fr;
+    .mines-game {
+        background: linear-gradient(145deg, #2d2d44, #252536);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 
+            0 20px 40px rgba(0,0,0,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+        border: 2px solid #444466;
+        position: relative;
+        overflow: hidden;
     }
-    
-    .board-cell {
+
+    .mines-game::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #ff6b6b, #f8e71c, #4ecdc4);
+        z-index: 2;
+    }
+
+    .game-info {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .info-item {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .info-label {
+        color: #b8b8b8;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #f8e71c;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .bet-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,0.1);
+        padding: 15px 20px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .bet-btn {
         width: 45px;
         height: 45px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    
+
+    .bet-btn:hover:not(:disabled) {
+        background: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.5);
+    }
+
+    .bet-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .max-bet {
+        width: auto;
+        padding: 0 15px;
+        border-radius: 25px;
+        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        font-weight: bold;
+    }
+
+    .bet-input {
+        width: 80px;
+        height: 45px;
+        border: 2px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.1);
+        color: #f8e71c;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    .bet-input:focus {
+        border-color: #f8e71c;
+        box-shadow: 0 0 10px rgba(248, 231, 28, 0.5);
+    }
+
+    .mines-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        justify-content: center;
+        color: white;
+    }
+
+    .mines-controls select {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    .mines-controls select option {
+        background: #2d2d44;
+        color: white;
+    }
+
+    .start-btn {
+        padding: 20px 50px;
+        font-size: 1.4em;
+        font-weight: bold;
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 5px 15px rgba(78, 205, 196, 0.4),
+            0 0 0 3px rgba(255,255,255,0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .start-btn:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 8px 25px rgba(78, 205, 196, 0.6),
+            0 0 0 3px rgba(255,255,255,0.2);
+    }
+
+    .start-btn:disabled {
+        background: #666;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .cashout-btn {
+        padding: 20px 50px;
+        font-size: 1.4em;
+        font-weight: bold;
+        background: linear-gradient(45deg, #f8e71c, #ffd700);
+        color: #333;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 5px 15px rgba(248, 231, 28, 0.4),
+            0 0 0 3px rgba(255,255,255,0.1);
+        margin-top: 10px;
+    }
+
+    .cashout-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 8px 25px rgba(248, 231, 28, 0.6),
+            0 0 0 3px rgba(255,255,255,0.2);
+    }
+
+    .game-board {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 25px;
+        perspective: 1000px;
+    }
+
+    .board-row {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .board-cell {
+        width: 60px;
+        height: 60px;
+        position: relative;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.6s ease;
+    }
+
+    .board-cell.revealed {
+        transform: rotateY(180deg);
+    }
+
     .cell-front, .cell-back {
-        font-size: 1.3em;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
     }
-    
-    .header h1 {
-        font-size: 2em;
+
+    .cell-front {
+        background: linear-gradient(145deg, #444466, #333355);
+        border: 2px solid #555577;
+        transform: rotateY(0deg);
     }
-}
+
+    .cell-back {
+        transform: rotateY(180deg);
+    }
+
+    .diamond-cell .cell-back {
+        background: linear-gradient(145deg, #4ecdc4, #44a08d);
+        border: 2px solid #6bffb8;
+    }
+
+    .mine-cell .cell-back {
+        background: linear-gradient(145deg, #ff6b6b, #ee5a24);
+        border: 2px solid #ff8e8e;
+    }
+
+    .result {
+        text-align: center;
+        margin: 20px 0;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .win-message {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #4ecdc4;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        animation: bounce 0.5s ease-in-out;
+    }
+
+    .lose-message {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #ff6b6b;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    @keyframes bounce {
+        0%, 20%, 60%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        80% {
+            transform: translateY(-5px);
+        }
+    }
+
+    .game-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .stats-item {
+        background: rgba(255,255,255,0.05);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stats-label {
+        color: #b8b8b8;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .stats-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: white;
+    }
+
+    .rules {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .rules h3 {
+        text-align: center;
+        margin-bottom: 15px;
+        color: #f8e71c;
+        font-size: 1.4em;
+    }
+
+    .rules-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .rule-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+
+    .rule-icon {
+        font-size: 1.5em;
+        flex-shrink: 0;
+    }
+
+    .rule-text {
+        color: #b8b8b8;
+        font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+        .mines-container {
+            padding: 10px;
+        }
+        
+        .game-info, .game-stats {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .rules-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .board-cell {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .cell-front, .cell-back {
+            font-size: 1.5em;
+        }
+        
+        .start-btn, .cashout-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+        }
+        
+        .bet-controls {
+            gap: 8px;
+            padding: 12px 15px;
+        }
+        
+        .bet-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 0.9em;
+        }
+        
+        .bet-input {
+            width: 70px;
+            height: 40px;
+            font-size: 1.1em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .game-info, .game-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .board-cell {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .cell-front, .cell-back {
+            font-size: 1.3em;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+        }
+    }
+    .custom-alert {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .alert-content {
+    background: linear-gradient(145deg, #2d2d44, #252536);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 300px;
+    max-width: 90%;
+    border: 2px solid #444466;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .alert-content h3 {
+    color: #f8e71c;
+    margin-bottom: 15px;
+    }
+
+    .alert-content p {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    }
+
+    #alertOk {
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    }
+
+    #alertOk:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+    }
 </style>
 
 <?php endif ?>

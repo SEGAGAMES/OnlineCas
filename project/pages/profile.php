@@ -8,7 +8,13 @@ require_once('database-api/load-items');
 ?>
 
 <h1>Личный кабинет</h1>
-
+<div id="customAlert" class="custom-alert">
+  <div class="alert-content">
+    <h3 id="alertTitle">Уведомление</h3>
+    <p id="alertMessage"></p>
+    <button id="alertOk">OK</button>
+  </div>
+</div>
 <div class="profile-container">
     <!-- Блок с основной информацией -->
     <div class="profile-info">
@@ -46,7 +52,38 @@ require_once('database-api/load-items');
                 </script>
                 <button class="btn-secondary" onclick="canNot()">Вывести</button>
                 <script>
-                    function canNot() {alert("Вы не моежете вывести отсюда деньги)")}
+                    function canNot() {customAlert("Вы не моежете вывести отсюда деньги)")}
+                    // Заменяем стандартный alert
+                    function customAlert(message, title = 'Уведомление') {
+                    const alert = document.getElementById('customAlert');
+                    const alertMessage = document.getElementById('alertMessage');
+                    const alertTitle = document.getElementById('alertTitle');
+                    const alertOk = document.getElementById('alertOk');
+                    
+                    alertTitle.textContent = title;
+                    alertMessage.textContent = message;
+                    alert.style.display = 'flex';
+                    
+                    // Закрытие по кнопке
+                    alertOk.onclick = function() {
+                        alert.style.display = 'none';
+                    };
+                    
+                    // Закрытие по клику вне окна
+                    alert.onclick = function(e) {
+                        if (e.target === alert) {
+                        alert.style.display = 'none';
+                        }
+                    };
+                    
+                    // Закрытие по Escape
+                    document.addEventListener('keydown', function closeOnEscape(e) {
+                        if (e.key === 'Escape') {
+                        alert.style.display = 'none';
+                        document.removeEventListener('keydown', closeOnEscape);
+                        }
+                    });
+                    }
                 </script>
             </div>
             </div>
@@ -173,7 +210,16 @@ require_once('database-api/load-items');
         </div>
     </div>
 </div>
-
+<div id="customConfirm" class="custom-confirm">
+  <div class="confirm-content">
+    <h3 id="confirmTitle">Подтверждение</h3>
+    <p id="confirmMessage"></p>
+    <div class="confirm-buttons">
+      <button id="confirmYes">Да</button>
+      <button id="confirmNo">Нет</button>
+    </div>
+  </div>
+</div>
 <style>
     /* Стили для инвентаря */
 
@@ -251,30 +297,215 @@ require_once('database-api/load-items');
     .btn-sell:hover {
         background: #c82333;
     }
+    .custom-alert {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .alert-content {
+    background: linear-gradient(145deg, #2d2d44, #252536);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 300px;
+    max-width: 90%;
+    border: 2px solid #444466;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .alert-content h3 {
+    color: #f8e71c;
+    margin-bottom: 15px;
+    }
+
+    .alert-content p {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    }
+
+    #alertOk {
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    }
+
+    #alertOk:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+    }
 </style>
 
 <script>
-
-    function useItem(itemId)
-    {
-        if (confirm('Использовать этот предмет?')) 
-        {
-            fetch('database-api/use-ava.php?id='+itemId)
-            setTimeout(() => {location.reload();}, 300);
+    function customConfirm(message, title = 'Подтверждение') {
+    return new Promise((resolve) => {
+        const confirm = document.getElementById('customConfirm');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmTitle = document.getElementById('confirmTitle');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+        
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
+        confirm.style.display = 'flex';
+        
+        // Очищаем предыдущие обработчики
+        confirmYes.onclick = null;
+        confirmNo.onclick = null;
+        confirm.onclick = null;
+        
+        // Да
+        confirmYes.onclick = function() {
+        confirm.style.display = 'none';
+        resolve(true);
+        };
+        
+        // Нет
+        confirmNo.onclick = function() {
+        confirm.style.display = 'none';
+        resolve(false);
+        };
+        
+        // Закрытие по клику вне окна
+        confirm.onclick = function(e) {
+        if (e.target === confirm) {
+            confirm.style.display = 'none';
+            resolve(false);
         }
+        };
+        
+        // Закрытие по Escape
+        const closeOnEscape = function(e) {
+        if (e.key === 'Escape') {
+            confirm.style.display = 'none';
+            document.removeEventListener('keydown', closeOnEscape);
+            resolve(false);
+        }
+        };
+        
+        document.addEventListener('keydown', closeOnEscape);
+    });
     }
 
-    function sellItem(itemId, cost, id) 
+    // Использование с async/await:
+    async function exampleUsage() {
+    const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
+    if (result) {
+        // Действие при подтверждении
+        console.log('Пользователь подтвердил');
+    } else {
+        // Действие при отказе
+        console.log('Пользователь отказался');
+    }
+    }
+
+    async function useItem(itemId)
     {
-        if (confirm('Продать этот предмет?'))
-        {
-            if (id == <?php echo $_SESSION['ava']?>)
-                alert('Невозможно удалить текущий аватар');
-            else
-            {
-                fetch('database-api/sell-item.php?id='+itemId+'&cost='+cost+'&itid='+id)
-                setTimeout(() => {location.reload();}, 300);
+        const result = await customConfirm('Использовать этот предмет?');
+            if (result) {
+                // Действие при подтверждении
+                            fetch('database-api/use-ava.php?id='+itemId)
+            setTimeout(() => {location.reload();}, 300);
             }
-        }
+    }
+
+    async function sellItem(itemId, cost, id) 
+    {
+        const result = await customConfirm('Продать этот предмет?');
+            if (result)
+            {
+                if (id == <?php echo $_SESSION['ava']?>)
+                    customAlert('Невозможно удалить текущий аватар');
+                else
+                {
+                    fetch('database-api/sell-item.php?id='+itemId+'&cost='+cost+'&itid='+id)
+                    setTimeout(() => {location.reload();}, 300);
+                }
+            }
     }
 </script>
+<style>
+    .custom-confirm {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .confirm-content {
+    background: linear-gradient(145deg, #2d2d44, #252536);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 320px;
+    max-width: 90%;
+    border: 2px solid #444466;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .confirm-content h3 {
+    color: #f8e71c;
+    margin-bottom: 15px;
+    }
+
+    .confirm-content p {
+    color: #fff;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    }
+
+    .confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    }
+
+    #confirmYes, #confirmNo {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    }
+
+    #confirmYes {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    }
+
+    #confirmYes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    #confirmNo {
+    background: linear-gradient(45deg, #666, #888);
+    color: white;
+    }
+
+    #confirmNo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 102, 102, 0.4);
+    }
+</style>

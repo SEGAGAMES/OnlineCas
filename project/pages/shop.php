@@ -40,21 +40,106 @@
             }
             ?>
 </div>
+<div id="customConfirm" class="custom-confirm">
+  <div class="confirm-content">
+    <h3 id="confirmTitle">Подтверждение</h3>
+    <p id="confirmMessage"></p>
+    <div class="confirm-buttons">
+      <button id="confirmYes">Да</button>
+      <button id="confirmNo">Нет</button>
+    </div>
+  </div>
+</div>
 <script>
-    function buyConfirm(name, cost, itemid)
+    async function buyConfirm(name, cost, itemid)
     {
         <?php if(isLoggedIn()): ?>
-        if (confirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?" ))
+        const result = await customConfirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?");
+        if (result)
         {
             fetch("database-api/buyitem.php?id="+itemid+"&cost="+cost);
             setTimeout(() => {location.reload();}, 300);
         }
         <?php else: ?>
-        if (confirm("Для покупки необходимо войти или зарегистрироваться, продолжить?" ))
-        {
+        const result = await customConfirm("Для покупки необходимо войти или зарегистрироваться, продолжить?");
+        if (result)
             loginModal.style.display = 'block';
-        }
         <?php endif ?>
+    }
+    function customConfirm(message, title = 'Подтверждение') {
+        return new Promise((resolve) => {
+            const confirm = document.getElementById('customConfirm');
+            const confirmMessage = document.getElementById('confirmMessage');
+            const confirmTitle = document.getElementById('confirmTitle');
+            const confirmYes = document.getElementById('confirmYes');
+            const confirmNo = document.getElementById('confirmNo');
+            
+            confirmTitle.textContent = title;
+            confirmMessage.textContent = message;
+            confirm.style.display = 'flex';
+            
+            // Очищаем предыдущие обработчики
+            confirmYes.onclick = null;
+            confirmNo.onclick = null;
+            confirm.onclick = null;
+            
+            // Да
+            confirmYes.onclick = function() {
+            confirm.style.display = 'none';
+            resolve(true);
+            };
+            
+            // Нет
+            confirmNo.onclick = function() {
+            confirm.style.display = 'none';
+            resolve(false);
+            };
+            
+            // Закрытие по клику вне окна
+            confirm.onclick = function(e) {
+            if (e.target === confirm) {
+                confirm.style.display = 'none';
+                resolve(false);
+            }
+            };
+            
+            // Закрытие по Escape
+            const closeOnEscape = function(e) {
+                if (e.key === 'Escape') {
+                    confirm.style.display = 'none';
+                    document.removeEventListener('keydown', closeOnEscape);
+                    resolve(false);
+                }
+                };
+                
+                document.addEventListener('keydown', closeOnEscape);
+            });
+    }
+
+    // Использование с async/await:
+    async function exampleUsage() {
+    const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
+    if (result) {
+        // Действие при подтверждении
+        console.log('Пользователь подтвердил');
+    } else {
+        // Действие при отказе
+        console.log('Пользователь отказался');
+    }
+    }
+
+    // Использование с then():
+    function exampleUsage2() {
+    customConfirm('Вы уверены, что хотите выйти?', 'Подтверждение выхода')
+        .then((result) => {
+        if (result) {
+            // Действие при подтверждении
+            console.log('Выход подтвержден');
+        } else {
+            // Действие при отказе
+            console.log('Выход отменен');
+        }
+        });
     }
 </script>
 
@@ -71,6 +156,76 @@
 </div>
 <?php endif ?>
 <style>
+    .custom-confirm {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    }
+
+    .confirm-content {
+    background: linear-gradient(145deg, #2d2d44, #252536);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 320px;
+    max-width: 90%;
+    border: 2px solid #444466;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .confirm-content h3 {
+    color: #f8e71c;
+    margin-bottom: 15px;
+    }
+
+    .confirm-content p {
+    color: #fff;
+    margin-bottom: 25px;
+    font-size: 1.1em;
+    }
+
+    .confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    }
+
+    #confirmYes, #confirmNo {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    min-width: 100px;
+    }
+
+    #confirmYes {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    }
+
+    #confirmYes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    #confirmNo {
+    background: linear-gradient(45deg, #666, #888);
+    color: white;
+    }
+
+    #confirmNo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 102, 102, 0.4);
+    }
     .shop-subtitle {
         text-align: center;
         font-size: 1.3rem;
