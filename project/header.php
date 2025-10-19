@@ -20,6 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['auth_action']) && $_P
         header('Location: ' . $_SERVER['REQUEST_URI']);
         exit;
     }
+    else {
+        // Сохраняем ошибку и данные формы в сессии
+        $_SESSION['login_error'] = 'Неправильный email или пароль!';
+        $_SESSION['login_email'] = $email; // Сохраняем введенный email
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit;
+    }
 }
 
 // Определяем текущее название страницы для title
@@ -39,12 +46,21 @@ $pageTitles = [
     'roulette' => 'Рулетка',
     'poker' => 'Техасский холдем',
     'slots' => 'Слоты',
+    'mines' => 'Мины',
 ];
 
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
 $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'Страница';
 
-// Получаем данные пользователя если авторизован
+// Получаем сохраненные данные формы
+$login_email = $_SESSION['login_email'] ?? '';
+$login_error = $_SESSION['login_error'] ?? '';
+
+// Очищаем ошибки после использования
+if (isset($_SESSION['login_error'])) {
+    unset($_SESSION['login_error']);
+    unset($_SESSION['login_email']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -55,59 +71,68 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     <title>Non-lossing Play - <?php echo $pageTitle; ?></title>
     <link rel="stylesheet" href="StylesCSS.css">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-    <style>
-        .logo {
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .logo-link {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            font-weight: bold;
-            padding: 10px 15px;
-            margin: -10px -15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            /* Обеспечиваем кликабельность всей области */
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-link:hover {
-            animation: textGlow 1.5s ease-in-out infinite;
-            background-color: transparent;
-        }
-
-        @keyframes textGlow {
-
-            0%,
-            60% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-                    0 0 20px rgba(255, 215, 0, 0.6),
-                    0 0 30px rgba(255, 165, 0, 0.4);
-            }
-
-            30% {
-                text-shadow: 0 0 15px rgba(255, 255, 255, 1),
-                    0 0 30px rgba(255, 215, 0, 0.8),
-                    0 0 45px rgba(255, 165, 0, 0.6),
-                    0 0 60px rgba(255, 140, 0, 0.4);
-            }
-        }
-
-        /* Убираем любые box-shadow для рамки */
-        .logo-link,
-        .logo-link:hover {
-            box-shadow: none !important;
-        }
-    </style>
 </head>
 
 <body>
+    <style>
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .alert-content {
+            background: linear-gradient(145deg, #2d2d44, #252536);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 300px;
+            max-width: 90%;
+            border: 2px solid #444466;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .alert-content h3 {
+            color: #f8e71c;
+            margin-bottom: 15px;
+        }
+
+        .alert-content p {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        #alertOk {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        #alertOk:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        </style>
+    <div id="customAlert" class="custom-alert">
+        <div class="alert-content">
+            <h3 id="alertTitle">Уведомление</h3>
+            <p id="alertMessage"></p>
+            <button id="alertOk">OK</button>
+        </div>
+    </div>
     <!-- Шапка сайта -->
     <header>
         <div class="logo">
@@ -133,61 +158,82 @@ $pageTitle = isset($pageTitles[$currentPage]) ? $pageTitles[$currentPage] : 'С�
     </header>
 
     <?php if (!isLoggedIn()): ?>
-        <!-- Модальное окно входа -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Вход в систему</h3>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="">
-                        <input type="hidden" name="auth_action" value="login">
-                        <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
-
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required
-                                value="<?php echo isset($_SESSION['login_email']) ? $_SESSION['login_email'] : ''; ?>">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Пароль:</label>
-                            <input type="password" id="password" name="password" required>
-                        </div>
-
-                        <button type="submit" class="btn-primary">Войти</button>
-                    </form>
-
-                    <div class="modal-footer">
-                        <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal" style="<?php echo !empty($login_error) ? 'display: block;' : ''; ?>">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Вход в систему</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <!-- Блок для отображения ошибок -->
+                <?php if (!empty($login_error)): ?>
+                    <div class="error-message" style="background: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #ffcdd2;">
+                        <?php echo $login_error; ?>
                     </div>
+                <?php endif; ?>
+
+                <form method="POST" action="">
+                    <input type="hidden" name="auth_action" value="login">
+                    <input type="hidden" name="redirect" value="<?php echo $_SERVER['REQUEST_URI']; ?>">
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($login_email); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Войти</button>
+                </form>
+
+                <div class="modal-footer">
+                    <p>Нет аккаунта? <a href="index.php?page=register">Зарегистрироваться</a></p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            // Управление модальным окном входа
-            const loginModal = document.getElementById('loginModal');
-            const loginBtn = document.getElementById('loginBtn');
-            const closeModal = document.querySelector('.close-modal');
+    <script>
+        // Управление модальным окном входа
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeModal = document.querySelector('.close-modal');
 
-            if (loginBtn) {
-                loginBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    loginModal.style.display = 'block';
-                });
-            }
-
-            if (closeModal) {
-                closeModal.addEventListener('click', function () {
-                    loginModal.style.display = 'none';
-                });
-            }
-
-            window.addEventListener('click', function (event) {
-                if (event.target === loginModal)
-                    loginModal.style.display = 'none';
+        // Автоматически открываем модальное окно при ошибке
+        <?php if (!empty($login_error)): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                loginModal.style.display = 'block';
             });
-        </script>
-    <?php endif ?>
+        <?php endif; ?>
+
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                loginModal.style.display = 'block';
+            });
+        }
+
+        if (closeModal) {
+            closeModal.addEventListener('click', function () {
+                loginModal.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('click', function (event) {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+
+        // Фокус на поле пароля при ошибке
+        <?php if (!empty($login_error)): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('password').focus();
+            });
+        <?php endif; ?>
+    </script>
+<?php endif ?>
