@@ -30,7 +30,7 @@ function loadAllItems()
     $db = new Database;
     if ($db) {
         try {
-            $query = "SELECT `item_id`, `item_type`, `path`, `description`, `name`, `cost` FROM `items` WHERE 1";
+            $query = "SELECT `item_id`, `item_type`, `path`, `description`, `name`, `cost` FROM `items` WHERE 1 ORDER BY `cost` ASC;";
             $result = $db->SendQuery($query, []);
             $result = $result->fetchall();
             if (!$result) {
