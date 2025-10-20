@@ -366,6 +366,70 @@
             height: 100px;
         }
     }
+
+    .shop-filters {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-group label {
+        color: #b8b8d2;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .filter-group select {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 10px 15px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 200px;
+    }
+
+    .filter-group select:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .filter-group select:focus {
+        outline: none;
+        border-color: #4d96ff;
+        box-shadow: 0 0 0 2px rgba(77, 150, 255, 0.3);
+    }
+
+    .filter-group option {
+        background: #2d2d44;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .shop-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-group {
+            justify-content: space-between;
+        }
+
+        .filter-group select {
+            min-width: 150px;
+        }
+    }
 </style>
 
 <div id="customConfirm" class="custom-confirm">
@@ -384,15 +448,15 @@
 <div class="shop-filters">
     <div class="filter-group">
         <label for="sortSelect">Сортировка:</label>
-        <select id="sortSelect" onchange="sortItems()">
-            <option value="cheap">Сначала дешевые</option>
-            <option value="expensive">Сначала дорогие</option>
+        <select id="sortSelect">
+            <option value="asc">Сначала дешевые</option>
+            <option value="desc">Сначала дорогие</option>
         </select>
     </div>
-    
+
     <div class="filter-group">
         <label for="typeSelect">Тип:</label>
-        <select id="typeSelect" onchange="filterItems()">
+        <select id="typeSelect">
             <option value="all">Все предметы</option>
             <option value="аватар">Аватар</option>
             <option value="статус">Статус</option>
@@ -404,6 +468,7 @@
 </div>
 
 <script>
+    sortItems('database-api/items/load-items-cost-asc.php');
     async function buyConfirm(name, cost, itemid) {
         <?php if (isLoggedIn()): ?>
             const result = await customConfirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?");
@@ -467,111 +532,109 @@
         });
     }
 
-    // Использование с async/await:
-    async function exampleUsage() {
-        const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
-        if (result) {
-            // Действие при подтверждении
-            console.log('Пользователь подтвердил');
-        } else {
-            // Действие при отказе
-            console.log('Пользователь отказался');
-        }
-    }
-
-    // Использование с then():
-    function exampleUsage2() {
-        customConfirm('Вы уверены, что хотите выйти?', 'Подтверждение выхода')
-            .then((result) => {
-                if (result) {
-                    // Действие при подтверждении
-                    console.log('Выход подтвержден');
-                } else {
-                    // Действие при отказе
-                    console.log('Выход отменен');
-                }
-            });
-    }
     document.addEventListener('DOMContentLoaded', function () {
-    const sortSelect = document.getElementById('sortSelect');
+        const sortSelect = document.getElementById('sortSelect');
 
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function () {
-            const selectedValue = this.value;
-            let url = '';
-            
-            if (selectedValue == 'asc') {
-                url = 'database-api/items/load-items-cost-asc.php';
-            } else {
-                url = 'database-api/items/load-items-cost-desc.php';
-            }
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function () {
+                const selectedValue = this.value;
+                let url = '';
 
-            // Вызываем функцию сортировки
-            sortItems(url);
-        });
-    }
-});
+                if (selectedValue == 'asc')
+                    url = 'database-api/items/load-items-cost-asc.php';
+                else
+                    url = 'database-api/items/load-items-cost-desc.php';
 
-function sortItems(url) {
-    // Очищаем контейнер с товарами
-    const shopGrid = document.querySelector('.shop-grid');
-    if (shopGrid) {
-        shopGrid.innerHTML = '';
-    }
 
-    // Показываем индикатор загрузки
-    showLoadingIndicator();
+                // Вызываем функцию сортировки
+                sortItems(url);
+            });
+        }
+        const typeSelect = document.getElementById('typeSelect');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function () {
+                const sortSelect = document.getElementById('sortSelect');
+                const selectedValue = this.value;
+                let url = '';
+                switch (selectedValue) {
+                    case 'all':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-cost-asc.php';
+                        else
+                            url = 'database-api/items/load-items-cost-desc.php';
+                        break;
+                    case 'аватар':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-avatar-asc.php';
+                        else
+                            url = 'database-api/items/load-items-avatar-desc.php';
+                        break;
+                    case 'предмет':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-item-asc.php';
+                        else
+                            url = 'database-api/items/load-items-item-desc.php';
+                        break;
 
-    // Выполняем fetch запрос
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success && data.items) {
-                // Очищаем контейнер перед добавлением новых элементов
-                if (shopGrid) {
-                    shopGrid.innerHTML = '';
                 }
-                
-                // Добавляем карточки товаров
-                data.items.forEach(item => {
-                    const productCard = createProductCard(item);
-                    if (shopGrid) {
-                        shopGrid.appendChild(productCard);
-                    }
-                });
-                
-                console.log(`Загружено ${data.count} товаров`);
-            } else {
-                throw new Error(data.message || 'Failed to load items');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showErrorMessage('Ошибка при загрузке товаров: ' + error.message);
-        })
-        .finally(() => {
-            // Скрываем индикатор загрузки
-            hideLoadingIndicator();
-        });
-}
+                // Вызываем функцию сортировки
+                sortItems(url);
+            });
+        }
+    });
 
-function createProductCard(item) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    // Экранируем значения для безопасности
-    const name = escapeHtml(item.name || '');
-    const desc = escapeHtml(item.description || '');
-    const cost = escapeHtml(item.cost || '0');
-    const path = escapeHtml(item.path || '');
-    const id = escapeHtml(item.item_id || '');
-    
-    card.innerHTML = `
+    function sortItems(url) {
+        // Очищаем контейнер с товарами
+        const shopGrid = document.querySelector('.shop-grid');
+        if (shopGrid) {
+            shopGrid.innerHTML = '';
+        }
+
+        // Показываем индикатор загрузки
+        showLoadingIndicator();
+
+        // Выполняем fetch запрос
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.items) {
+                    // Очищаем контейнер перед добавлением новых элементов
+                    if (shopGrid) {
+                        shopGrid.innerHTML = '';
+                    }
+
+                    // Добавляем карточки товаров
+                    data.items.forEach(item => {
+                        const productCard = createProductCard(item);
+                        if (shopGrid) {
+                            shopGrid.appendChild(productCard);
+                        }
+                    });
+
+                    console.log(`Загружено ${data.count} товаров`);
+                } else {
+                    throw new Error(data.message || 'Failed to load items');
+                }
+            })
+    }
+
+    function createProductCard(item) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+
+        // Экранируем значения для безопасности
+        const name = (item.name || '');
+        const desc = (item.description || '');
+        const cost = (item.cost || '0');
+        const path = (item.path || '');
+        const id = (item.item_id || '');
+
+        card.innerHTML = `
         <!--<div class='product-badge popular'>Популярная</div>-->
         <div class='product-image'>
             <img src='${path}' alt='${name}' class='circle-image'>
@@ -589,52 +652,26 @@ function createProductCard(item) {
         </div>
         <div class='product-glow'></div>
     `;
-    
-    return card;
-}
 
-// Функция для экранирования HTML
-function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+        return card;
+    }
 
-// Функции для индикатора загрузки
-function showLoadingIndicator() {
-    const shopGrid = document.querySelector('.shop-grid');
-    if (shopGrid) {
-        shopGrid.innerHTML = `
+    // Функции для индикатора загрузки
+    function showLoadingIndicator() {
+        const shopGrid = document.querySelector('.shop-grid');
+        if (shopGrid) {
+            shopGrid.innerHTML = `
             <div class="loading-indicator">
                 <div class="spinner"></div>
                 <p>Загрузка товаров...</p>
             </div>
         `;
+        }
     }
-}
 
-function hideLoadingIndicator() {
-    // Автоматически скрывается при добавлении товаров
-}
-
-function showErrorMessage(message) {
-    const shopGrid = document.querySelector('.shop-grid');
-    if (shopGrid) {
-        shopGrid.innerHTML = `
-            <div class="error-message">
-                <p>${message}</p>
-                <button onclick="location.reload()">Попробовать снова</button>
-            </div>
-        `;
-    }
-}
-
-// Добавьте этот CSS для стилизации индикатора загрузки и сообщений об ошибках
-const style = document.createElement('style');
-style.textContent = `
+    // Добавьте этот CSS для стилизации индикатора загрузки и сообщений об ошибках
+    const style = document.createElement('style');
+    style.textContent = `
     .loading-indicator {
         display: flex;
         flex-direction: column;
@@ -658,28 +695,8 @@ style.textContent = `
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
-    
-    .error-message {
-        text-align: center;
-        padding: 40px;
-        color: #e74c3c;
-    }
-    
-    .error-message button {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    
-    .error-message button:hover {
-        background: #c0392b;
-    }
 `;
-document.head.appendChild(style);
+    document.head.appendChild(style);
 </script>
 
 <?php if (!isLoggedIn()): ?>
