@@ -635,7 +635,7 @@
     <div class="promo-banner">
         <div class="promo-content">
             <div class="promo-badge">НОВИЧКАМ</div>
-            <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000$</h2>
+            <h2 class="promo-title">Добро пожаловать Бонус 100% до 1000 CEV</h2>
             <p class="promo-subtitle">Увеличьте свой стартовый капитал и получите бесплатные вращения</p>
             <a href="index.php?page=register" class="cta-button promo-button">Получить бонус</a>
             <div class="wagering-info">
