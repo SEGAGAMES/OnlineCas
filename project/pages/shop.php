@@ -366,6 +366,70 @@
             height: 100px;
         }
     }
+
+    .shop-filters {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-group label {
+        color: #b8b8d2;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .filter-group select {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 10px 15px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 200px;
+    }
+
+    .filter-group select:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .filter-group select:focus {
+        outline: none;
+        border-color: #4d96ff;
+        box-shadow: 0 0 0 2px rgba(77, 150, 255, 0.3);
+    }
+
+    .filter-group option {
+        background: #2d2d44;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .shop-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .filter-group {
+            justify-content: space-between;
+        }
+
+        .filter-group select {
+            min-width: 150px;
+        }
+    }
 </style>
 
 <div id="customConfirm" class="custom-confirm">
@@ -381,47 +445,30 @@
 
 <h1>🛍️ Магазин</h1>
 <p class="shop-subtitle">Коллекция эксклюзивных аватарок для вашего уникального стиля!</p>
+<div class="shop-filters">
+    <div class="filter-group">
+        <label for="sortSelect">Сортировка:</label>
+        <select id="sortSelect">
+            <option value="asc">Сначала дешевые</option>
+            <option value="desc">Сначала дорогие</option>
+        </select>
+    </div>
 
+    <div class="filter-group">
+        <label for="typeSelect">Тип:</label>
+        <select id="typeSelect">
+            <option value="all">Все предметы</option>
+            <option value="аватар">Аватар</option>
+            <option value="статус">Статус</option>
+            <option value="предмет">Предмет</option>
+        </select>
+    </div>
+</div>
 <div class="shop-grid">
-    <?php
-    require_once('database-api/load-items');
-    $cards = loadAllItems();
-    $pathes = $cards['path'];
-    $ids = $cards['item_id'];
-    $descs = $cards['desc'];
-    $types = $cards['item_type'];
-    $name = $cards['name'];
-    $cost = $cards['cost'];
-    // Пример данных предметов (замените на реальные данные из БД)
-    for ($i = 0; $i < count($pathes); $i++) {
-        echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i]);
-    }
-    function renderItemCard($path, $id, $desc, $type, $name, $cost)
-    {
-        return "
-                <div class='product-card'>
-                    <!--<div class='product-badge popular'>Популярная</div>-->
-                    <div class='product-image'>
-                        <img src='{$path}' alt='{$name}' class='circle-image'>
-                    </div>
-                    <div class='product-content'>
-                        <h3>{$name}</h3>
-                        <p class='product-description'>{$desc}</p>
-                        <div class='product-price'>
-                            <span class='price-amount'>{$cost} CEV</span>
-                        </div>
-                        <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
-                            <span class='btn-text'>Купить сейчас</span>
-                            <span class='btn-sparkle'>✨</span>
-                        </button>
-                    </div>
-                    <div class='product-glow'></div>
-                </div>";
-    }
-    ?>
 </div>
 
 <script>
+    sortItems('database-api/items/load-items-cost-asc.php');
     async function buyConfirm(name, cost, itemid) {
         <?php if (isLoggedIn()): ?>
             const result = await customConfirm("Вы уверены что хотите купить предмет " + name + " за " + cost + "CEV?");
@@ -485,31 +532,171 @@
         });
     }
 
-    // Использование с async/await:
-    async function exampleUsage() {
-        const result = await customConfirm('Вы уверены, что хотите сделать ставку?', 'Подтверждение ставки');
-        if (result) {
-            // Действие при подтверждении
-            console.log('Пользователь подтвердил');
-        } else {
-            // Действие при отказе
-            console.log('Пользователь отказался');
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortSelect = document.getElementById('sortSelect');
+
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function () {
+                const selectedValue = this.value;
+                let url = '';
+
+                if (selectedValue == 'asc')
+                    url = 'database-api/items/load-items-cost-asc.php';
+                else
+                    url = 'database-api/items/load-items-cost-desc.php';
+
+
+                // Вызываем функцию сортировки
+                sortItems(url);
+            });
+        }
+        const typeSelect = document.getElementById('typeSelect');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function () {
+                const sortSelect = document.getElementById('sortSelect');
+                const selectedValue = this.value;
+                let url = '';
+                switch (selectedValue) {
+                    case 'all':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-cost-asc.php';
+                        else
+                            url = 'database-api/items/load-items-cost-desc.php';
+                        break;
+                    case 'аватар':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-avatar-asc.php';
+                        else
+                            url = 'database-api/items/load-items-avatar-desc.php';
+                        break;
+                    case 'предмет':
+                        if (sortSelect.value == 'asc')
+                            url = 'database-api/items/load-items-item-asc.php';
+                        else
+                            url = 'database-api/items/load-items-item-desc.php';
+                        break;
+
+                }
+                // Вызываем функцию сортировки
+                sortItems(url);
+            });
+        }
+    });
+
+    function sortItems(url) {
+        // Очищаем контейнер с товарами
+        const shopGrid = document.querySelector('.shop-grid');
+        if (shopGrid) {
+            shopGrid.innerHTML = '';
+        }
+
+        // Показываем индикатор загрузки
+        showLoadingIndicator();
+
+        // Выполняем fetch запрос
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.items) {
+                    // Очищаем контейнер перед добавлением новых элементов
+                    if (shopGrid) {
+                        shopGrid.innerHTML = '';
+                    }
+
+                    // Добавляем карточки товаров
+                    data.items.forEach(item => {
+                        const productCard = createProductCard(item);
+                        if (shopGrid) {
+                            shopGrid.appendChild(productCard);
+                        }
+                    });
+
+                    console.log(`Загружено ${data.count} товаров`);
+                } else {
+                    throw new Error(data.message || 'Failed to load items');
+                }
+            })
+    }
+
+    function createProductCard(item) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+
+        // Экранируем значения для безопасности
+        const name = (item.name || '');
+        const desc = (item.description || '');
+        const cost = (item.cost || '0');
+        const path = (item.path || '');
+        const id = (item.item_id || '');
+
+        card.innerHTML = `
+        <!--<div class='product-badge popular'>Популярная</div>-->
+        <div class='product-image'>
+            <img src='${path}' alt='${name}' class='circle-image'>
+        </div>
+        <div class='product-content'>
+            <h3>${name}</h3>
+            <p class='product-description'>${desc}</p>
+            <div class='product-price'>
+                <span class='price-amount'>${cost} CEV</span>
+            </div>
+            <button class='buy-btn' onclick='buyConfirm(\`${name}\`, ${cost}, ${id})'>
+                <span class='btn-text'>Купить сейчас</span>
+                <span class='btn-sparkle'>✨</span>
+            </button>
+        </div>
+        <div class='product-glow'></div>
+    `;
+
+        return card;
+    }
+
+    // Функции для индикатора загрузки
+    function showLoadingIndicator() {
+        const shopGrid = document.querySelector('.shop-grid');
+        if (shopGrid) {
+            shopGrid.innerHTML = `
+            <div class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Загрузка товаров...</p>
+            </div>
+        `;
         }
     }
 
-    // Использование с then():
-    function exampleUsage2() {
-        customConfirm('Вы уверены, что хотите выйти?', 'Подтверждение выхода')
-            .then((result) => {
-                if (result) {
-                    // Действие при подтверждении
-                    console.log('Выход подтвержден');
-                } else {
-                    // Действие при отказе
-                    console.log('Выход отменен');
-                }
-            });
+    // Добавьте этот CSS для стилизации индикатора загрузки и сообщений об ошибках
+    const style = document.createElement('style');
+    style.textContent = `
+    .loading-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        text-align: center;
     }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin-bottom: 16px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
+    document.head.appendChild(style);
 </script>
 
 <?php if (!isLoggedIn()): ?>

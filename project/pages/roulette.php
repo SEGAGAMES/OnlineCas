@@ -602,7 +602,7 @@ if (!isLoggedIn()):
                 <div class="betting-system">
                     <div class="balance-section">
                         <div class="balance-display">
-                            <span>Баланс: $</span>
+                            <span>Баланс: </span>
                             <span id="balance"><?php echo $_SESSION['balance'] ?> CEV</span>
                         </div>
                         <div class="bet-amount">

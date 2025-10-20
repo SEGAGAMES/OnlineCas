@@ -1,5 +1,5 @@
 <?php
-require_once('db-connection');
+require_once('db-connection.php');
 session_start();
 if (isset($_GET['id'])) {
     $newAva = $_GET['id'];

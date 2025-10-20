@@ -1,5 +1,5 @@
 <?php
-require_once("database-api/db-connection");
+require_once("database-api/db-connection.php");
 
 function authenticateUser($email, $password)
 {
