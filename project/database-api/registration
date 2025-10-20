@@ -1,5 +1,5 @@
 <?php
-require_once('db-connection');
+require_once('db-connection.php');
 function register_user($email, $surname, $name, $password, $lastname = "")
 {
     $db = new Database;

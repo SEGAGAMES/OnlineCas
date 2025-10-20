@@ -1,5 +1,5 @@
 <?php
-require_once('db-connection');
+require_once('db-connection.php');
 function loadItem($item_id)
 {
     $db = new Database;

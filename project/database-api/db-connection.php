@@ -25,13 +25,10 @@ class Database
     // Соединение с базой.
     public function Connect()
     {
-        try
-        {
+        try {
             $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->exec("set names utf8");
-        }
-        catch (PDOException $exception)
-        {
+        } catch (PDOException $exception) {
             echo "Ошибка подключения: " . $exception->getMessage();
         }
     }
@@ -39,16 +36,13 @@ class Database
     // Отправка запроса в базу данных.
     public function SendQuery($query, $paramsArray = [])
     {
-        try 
-        {
+        try {
             $stmt = $this->conn->prepare($query);
             // for ($i = 0; $i < count($paramsArray); $i++)
             //     $stmt->bind_param($i, $paramsArray[$i]);
             $stmt->execute($paramsArray);
             return $stmt;
-        }
-        catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             return null;
         }
     }

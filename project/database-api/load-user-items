@@ -1,5 +1,5 @@
 <?php
-require_once('db-connection');
+require_once('db-connection.php');
 function load_inv()
 {
     $db = new Database;

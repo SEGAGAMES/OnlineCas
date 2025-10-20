@@ -1,5 +1,5 @@
 <?php
-require_once('db-connection');
+require_once('db-connection.php');
 function send_photo($type, $path, $desc, $name, $cost)
 {
     $db = new Database;

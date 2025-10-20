@@ -381,44 +381,26 @@
 
 <h1>🛍️ Магазин</h1>
 <p class="shop-subtitle">Коллекция эксклюзивных аватарок для вашего уникального стиля!</p>
-
+<div class="shop-filters">
+    <div class="filter-group">
+        <label for="sortSelect">Сортировка:</label>
+        <select id="sortSelect" onchange="sortItems()">
+            <option value="cheap">Сначала дешевые</option>
+            <option value="expensive">Сначала дорогие</option>
+        </select>
+    </div>
+    
+    <div class="filter-group">
+        <label for="typeSelect">Тип:</label>
+        <select id="typeSelect" onchange="filterItems()">
+            <option value="all">Все предметы</option>
+            <option value="аватар">Аватар</option>
+            <option value="статус">Статус</option>
+            <option value="предмет">Предмет</option>
+        </select>
+    </div>
+</div>
 <div class="shop-grid">
-    <?php
-    require_once('database-api/load-items');
-    $cards = loadAllItems();
-    $pathes = $cards['path'];
-    $ids = $cards['item_id'];
-    $descs = $cards['desc'];
-    $types = $cards['item_type'];
-    $name = $cards['name'];
-    $cost = $cards['cost'];
-    // Пример данных предметов (замените на реальные данные из БД)
-    for ($i = 0; $i < count($pathes); $i++) {
-        echo renderItemCard($pathes[$i], $ids[$i], $descs[$i], $types[$i], $name[$i], $cost[$i]);
-    }
-    function renderItemCard($path, $id, $desc, $type, $name, $cost)
-    {
-        return "
-                <div class='product-card'>
-                    <!--<div class='product-badge popular'>Популярная</div>-->
-                    <div class='product-image'>
-                        <img src='{$path}' alt='{$name}' class='circle-image'>
-                    </div>
-                    <div class='product-content'>
-                        <h3>{$name}</h3>
-                        <p class='product-description'>{$desc}</p>
-                        <div class='product-price'>
-                            <span class='price-amount'>{$cost} CEV</span>
-                        </div>
-                        <button class='buy-btn' onclick='buyConfirm(`{$name}`, {$cost}, {$id})'>
-                            <span class='btn-text'>Купить сейчас</span>
-                            <span class='btn-sparkle'>✨</span>
-                        </button>
-                    </div>
-                    <div class='product-glow'></div>
-                </div>";
-    }
-    ?>
 </div>
 
 <script>
@@ -510,6 +492,194 @@
                 }
             });
     }
+    document.addEventListener('DOMContentLoaded', function () {
+    const sortSelect = document.getElementById('sortSelect');
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+            const selectedValue = this.value;
+            let url = '';
+            
+            if (selectedValue == 'asc') {
+                url = 'database-api/items/load-items-cost-asc.php';
+            } else {
+                url = 'database-api/items/load-items-cost-desc.php';
+            }
+
+            // Вызываем функцию сортировки
+            sortItems(url);
+        });
+    }
+});
+
+function sortItems(url) {
+    // Очищаем контейнер с товарами
+    const shopGrid = document.querySelector('.shop-grid');
+    if (shopGrid) {
+        shopGrid.innerHTML = '';
+    }
+
+    // Показываем индикатор загрузки
+    showLoadingIndicator();
+
+    // Выполняем fetch запрос
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.items) {
+                // Очищаем контейнер перед добавлением новых элементов
+                if (shopGrid) {
+                    shopGrid.innerHTML = '';
+                }
+                
+                // Добавляем карточки товаров
+                data.items.forEach(item => {
+                    const productCard = createProductCard(item);
+                    if (shopGrid) {
+                        shopGrid.appendChild(productCard);
+                    }
+                });
+                
+                console.log(`Загружено ${data.count} товаров`);
+            } else {
+                throw new Error(data.message || 'Failed to load items');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showErrorMessage('Ошибка при загрузке товаров: ' + error.message);
+        })
+        .finally(() => {
+            // Скрываем индикатор загрузки
+            hideLoadingIndicator();
+        });
+}
+
+function createProductCard(item) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    
+    // Экранируем значения для безопасности
+    const name = escapeHtml(item.name || '');
+    const desc = escapeHtml(item.description || '');
+    const cost = escapeHtml(item.cost || '0');
+    const path = escapeHtml(item.path || '');
+    const id = escapeHtml(item.item_id || '');
+    
+    card.innerHTML = `
+        <!--<div class='product-badge popular'>Популярная</div>-->
+        <div class='product-image'>
+            <img src='${path}' alt='${name}' class='circle-image'>
+        </div>
+        <div class='product-content'>
+            <h3>${name}</h3>
+            <p class='product-description'>${desc}</p>
+            <div class='product-price'>
+                <span class='price-amount'>${cost} CEV</span>
+            </div>
+            <button class='buy-btn' onclick='buyConfirm(\`${name}\`, ${cost}, ${id})'>
+                <span class='btn-text'>Купить сейчас</span>
+                <span class='btn-sparkle'>✨</span>
+            </button>
+        </div>
+        <div class='product-glow'></div>
+    `;
+    
+    return card;
+}
+
+// Функция для экранирования HTML
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// Функции для индикатора загрузки
+function showLoadingIndicator() {
+    const shopGrid = document.querySelector('.shop-grid');
+    if (shopGrid) {
+        shopGrid.innerHTML = `
+            <div class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Загрузка товаров...</p>
+            </div>
+        `;
+    }
+}
+
+function hideLoadingIndicator() {
+    // Автоматически скрывается при добавлении товаров
+}
+
+function showErrorMessage(message) {
+    const shopGrid = document.querySelector('.shop-grid');
+    if (shopGrid) {
+        shopGrid.innerHTML = `
+            <div class="error-message">
+                <p>${message}</p>
+                <button onclick="location.reload()">Попробовать снова</button>
+            </div>
+        `;
+    }
+}
+
+// Добавьте этот CSS для стилизации индикатора загрузки и сообщений об ошибках
+const style = document.createElement('style');
+style.textContent = `
+    .loading-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 2s linear infinite;
+        margin-bottom: 16px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+        text-align: center;
+        padding: 40px;
+        color: #e74c3c;
+    }
+    
+    .error-message button {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    
+    .error-message button:hover {
+        background: #c0392b;
+    }
+`;
+document.head.appendChild(style);
 </script>
 
 <?php if (!isLoggedIn()): ?>
